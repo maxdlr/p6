@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 import { NgOptimizedImage } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatButtonToggle } from "@angular/material/button-toggle";
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -12,8 +14,9 @@ import { NgOptimizedImage } from "@angular/common";
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NgModule,
     NgOptimizedImage,
+    MatButtonModule,
+    MatButtonToggle,
   ],
   providers: [],
   bootstrap: [AppComponent],
