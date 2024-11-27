@@ -49,4 +49,58 @@ public class User {
   @UpdateTimestamp
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
+
+  public Long getId() {
+    return id;
+  }
+
+  public User setId(Long id) {
+    this.id = id;
+    return this;
+  }
+
+  public @NonNull String getEmail() {
+    return email;
+  }
+
+  public User setEmail(@NonNull String email) {
+    this.email = email;
+    return this;
+  }
+
+  public @NonNull String getUsername() {
+    return username;
+  }
+
+  public User setUsername(@NonNull String username) {
+    this.username = username;
+    return this;
+  }
+
+  public @NonNull String getPassword() {
+    return password;
+  }
+
+  public User setPassword(@NonNull String password) {
+    this.password = password;
+    return this;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public User setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+    return this;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public User setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+    return this;
+  }
 }
