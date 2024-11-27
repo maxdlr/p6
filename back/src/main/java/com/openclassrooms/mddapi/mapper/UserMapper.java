@@ -3,7 +3,7 @@ package com.openclassrooms.mddapi.mapper;
 import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.models.User;
 import org.springframework.stereotype.Component;
-import org.mapstruct.Mapper;
+import org.mapstruct.*;
 
 @Component
 @Mapper(componentModel = "spring")
