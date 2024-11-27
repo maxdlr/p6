@@ -3,14 +3,17 @@ package com.openclassrooms.mddapi.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.mddapi.TestUtils;
 import com.openclassrooms.mddapi.models.User;
+import com.openclassrooms.mddapi.payload.request.LoginRequest;
 import com.openclassrooms.mddapi.payload.request.SignUpRequest;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import com.openclassrooms.mddapi.security.jwt.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -27,11 +30,29 @@ public class AuthControllerTests {
 
   @Mock UserRepository userRepository;
   @Mock PasswordEncoder passwordEncoder;
+  @Mock AuthenticationManager authenticationManager;
+  @Mock JwtUtils jwtUtils;
 
   @BeforeEach
   public void setup() {
-    AuthController authController = new AuthController(userRepository, passwordEncoder);
+    AuthController authController =
+        new AuthController(userRepository, passwordEncoder, authenticationManager, jwtUtils);
     mvc = MockMvcBuilders.standaloneSetup(authController).build();
+  }
+
+  @Test
+  public void testAuthenticateUser() throws Exception {
+    LoginRequest loginRequest = new LoginRequest();
+    loginRequest.setEmail("email@email.com1").setPassword("password1");
+
+    String payload = new ObjectMapper().writeValueAsString(loginRequest);
+
+    mvc.perform(
+            post("/api/auth/login")
+                .content(payload)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
   }
 
   @Test
