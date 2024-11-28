@@ -13,21 +13,21 @@ import com.openclassrooms.mddapi.repository.UserRepository;
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
-    UserRepository userRepository;
+  UserRepository userRepository;
 
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user =
-                userRepository
-                        .findByEmail(email)
-                        .orElseThrow(
-                                () -> new UsernameNotFoundException("User Not Found with email: " + email));
+  @Override
+  @Transactional
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    User user =
+        userRepository
+            .findByEmail(email)
+            .orElseThrow(
+                () -> new UsernameNotFoundException("User Not Found with email: " + email));
 
-        return UserDetailsImpl.builder()
-                .id(user.getId())
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .build();
-    }
+    return UserDetailsImpl.builder()
+        .id(user.getId())
+        .username(user.getEmail())
+        .password(user.getPassword())
+        .build();
+  }
 }

@@ -9,8 +9,6 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 public class LoginRequest {
-    @NotBlank
-    private String email;
-    @NotBlank
-    private String password;
+  @NotBlank private String email;
+  @NotBlank private String password;
 }

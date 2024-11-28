@@ -16,22 +16,22 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class UserDto {
-    private Long id;
+  private Long id;
 
-    @NonNull
-    @Size(max = 50)
-    @Email
-    private String email;
+  @NonNull
+  @Size(max = 50)
+  @Email
+  private String email;
 
-    @NonNull
-    @Size(max = 20)
-    private String username;
+  @NonNull
+  @Size(max = 20)
+  private String username;
 
-    @JsonIgnore
-    @Size(max = 120)
-    private String password;
+  @JsonIgnore
+  @Size(max = 120)
+  private String password;
 
-    private LocalDateTime createdAt;
+  private LocalDateTime createdAt;
 
-    private LocalDateTime updatedAt;
+  private LocalDateTime updatedAt;
 }
