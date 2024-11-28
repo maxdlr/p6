@@ -25,52 +25,50 @@ import static com.openclassrooms.mddapi.TestUtils.*;
 @ExtendWith(MockitoExtension.class)
 public class ThemeControllerTests {
 
-    MockMvc mvc;
+  MockMvc mvc;
 
-    @Mock
-    ThemeMapper themeMapper;
+  @Mock ThemeMapper themeMapper;
 
-    @Mock
-    ThemeRepository themeRepository;
+  @Mock ThemeRepository themeRepository;
 
-    @BeforeEach
-    void setup() {
-        ThemeController themeController = new ThemeController(themeMapper, themeRepository);
-        mvc = MockMvcBuilders.standaloneSetup(themeController).build();
+  @BeforeEach
+  void setup() {
+    ThemeController themeController = new ThemeController(themeMapper, themeRepository);
+    mvc = MockMvcBuilders.standaloneSetup(themeController).build();
+  }
+
+  @Test
+  public void testBrowseListOfTheme() throws Exception {
+    List<Theme> themes = new ArrayList<>();
+    List<ThemeDto> themeDtos = new ArrayList<>();
+
+    for (int i = 0; i < 10; i++) {
+      Theme theme = makeTheme(i);
+      ThemeDto themeDto = makeThemeDto(i);
+      themes.add(theme);
+      themeDtos.add(themeDto);
     }
 
-    @Test
-    public void testBrowseListOfTheme() throws Exception {
-        List<Theme> themes = new ArrayList<>();
-        List<ThemeDto> themeDtos = new ArrayList<>();
+    when(themeRepository.findAll()).thenReturn(themes);
+    when(themeMapper.toDto(themes)).thenReturn(themeDtos);
 
-        for (int i = 0; i < 10; i++) {
-            Theme theme = makeTheme(i);
-            ThemeDto themeDto = makeThemeDto(i);
-            themes.add(theme);
-            themeDtos.add(themeDto);
-        }
+    mvc.perform(
+            get("/api/themes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].id").value(themes.getFirst().getId()))
+        .andExpect(
+            jsonPath("$[" + (themes.size() - 1) + "].id")
+                .value(themes.get(themes.size() - 1).getId()));
 
-        when(themeRepository.findAll()).thenReturn(themes);
-        when(themeMapper.toDto(themes)).thenReturn(themeDtos);
+    when(themeMapper.toDto(any(ArrayList.class))).thenReturn(new ArrayList<>());
 
-        mvc.perform(
-                        get("/api/themes")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .accept(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(themes.getFirst().getId()))
-                .andExpect(jsonPath("$[" + (themes.size() - 1) + "].id").value(themes.get(themes.size() - 1).getId()));
-
-        when(themeMapper.toDto(any(ArrayList.class))).thenReturn(new ArrayList<>());
-
-        mvc.perform(
-                        get("/api/themes")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .accept(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(new ArrayList<>()));
-    }
+    mvc.perform(
+            get("/api/themes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$").value(new ArrayList<>()));
+  }
 }
