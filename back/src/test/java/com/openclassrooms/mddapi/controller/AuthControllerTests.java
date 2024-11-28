@@ -57,7 +57,6 @@ public class AuthControllerTests {
         UserDetailsImpl userDetails = new UserDetailsImpl(
                 1L,
                 loginRequest.getEmail(),
-                "username1",
                 loginRequest.getPassword()
         );
 
@@ -76,8 +75,7 @@ public class AuthControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token").value("token"))
                 .andExpect(jsonPath("$.id").value(userDetails.getId()))
-                .andExpect(jsonPath("$.email").value(userDetails.getEmail()))
-                .andExpect(jsonPath("$.username").value(userDetails.getUsername()));
+                .andExpect(jsonPath("$.email").value(userDetails.getUsername()));
 
         when(userRepository.existsByEmail(any(String.class))).thenReturn(false);
 
