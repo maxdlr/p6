@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi;
 
+import com.openclassrooms.mddapi.dto.ThemeDto;
 import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
@@ -32,8 +33,17 @@ public class TestUtils {
 
     public static Theme makeTheme(Integer id) {
         Theme theme = new Theme();
-        theme.setName("theme" + id);
+        theme
+                .setId((long) id)
+                .setName("theme" + id).setCreatedAt(LocalDateTime.now()).setUpdatedAt(LocalDateTime.now());
 
         return theme;
+    }
+
+    public static ThemeDto makeThemeDto(Integer id) {
+        ThemeDto themeDto = new ThemeDto();
+        themeDto.setId((long) id).setName("theme" + id).setCreatedAt(LocalDateTime.now()).setUpdatedAt(LocalDateTime.now());
+
+        return themeDto;
     }
 }
