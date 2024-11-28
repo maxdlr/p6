@@ -58,7 +58,7 @@ public class AuthController {
 
         return ResponseEntity.ok(
                 new JwtResponse(
-                        jwt, userDetails.getId(), userDetails.getEmail(), userDetails.getUsername()));
+                        jwt, userDetails.getId(), userDetails.getUsername()));
     }
 
     @PostMapping("/register")
