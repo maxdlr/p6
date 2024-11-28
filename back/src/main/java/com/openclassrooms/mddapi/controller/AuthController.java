@@ -24,56 +24,61 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-  private final UserRepository userRepository;
-  private final PasswordEncoder passwordEncoder;
-  private final AuthenticationManager authenticationManager;
-  private final JwtUtils jwtUtils;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
-  public AuthController(
-      UserRepository userRepository,
-      PasswordEncoder passwordEncoder,
-      AuthenticationManager authenticationManager,
-      JwtUtils jwtUtils) {
-    this.userRepository = userRepository;
-    this.passwordEncoder = passwordEncoder;
-    this.authenticationManager = authenticationManager;
-    this.jwtUtils = jwtUtils;
-  }
-
-  @PostMapping("/login")
-  public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
-    Authentication authentication =
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                loginRequest.getEmail(), loginRequest.getPassword()));
-
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-    String jwt = jwtUtils.generateJwtToken(authentication);
-    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-    return ResponseEntity.ok(
-        new JwtResponse(
-            jwt, userDetails.getId(), userDetails.getEmail(), userDetails.getUsername()));
-  }
-
-  @PostMapping("/register")
-  public ResponseEntity<?> register(@Valid @RequestBody SignUpRequest signUpRequest) {
-    try {
-      if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-        return ResponseEntity.badRequest().body(new MessageResponse("Email already exists"));
-      }
-
-      String password = passwordEncoder.encode(signUpRequest.getPassword());
-      User user = new User();
-      user.setUsername(signUpRequest.getUsername())
-          .setEmail(signUpRequest.getEmail())
-          .setPassword(password);
-
-      userRepository.save(user);
-
-      return ResponseEntity.ok().body(new MessageResponse("User registered successfully"));
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().build();
+    public AuthController(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager,
+            JwtUtils jwtUtils) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
     }
-  }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
+
+        if (!userRepository.existsByEmail(loginRequest.getEmail())) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                loginRequest.getEmail(), loginRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        return ResponseEntity.ok(
+                new JwtResponse(
+                        jwt, userDetails.getId(), userDetails.getEmail(), userDetails.getUsername()));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody SignUpRequest signUpRequest) {
+        try {
+            if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+                return ResponseEntity.badRequest().body(new MessageResponse("Email already exists"));
+            }
+
+            String password = passwordEncoder.encode(signUpRequest.getPassword());
+            User user = new User();
+            user.setUsername(signUpRequest.getUsername())
+                    .setEmail(signUpRequest.getEmail())
+                    .setPassword(password);
+
+            userRepository.save(user);
+
+            return ResponseEntity.ok().body(new MessageResponse("User registered successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }
