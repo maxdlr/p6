@@ -39,28 +39,27 @@ public class ThemeControllerTests {
 
   @Test
   public void testBrowseListOfTheme() throws Exception {
-    List<Theme> themes = new ArrayList<>();
-    List<ThemeDto> themeDtos = new ArrayList<>();
+    List<Theme> themeList = new ArrayList<>();
+    List<ThemeDto> themeDtoList = new ArrayList<>();
 
     for (int i = 0; i < 10; i++) {
       Theme theme = makeTheme(i);
       ThemeDto themeDto = makeThemeDto(i);
-      themes.add(theme);
-      themeDtos.add(themeDto);
+      themeList.add(theme);
+      themeDtoList.add(themeDto);
     }
 
-    when(themeRepository.findAll()).thenReturn(themes);
-    when(themeMapper.toDto(themes)).thenReturn(themeDtos);
+    when(themeRepository.findAll()).thenReturn(themeList);
+    when(themeMapper.toDto(themeList)).thenReturn(themeDtoList);
 
     mvc.perform(
             get("/api/themes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].id").value(themes.getFirst().getId()))
+        .andExpect(jsonPath("$[0].id").value(themeList.getFirst().getId()))
         .andExpect(
-            jsonPath("$[" + (themes.size() - 1) + "].id")
-                .value(themes.get(themes.size() - 1).getId()));
+            jsonPath("$[" + (themeList.size() - 1) + "].id").value(themeList.getLast().getId()));
 
     when(themeMapper.toDto(any(ArrayList.class))).thenReturn(new ArrayList<>());
 
