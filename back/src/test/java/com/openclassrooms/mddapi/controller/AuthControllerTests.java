@@ -96,8 +96,6 @@ public class AuthControllerTests {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-
-
     }
 
     @Test
