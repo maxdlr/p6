@@ -3,6 +3,7 @@ package com.openclassrooms.mddapi;
 import com.openclassrooms.mddapi.dto.ThemeDto;
 import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.models.Theme;
+import com.openclassrooms.mddapi.models.Subscription;
 import com.openclassrooms.mddapi.models.User;
 
 import java.time.LocalDateTime;
@@ -51,5 +52,11 @@ public class TestUtils {
         .setUpdatedAt(LocalDateTime.now());
 
     return themeDto;
+  }
+
+  public static Subscription makeSubscription(User user, Theme theme) {
+    Subscription subscription = new Subscription();
+    subscription.setUser(user).setTheme(theme);
+    return subscription;
   }
 }
