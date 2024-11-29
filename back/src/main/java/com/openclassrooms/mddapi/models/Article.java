@@ -9,10 +9,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Table(name = "THEMES")
+@Table(name = "ARTICLES")
 @Data
 @Accessors(chain = true)
 @EntityListeners(AuditingEntityListener.class)
@@ -22,16 +21,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Theme {
+public class Article {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @NonNull
-  @Size(max = 200)
-  private String name;
+  @Size(max = 50)
+  private String title;
 
-  @OneToMany private List<Article> articleList;
+  @NonNull private String content;
+
+  @ManyToOne private User author;
+
+  @ManyToOne private Theme theme;
 
   @CreatedDate
   @Column(name = "created_at", updatable = false)
