@@ -7,7 +7,7 @@ import com.openclassrooms.mddapi.repository.SubscriptionRepository;
 import com.openclassrooms.mddapi.repository.ThemeRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.payload.request.SubscriptionRequest;
-import com.openclassrooms.mddapi.service.SubscriptionService;
+import com.openclassrooms.mddapi.service.SubscriptionValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,12 +36,12 @@ public class SubscriptionControllerTests {
 
   @BeforeEach
   public void setup() {
-    SubscriptionService subscriptionService =
-        new SubscriptionService(userRepository, themeRepository, subscriptionRepository);
+    SubscriptionValidator subscriptionValidator =
+        new SubscriptionValidator(userRepository, themeRepository, subscriptionRepository);
 
     SubscriptionController subscriptionController =
         new SubscriptionController(
-            userRepository, subscriptionRepository, themeRepository, subscriptionService);
+            userRepository, subscriptionRepository, themeRepository, subscriptionValidator);
     mvc = MockMvcBuilders.standaloneSetup(subscriptionController).build();
   }
 

@@ -1,6 +1,5 @@
 package com.openclassrooms.mddapi.service;
 
-import com.openclassrooms.mddapi.models.Subscription;
 import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.payload.request.SubscriptionRequest;
@@ -14,14 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SubscriptionService {
+public class SubscriptionValidator {
 
   private final ThemeRepository themeRepository;
   private final SubscriptionRepository subscriptionRepository;
   @Getter private final List<String> errors = new ArrayList<>();
   UserRepository userRepository;
 
-  public SubscriptionService(
+  public SubscriptionValidator(
       UserRepository userRepository,
       ThemeRepository themeRepository,
       SubscriptionRepository subscriptionRepository) {
@@ -30,7 +29,8 @@ public class SubscriptionService {
     this.subscriptionRepository = subscriptionRepository;
   }
 
-  public SubscriptionService validateSubscriptionRequest(SubscriptionRequest subscriptionRequest) {
+  public SubscriptionValidator validateSubscriptionRequest(
+      SubscriptionRequest subscriptionRequest) {
     User user = userRepository.findById(subscriptionRequest.getUserId()).orElse(null);
     Theme theme = themeRepository.findById(subscriptionRequest.getThemeId()).orElse(null);
 
@@ -49,7 +49,7 @@ public class SubscriptionService {
     return this;
   }
 
-  public SubscriptionService validateUnsubscriptionRequest(
+  public SubscriptionValidator validateUnsubscriptionRequest(
       SubscriptionRequest subscriptionRequest) {
     User user = userRepository.findById(subscriptionRequest.getUserId()).orElse(null);
     Theme theme = themeRepository.findById(subscriptionRequest.getThemeId()).orElse(null);
