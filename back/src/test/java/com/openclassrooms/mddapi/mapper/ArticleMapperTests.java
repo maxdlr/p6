@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ArticleMapperTest {
+class ArticleMapperTests {
 
   @Mock private UserRepository userRepository;
   @Mock private ThemeRepository themeRepository;

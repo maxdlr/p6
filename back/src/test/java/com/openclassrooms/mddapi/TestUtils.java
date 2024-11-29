@@ -4,6 +4,7 @@ import com.openclassrooms.mddapi.dto.ArticleDto;
 import com.openclassrooms.mddapi.dto.ThemeDto;
 import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.models.Article;
+import com.openclassrooms.mddapi.models.Subscription;
 import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
 
@@ -79,5 +80,16 @@ public class TestUtils {
         .setCreatedAt(LocalDateTime.now())
         .setUpdatedAt(LocalDateTime.now());
     return articleDto;
+  }
+
+  public static Subscription makeSubscription(Integer id, Theme theme, User user) {
+    Subscription subscription = new Subscription();
+    subscription
+        .setId((long) id)
+        .setUser(user)
+        .setTheme(theme)
+        .setCreatedAt(LocalDateTime.now())
+        .setUpdatedAt(LocalDateTime.now());
+    return subscription;
   }
 }
