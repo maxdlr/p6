@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
   List<Article> findAllByTheme(Theme theme);
+
+  List<Article> findByTheme(Theme theme);
 }

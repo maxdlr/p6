@@ -3,36 +3,37 @@ package com.openclassrooms.mddapi.service;
 import com.openclassrooms.mddapi.dto.ArticleDto;
 import com.openclassrooms.mddapi.mapper.ArticleMapper;
 import com.openclassrooms.mddapi.models.Article;
-import com.openclassrooms.mddapi.models.Subscription;
-import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
-import com.openclassrooms.mddapi.repository.SubscriptionRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ArticleService {
-
   private final ArticleMapper articleMapper;
-  private final SubscriptionRepository subscriptionRepository;
+  private final EntityManager entityManager;
 
-  public ArticleService(
-      ArticleMapper articleMapper, SubscriptionRepository subscriptionRepository) {
+  public ArticleService(ArticleMapper articleMapper, EntityManager entityManager) {
     this.articleMapper = articleMapper;
-    this.subscriptionRepository = subscriptionRepository;
+    this.entityManager = entityManager;
   }
 
   public List<ArticleDto> getArticlesOfUser(User user) {
-    List<Article> articles = new ArrayList<>();
-    List<Subscription> subscriptions = subscriptionRepository.findAllByUser(user);
+    String nativeSql =
+        """
+            SELECT a.*
+            FROM ARTICLES a
+            JOIN THEMES t ON a.theme_id = t.id
+            JOIN SUBSCRIPTIONS s ON s.theme_id = t.id
+            WHERE s.user_id = :userId
+        """;
 
-    for (int i = 0; i < subscriptions.size() - 1; i++) {
-      Theme theme = subscriptions.get(i).getTheme();
-      articles = theme.getArticleList();
-    }
+    Query query = entityManager.createNativeQuery(nativeSql, Article.class);
+    query.setParameter("userId", user.getId());
 
+    List<Article> articles = query.getResultList();
     return articleMapper.toDto(articles);
   }
 }

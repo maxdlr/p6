@@ -11,25 +11,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@Mapper()
+@Mapper(componentModel = "spring")
 public abstract class ArticleMapper implements EntityMapper<ArticleDto, Article> {
 
   @Autowired ThemeRepository themeRepository;
 
   @Autowired UserRepository userRepository;
 
-  //  @Mappings({
-  //    @Mapping(
-  //        target = "author",
-  //        expression =
-  // "java(this.userRepository.findById(articleDto.getAuthorId()).orElse(null))"),
-  //    @Mapping(
-  //        target = "theme",
-  //        expression =
-  // "java(this.themeRepository.findById(articleDto.getThemeId()).orElse(null))"),
-  //  })
-  //  public abstract Article toEntity(ArticleDto articleDto);
-  //
+  @Mappings({
+    @Mapping(
+        target = "author",
+        expression = "java(this.userRepository.findById(articleDto.getAuthorId()).orElse(null))"),
+    @Mapping(
+        target = "theme",
+        expression = "java(this.themeRepository.findById(articleDto.getThemeId()).orElse(null))"),
+  })
+  public abstract Article toEntity(ArticleDto articleDto);
+
   @Mappings({
     @Mapping(target = "authorId", expression = "java(article.getAuthor().getId())"),
     @Mapping(target = "themeId", expression = "java(article.getTheme().getId())")
