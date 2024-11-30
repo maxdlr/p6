@@ -1,0 +1,18 @@
+create table ARTICLES (article_id bigint, author_id bigint, created_at datetime(6), id bigint not null auto_increment, theme_id bigint, updated_at datetime(6), title varchar(50), content varchar(255), primary key (id)) engine=InnoDB;
+create table ARTICLES_comments (Article_id bigint not null, comments_id bigint not null) engine=InnoDB;
+create table SUBSCRIPTIONS (created_at datetime(6), id bigint not null auto_increment, theme_id bigint, updated_at datetime(6), user_id bigint, primary key (id)) engine=InnoDB;
+create table THEMES (created_at datetime(6), id bigint not null auto_increment, updated_at datetime(6), name varchar(200), primary key (id)) engine=InnoDB;
+create table THEMES_articleList (Theme_id bigint not null, articleList_id bigint not null) engine=InnoDB;
+create table USERS (created_at datetime(6), id bigint not null auto_increment, updated_at datetime(6), username varchar(20), email varchar(50), password varchar(120), primary key (id)) engine=InnoDB;
+alter table ARTICLES_comments add constraint UK8tv77gly2q63cfas5q56dt4bx unique (comments_id);
+alter table THEMES_articleList add constraint UKltowkgtsotyrsohcldnm5dbwm unique (articleList_id);
+alter table USERS add constraint UKavh1b2ec82audum2lyjx2p1ws unique (email);
+alter table ARTICLES add constraint FKjnt23nr1d7wt0sjl2dof5mip5 foreign key (author_id) references USERS (id);
+alter table ARTICLES add constraint FKb26fanb9ju1i0ym1gswhj0cg6 foreign key (theme_id) references THEMES (id);
+alter table ARTICLES add constraint FKfp2b0rrqu854uwa7r8hlmqmuk foreign key (article_id) references ARTICLES (id);
+alter table ARTICLES_comments add constraint FKe1v0p69j22pc7oj47qt4ojmiv foreign key (comments_id) references ARTICLES (id);
+alter table ARTICLES_comments add constraint FKew5iiy8prmbpargfs5t2cl72s foreign key (Article_id) references ARTICLES (id);
+alter table SUBSCRIPTIONS add constraint FKpn4yxeolhg898i28a1p5tvti2 foreign key (theme_id) references THEMES (id);
+alter table SUBSCRIPTIONS add constraint FKgb4j0qpwv6hdgy7aotoobd4ty foreign key (user_id) references USERS (id);
+alter table THEMES_articleList add constraint FK5g6vxr9fegpjsu2suts9vhrsy foreign key (articleList_id) references ARTICLES (id);
+alter table THEMES_articleList add constraint FKqlf0le3jv1a6a7d9l5mds1swl foreign key (Theme_id) references THEMES (id);
