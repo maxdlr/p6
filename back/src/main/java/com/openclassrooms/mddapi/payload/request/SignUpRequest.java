@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(chain = true)
 public class SignUpRequest {
-  @NotBlank()
+  @NotBlank
   @Email
   @Size(min = 5, max = 50)
   private String email;
