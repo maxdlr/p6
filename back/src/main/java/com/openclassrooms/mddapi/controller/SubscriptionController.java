@@ -73,7 +73,7 @@ public class SubscriptionController {
     Theme theme = themeRepository.findById(subscriptionRequest.getThemeId()).get();
     Optional<Subscription> subscription = subscriptionRepository.findByUserAndTheme(user, theme);
 
-    subscription.ifPresent(subscriptionRepository::removeBy);
+    subscriptionRepository.removeById(subscription.get().getId());
 
     return ResponseEntity.ok().build();
   }

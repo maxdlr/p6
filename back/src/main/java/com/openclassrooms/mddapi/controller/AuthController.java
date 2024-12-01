@@ -20,14 +20,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-  private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
   private final JwtUtils jwtUtils;
+  private final UserRepository userRepository;
 
   public AuthController(
       UserRepository userRepository,
@@ -43,7 +45,9 @@ public class AuthController {
   @PostMapping("/login")
   public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
 
-    if (!userRepository.existsByEmail(loginRequest.getEmail())) {
+    Optional<User> user = userRepository.findByEmail(loginRequest.getEmail());
+
+    if (user.isEmpty()) {
       return ResponseEntity.notFound().build();
     }
 
@@ -56,7 +60,9 @@ public class AuthController {
     String jwt = jwtUtils.generateJwtToken(authentication);
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-    return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername()));
+    return ResponseEntity.ok(
+        new JwtResponse(
+            jwt, userDetails.getId(), userDetails.getUsername(), user.get().getUsername()));
   }
 
   @PostMapping("/register")
