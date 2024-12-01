@@ -6,6 +6,4 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.scss'],
   standalone: false,
 })
-export class HomeComponent implements OnInit {
-  ngOnInit(): void {}
-}
+export class HomeComponent {}

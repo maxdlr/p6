@@ -7,6 +7,10 @@ import { HomeComponent } from './pages/home/home.component';
 import { NgOptimizedImage } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggle } from '@angular/material/button-toggle';
+import { provideHttpClient } from '@angular/common/http';
+import { AuthModule } from './pages/auth/auth.module';
+
+const mats = [MatButtonModule, MatButtonToggle];
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -15,10 +19,10 @@ import { MatButtonToggle } from '@angular/material/button-toggle';
     AppRoutingModule,
     BrowserAnimationsModule,
     NgOptimizedImage,
-    MatButtonModule,
-    MatButtonToggle,
+    AuthModule,
+    ...mats,
   ],
-  providers: [],
+  providers: [provideHttpClient()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
