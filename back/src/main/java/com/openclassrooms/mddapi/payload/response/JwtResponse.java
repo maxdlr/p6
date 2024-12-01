@@ -12,11 +12,14 @@ public class JwtResponse {
   private String email;
   private String username;
 
-  private Boolean admin;
-
-  public JwtResponse(String accessToken, Long id, String email) {
+  public JwtResponse(
+      String accessToken,
+      Long id,
+      String email, // username
+      String username) {
     this.token = accessToken;
     this.id = id;
     this.email = email;
+    this.username = username;
   }
 }

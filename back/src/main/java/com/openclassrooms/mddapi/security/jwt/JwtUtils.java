@@ -31,13 +31,13 @@ public class JwtUtils {
         .subject((userPrincipal.getUsername()))
         .issuedAt(new Date())
         .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
-        .signWith(Keys.password(jwtSecret.toCharArray()), Jwts.SIG.HS512)
+        .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()), Jwts.SIG.HS512)
         .compact();
   }
 
   public String getUserNameFromJwtToken(String token) {
     return Jwts.parser()
-        .verifyWith(Keys.password(jwtSecret.toCharArray()))
+        .verifyWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
         .build()
         .parseSignedClaims(token)
         .getPayload()
@@ -46,8 +46,9 @@ public class JwtUtils {
 
   public boolean validateJwtToken(String authToken) {
     try {
+      byte[] secretKeyBytes = jwtSecret.getBytes();
       Jwts.parser()
-          .verifyWith(Keys.password(jwtSecret.toCharArray()))
+          .verifyWith(Keys.hmacShaKeyFor(secretKeyBytes))
           .build()
           .parseSignedClaims(authToken);
       return true;

@@ -13,7 +13,7 @@ import com.openclassrooms.mddapi.repository.UserRepository;
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
-  UserRepository userRepository;
+  private final UserRepository userRepository;
 
   @Override
   @Transactional

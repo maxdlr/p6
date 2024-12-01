@@ -7,6 +7,7 @@ import com.openclassrooms.mddapi.payload.request.SignUpRequest;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.security.jwt.JwtUtils;
 import com.openclassrooms.mddapi.security.services.UserDetailsImpl;
+import net.bytebuddy.description.type.TypeList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +20,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.Optional;
 
 import static com.openclassrooms.mddapi.TestUtils.makeUser;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,7 +55,7 @@ public class AuthControllerTests {
     UserDetailsImpl userDetails =
         new UserDetailsImpl(1L, loginRequest.getEmail(), loginRequest.getPassword());
 
-    when(userRepository.existsByEmail(any(String.class))).thenReturn(true);
+    when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.of(makeUser(1)));
     when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
         .thenReturn(authentication);
     when(authentication.getPrincipal()).thenReturn(userDetails);
@@ -70,7 +73,7 @@ public class AuthControllerTests {
         .andExpect(jsonPath("$.id").value(userDetails.getId()))
         .andExpect(jsonPath("$.email").value(userDetails.getUsername()));
 
-    when(userRepository.existsByEmail(any(String.class))).thenReturn(false);
+    when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.empty());
 
     mvc.perform(
             post("/api/auth/login")

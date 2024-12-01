@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -124,6 +125,8 @@ public class SubscriptionControllerTests {
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     when(themeRepository.findById(1L)).thenReturn(Optional.of(theme));
     when(subscriptionRepository.existsByUserAndTheme(user, theme)).thenReturn(true);
+    when(subscriptionRepository.findByUserAndTheme(user, theme))
+        .thenReturn(Optional.of(makeSubscription(1, theme, user)));
 
     String payload = new ObjectMapper().writeValueAsString(subscriptionRequest);
 
