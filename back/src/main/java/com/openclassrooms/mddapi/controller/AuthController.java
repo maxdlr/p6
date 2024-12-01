@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.controller;
 
+import com.openclassrooms.mddapi.exception.ApiBadPostRequestException;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.payload.request.SignUpRequest;
 import com.openclassrooms.mddapi.payload.request.LoginRequest;
@@ -81,7 +82,7 @@ public class AuthController {
       userRepository.save(user);
 
       return ResponseEntity.ok().body(new MessageResponse("User registered successfully"));
-    } catch (Exception e) {
+    } catch (ApiBadPostRequestException e) {
       return ResponseEntity.badRequest().build();
     }
   }

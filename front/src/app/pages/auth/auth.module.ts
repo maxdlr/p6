@@ -19,6 +19,7 @@ import {
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipInput } from '@angular/material/chips';
+import { RegisterComponent } from './components/register/register.component';
 
 const mats = [
   MatButton,
@@ -38,9 +39,9 @@ const mats = [
 ];
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [LoginComponent, RegisterComponent],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, ...mats],
-  exports: [LoginComponent],
+  exports: [LoginComponent, RegisterComponent],
   providers: [
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
