@@ -1,0 +1,28 @@
+<app-auth-base>
+  <form (ngSubmit)="submit()" [formGroup]="form" class="flex flex-col justify-center items-center">
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input
+        autocomplete="email"
+        formControlName="email"
+        matInput
+        placeholder="Ex. pat@example.com"
+        type="email">
+      <mat-error *ngIf="form.controls['email'].hasError('email')">
+        Please enter a valid email address
+      </mat-error>
+      <mat-error *ngIf="form.hasError('required')">
+        Email is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input autocomplete="current-password" formControlName="password" matInput placeholder="Ex. 12345678"
+             type="password">
+      <mat-error *ngIf="form.controls['password'].hasError('min')">
+        Please enter a valid password
+      </mat-error>
+    </mat-form-field>
+    <app-button label="se connecter" />
+  </form>
+</app-auth-base>

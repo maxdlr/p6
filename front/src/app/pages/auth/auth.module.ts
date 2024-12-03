@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './templates/login/login.component';
 import {
   MatButton,
   MatButtonModule,
@@ -19,7 +19,9 @@ import {
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipInput } from '@angular/material/chips';
-import { RegisterComponent } from './components/register/register.component';
+import { RegisterComponent } from './templates/register/register.component';
+import { AuthBaseComponent } from './components/auth-base/auth-base.component';
+import { ButtonComponent } from '../../components/atom/button/button.component';
 
 const mats = [
   MatButton,
@@ -39,8 +41,14 @@ const mats = [
 ];
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent],
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ...mats],
+  declarations: [LoginComponent, RegisterComponent, AuthBaseComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ...mats,
+    ButtonComponent,
+  ],
   exports: [LoginComponent, RegisterComponent],
   providers: [
     {
