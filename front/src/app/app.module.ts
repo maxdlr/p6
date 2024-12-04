@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggle } from '@angular/material/button-toggle';
 import { provideHttpClient } from '@angular/common/http';
 import { AuthModule } from './pages/auth/auth.module';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 const mats = [MatButtonModule, MatButtonToggle];
 
@@ -22,7 +23,13 @@ const mats = [MatButtonModule, MatButtonToggle];
     AuthModule,
     ...mats,
   ],
-  providers: [provideHttpClient()],
+  providers: [
+    provideHttpClient(),
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { floatLabel: 'auto', appearance: 'outline' },
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,1 +1,5 @@
-<button --mat-sys-primary mat-flat-button type="submit">{{ label }}</button>
+@if (route) {
+  <a [href]="route" [color]="color" [type]="type" mat-flat-button>{{ label }}</a>
+} @else {
+  <button [color]="color" [type]="type" mat-flat-button>{{ label }}</button>
+}

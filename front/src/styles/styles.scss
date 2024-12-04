@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
+@import 'src/styles/_theme-colors.scss';
 
 @tailwind base;
 @tailwind components;
@@ -15,8 +16,8 @@ html {
   color-scheme: light dark;
   @include mat.theme((
     color: (
-      primary: mat.$violet-palette,
-      tertiary: mat.$orange-palette,
+      primary: $primary-palette,
+      tertiary: $tertiary-palette,
       theme-type: light,
     ),
     typography: (
@@ -29,8 +30,10 @@ html {
     density: -2,
   ));
   @include mat.button-overrides((
-    filled-container-color: #7764c5,
-    filled-label-text-color: white,
-    filled-container-border-radius: 20px,
+    filled-container-shape: 10px,
+    filled-label-text-weight: bold,
   ));
+  @include mat.form-field-overrides((
+    outlined-container-shape: 10px,
+  ))
 }

@@ -1,12 +1,13 @@
-<app-auth-base>
+<app-auth-base title="se connecter">
   <form (ngSubmit)="submit()" [formGroup]="form" class="flex flex-col justify-center items-center">
-    <mat-form-field appearance="fill">
+    <mat-form-field>
       <mat-label>Email</mat-label>
       <input
-        autocomplete="email"
+        autocomplete
         formControlName="email"
         matInput
         placeholder="Ex. pat@example.com"
+        required
         type="email">
       <mat-error *ngIf="form.controls['email'].hasError('email')">
         Please enter a valid email address
@@ -23,6 +24,6 @@
         Please enter a valid password
       </mat-error>
     </mat-form-field>
-    <app-button label="se connecter" />
+    <app-button (clicked)="submit()" label="se connecter" type="submit" />
   </form>
 </app-auth-base>

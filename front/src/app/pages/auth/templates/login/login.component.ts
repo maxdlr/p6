@@ -10,6 +10,9 @@ import { AuthService } from '../../services/auth.service';
 import { SessionInformation } from '../../../../interfaces/session-information';
 import { SessionService } from '../../../../services/session.service';
 import { LoginRequest } from '../../interfaces/login-request';
+import { FloatLabelType } from '@angular/material/form-field';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +32,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.form = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.min(3)]),
+      password: new FormControl('', [Validators.required, Validators.min(8)]),
     });
   }
 
