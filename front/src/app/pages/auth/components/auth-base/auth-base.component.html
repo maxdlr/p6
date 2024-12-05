@@ -1,10 +1,11 @@
-<div>
-  <app-button color="secondary" label="<- back" route="/" />
-</div>
-<section class="flex flex-col justify-center items-center h-full">
-  <h1>{{ title }}</h1>
-  <div class="my-5">
-    <ng-content />
+<app-base>
+  <div>
+    <app-button-icon color="secondary" icon="arrow_left_alt" route="/" />
   </div>
-</section>
-
+  <section class="flex flex-col justify-center items-center h-full">
+    <h1>{{ title }}</h1>
+    <div class="my-5">
+      <ng-content />
+    </div>
+  </section>
+</app-base>

@@ -22,6 +22,8 @@ import { MatChipInput } from '@angular/material/chips';
 import { RegisterComponent } from './templates/register/register.component';
 import { AuthBaseComponent } from './components/auth-base/auth-base.component';
 import { ButtonComponent } from '../../components/atom/button/button.component';
+import { ButtonIconComponent } from '../../components/atom/button-icon/button-icon.component';
+import { BaseComponent } from '../../components/atom/base/base.component';
 
 const mats = [
   MatButton,
@@ -48,6 +50,8 @@ const mats = [
     FormsModule,
     ...mats,
     ButtonComponent,
+    ButtonIconComponent,
+    BaseComponent,
   ],
   exports: [LoginComponent, RegisterComponent],
   providers: [
