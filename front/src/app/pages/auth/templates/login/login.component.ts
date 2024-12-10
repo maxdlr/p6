@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
       next: (response: SessionInformation) => {
         this.sessionService.logIn(response);
         this.snackBar.open('Welcome back !', '', { duration: 3000 });
-        this.router.navigate(['/']);
+        this.router.navigate(['/me']);
       },
       error: (error) => {
         this.onError = true;

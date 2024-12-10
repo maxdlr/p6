@@ -10,6 +10,7 @@ import { MatButtonToggle } from '@angular/material/button-toggle';
 import { provideHttpClient } from '@angular/common/http';
 import { AuthModule } from './pages/auth/auth.module';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { ButtonComponent } from './components/atom/button/button.component';
 
 const mats = [MatButtonModule, MatButtonToggle];
 
@@ -22,6 +23,7 @@ const mats = [MatButtonModule, MatButtonToggle];
     NgOptimizedImage,
     AuthModule,
     ...mats,
+    ButtonComponent,
   ],
   providers: [
     provideHttpClient(),

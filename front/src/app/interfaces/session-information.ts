@@ -1,7 +1,10 @@
+import { User } from './user';
+
 export interface SessionInformation {
+  id: number;
   token: string;
   type: string;
-  id: number;
   email: string;
   username: string;
+  user: User;
 }

@@ -14,8 +14,21 @@ export class ButtonComponent implements OnInit {
   @Input() type!: 'button' | 'reset' | 'submit';
   @Output() clicked: EventEmitter<void> = new EventEmitter<void>();
   @Input() route?: string;
+  matType!: string;
 
   ngOnInit() {
     this.label = _.upperFirst(this.label);
+    this.defineButtonMatType();
+  }
+
+  defineButtonMatType(): void {
+    switch (this.color) {
+      case 'primary':
+        this.matType = 'mat-flat-button';
+        break;
+      case 'secondary':
+        this.matType = 'mat-stroked-button';
+        break;
+    }
   }
 }

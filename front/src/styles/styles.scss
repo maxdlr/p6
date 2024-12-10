@@ -32,6 +32,8 @@ html {
   @include mat.button-overrides((
     filled-container-shape: 10px,
     filled-label-text-weight: bold,
+    outlined-container-shape: 10px,
+    outlined-label-text-weight: bold,
   ));
   @include mat.form-field-overrides((
     outlined-container-shape: 10px,
