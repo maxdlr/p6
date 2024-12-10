@@ -1,25 +1,30 @@
 package com.openclassrooms.mddapi.mapper;
 
-import com.openclassrooms.mddapi.dto.ArticleDto;
-import com.openclassrooms.mddapi.models.Article;
-import com.openclassrooms.mddapi.models.Theme;
-import com.openclassrooms.mddapi.models.User;
-import com.openclassrooms.mddapi.repository.ThemeRepository;
-import com.openclassrooms.mddapi.repository.UserRepository;
+import static com.openclassrooms.mddapi.TestUtils.makeArticle;
+import static com.openclassrooms.mddapi.TestUtils.makeArticleDto;
+import static com.openclassrooms.mddapi.TestUtils.makeTheme;
+import static com.openclassrooms.mddapi.TestUtils.makeUser;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static com.openclassrooms.mddapi.TestUtils.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import com.openclassrooms.mddapi.dto.ArticleDto;
+import com.openclassrooms.mddapi.models.Article;
+import com.openclassrooms.mddapi.models.Theme;
+import com.openclassrooms.mddapi.models.User;
+import com.openclassrooms.mddapi.repository.ThemeRepository;
+import com.openclassrooms.mddapi.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class ArticleMapperTests {

@@ -1,0 +1,9 @@
+@if (route) {
+  <a [href]="route" [color]="color" [type]="type" mat-icon-button>
+    <mat-icon>{{ icon }}</mat-icon>
+  </a>
+} @else {
+  <button [color]="color" [type]="type" mat-icon-button>
+    <mat-icon>{{ icon }}</mat-icon>
+  </button>
+}
