@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 @Component({
   selector: 'app-button',
+  standalone: true,
   imports: [MatButton, MatAnchor],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',

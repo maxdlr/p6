@@ -21,7 +21,7 @@ const mats = [MatButtonModule, MatButtonToggle];
     AppRoutingModule,
     BrowserAnimationsModule,
     NgOptimizedImage,
-    AuthModule,
+    // AuthModule,
     ...mats,
     ButtonComponent,
   ],

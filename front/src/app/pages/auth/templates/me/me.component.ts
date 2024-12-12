@@ -6,7 +6,7 @@ import { User } from '../../../../interfaces/user';
 
 @Component({
   selector: 'app-me',
-  imports: [],
+  standalone: false,
   templateUrl: './me.component.html',
   styleUrl: './me.component.scss',
 })
