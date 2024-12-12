@@ -1,1 +1,30 @@
-<p>me works!</p>
+<app-auth-base title="profil utilisateur">
+  <form (ngSubmit)="submit()" [formGroup]="form" class="flex flex-col justify-center items-center">
+
+    <mat-form-field>
+      <mat-label>Username</mat-label>
+
+      <input
+        autocomplete="username"
+        formControlName="username"
+        matInput
+        type="text">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input
+        autocomplete
+        formControlName="email"
+        matInput
+        placeholder="Ex. pat@example.com"
+        type="email">
+      <mat-error *ngIf="form.controls['email'].hasError('email')">
+        L'adresse email doit être valide
+      </mat-error>
+    </mat-form-field>
+
+    <app-button (clicked)="submit()" label="enregistrer" type="submit" />
+  </form>
+  <app-button (clicked)="logOut()" color="secondary" label="se deconnecter" />
+</app-auth-base>

@@ -17,7 +17,10 @@ export class SessionService {
       this.sessionInformation = jwtDecode<SessionInformation>(token);
       this.isLogged = true;
       this.next();
+      console.log('online');
     }
+
+    console.log(localStorage);
   }
 
   public $isLogged(): Observable<boolean> {
