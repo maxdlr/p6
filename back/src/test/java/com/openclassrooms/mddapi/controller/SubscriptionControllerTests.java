@@ -49,7 +49,7 @@ public class SubscriptionControllerTests {
   @Test
   public void testSubscribe() throws Exception {
     Theme theme = makeTheme(1);
-    User user = makeUser(1);
+    User user = makeUser(1, false);
 
     SubscriptionRequest subscriptionRequest = new SubscriptionRequest();
     subscriptionRequest.setUserId(user.getId()).setThemeId(theme.getId());
@@ -118,7 +118,7 @@ public class SubscriptionControllerTests {
   @Test
   public void testUnsubscribe() throws Exception {
     Theme theme = makeTheme(1);
-    User user = makeUser(1);
+    User user = makeUser(1, false);
     SubscriptionRequest subscriptionRequest = new SubscriptionRequest();
     subscriptionRequest.setUserId(user.getId()).setThemeId(theme.getId());
 

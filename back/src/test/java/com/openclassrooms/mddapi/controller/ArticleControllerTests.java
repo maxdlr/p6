@@ -52,7 +52,7 @@ public class ArticleControllerTests {
 
   @Test
   public void testAddArticle() throws Exception {
-    User user = makeUser(1);
+    User user = makeUser(1, false);
     Theme theme = makeTheme(1);
     Article article = makeArticle(1, theme, user);
     ArticleDto articleDto = new ArticleDto();
@@ -115,7 +115,7 @@ public class ArticleControllerTests {
 
   @Test
   public void testGetArticleById() throws Exception {
-    User user = makeUser(1);
+    User user = makeUser(1, false);
     Theme theme = makeTheme(1);
     Article article = makeArticle(1, theme, user);
     ArticleDto articleDto = makeArticleDto(1, theme, user);
@@ -146,7 +146,7 @@ public class ArticleControllerTests {
 
   @Test
   public void testGetAllArticlesOfUserSubscriptions() throws Exception {
-    User author = makeUser(2);
+    User author = makeUser(2, false);
 
     List<Theme> userSubscriptionThemes = new ArrayList<>();
     List<Article> articles = new ArrayList<>();
@@ -166,7 +166,7 @@ public class ArticleControllerTests {
     }
 
     List<Subscription> userSubscriptions = new ArrayList<>();
-    User user = makeUser(1);
+    User user = makeUser(1, false);
 
     for (int i = 0; i < userSubscriptionThemes.size() - 1; i++) {
       Subscription subscription = makeSubscription(i, userSubscriptionThemes.get(i), user);
@@ -191,7 +191,7 @@ public class ArticleControllerTests {
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound());
 
-    User unsubscribedUser = makeUser(3);
+    User unsubscribedUser = makeUser(3, false);
     when(userRepository.findById(3L)).thenReturn(Optional.of(unsubscribedUser));
 
     String emptyListResponseBody =

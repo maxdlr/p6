@@ -1,10 +1,8 @@
 package com.openclassrooms.mddapi.models;
 
-import com.openclassrooms.mddapi.repository.ThemeRepository;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;

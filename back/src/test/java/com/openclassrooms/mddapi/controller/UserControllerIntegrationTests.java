@@ -6,7 +6,6 @@ import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.payload.request.LoginRequest;
 import com.openclassrooms.mddapi.repository.UserRepository;
-import org.apache.catalina.realm.UserDatabaseRealm;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,73 +14,122 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
-import static com.openclassrooms.mddapi.TestUtils.makeUser;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+import static com.openclassrooms.mddapi.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class UserControllerIntegrationTests {
-    @LocalServerPort
-    private int port;
+  @LocalServerPort private int port;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+  @Autowired private TestRestTemplate restTemplate;
 
-    @Autowired
-    private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
-    private String baseUrl;
-    private String jwtToken;
+  @Autowired private PasswordEncoder passwordEncoder;
 
-    private User authenticatedUser;
+  private String baseUrl;
+  private String jwtToken;
 
-    @BeforeEach()
-    public void setUp() throws JsonProcessingException {
-        baseUrl = "http://localhost:" + port + "/api/users";
-        jwtToken = getJwtToken();
-    }
+  private User authenticatedUser;
 
-    private String getJwtToken() throws JsonProcessingException {
-        authenticatedUser = makeUser(1, true);
-        userRepository.save(authenticatedUser);
+  @BeforeEach()
+  public void setUp() throws JsonProcessingException {
+    baseUrl = "http://localhost:" + port + "/api/users";
+    jwtToken = getJwtToken();
+  }
 
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail(authenticatedUser.getEmail());
-        loginRequest.setPassword("password1");
+  private String getJwtToken() throws JsonProcessingException {
+    authenticatedUser = makeUser(1, true);
+    userRepository.save(authenticatedUser);
 
-        ResponseEntity<String> loginResponse = restTemplate.postForEntity("http://localhost:" + port + "/api/auth/login", loginRequest, String.class);
-        assertEquals(HttpStatusCode.valueOf(200), loginResponse.getStatusCode());
+    LoginRequest loginRequest = new LoginRequest();
+    loginRequest.setEmail(authenticatedUser.getEmail());
+    loginRequest.setPassword("password1");
 
-        String responseBody = loginResponse.getBody();
-        assert responseBody != null;
+    ResponseEntity<String> loginResponse =
+        restTemplate.postForEntity(
+            "http://localhost:" + port + "/api/auth/login", loginRequest, String.class);
+    assertEquals(HttpStatusCode.valueOf(200), loginResponse.getStatusCode());
 
-        return new ObjectMapper().readTree(responseBody).get("token").asText();
-    }
+    String responseBody = loginResponse.getBody();
+    assert responseBody != null;
 
-    @AfterEach
-    public void tearDown() {
-        userRepository.deleteAll();
-    }
+    return new ObjectMapper().readTree(responseBody).get("token").asText();
+  }
 
-    private HttpHeaders createHeadersWithToken() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + jwtToken);
-        return headers;
-    }
+  @AfterEach
+  public void tearDown() {
+    userRepository.deleteAll();
+  }
 
-    @Test
-    public void testGetUserById() {
-        HttpEntity<UserDto> httpEntity = new HttpEntity<>(createHeadersWithToken());
-        User user = makeUser(2, true);
-        userRepository.save(user);
+  private HttpHeaders createHeadersWithToken() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", "Bearer " + jwtToken);
+    return headers;
+  }
 
-        ResponseEntity<UserDto> response = restTemplate
-                .exchange(baseUrl + "/" + user.getId(), HttpMethod.GET, httpEntity, UserDto.class);
+  @Test
+  public void testGetUserById() {
+    HttpEntity<UserDto> httpEntity = new HttpEntity<>(createHeadersWithToken());
 
-        System.out.println(response.getBody());
+    User user = new User();
+    user.setUsername("username")
+        .setPassword(passwordEncoder.encode("password"))
+        .setEmail("email@email.com")
+        .setCreatedAt(LocalDateTime.now());
 
+    userRepository.save(user);
 
-    }
+    ResponseEntity<UserDto> response =
+        restTemplate.exchange(
+            baseUrl + "/" + user.getId(), HttpMethod.GET, httpEntity, UserDto.class);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals(user.getId(), Objects.requireNonNull(response.getBody()).getId());
+    assertInstanceOf(UserDto.class, response.getBody());
+
+    ResponseEntity<UserDto> badRequestResponse =
+        restTemplate.exchange(baseUrl + "/undefined", HttpMethod.GET, httpEntity, UserDto.class);
+
+    assertEquals(HttpStatus.BAD_REQUEST, badRequestResponse.getStatusCode());
+
+    ResponseEntity<UserDto> notFoundRequestResponse =
+        restTemplate.exchange(baseUrl + "/5", HttpMethod.GET, httpEntity, UserDto.class);
+
+    assertEquals(HttpStatus.NOT_FOUND, notFoundRequestResponse.getStatusCode());
+  }
+
+  @Test
+  public void testUpdateUser() {
+    UserDto userDto = new UserDto();
+    userDto.setUsername("newUsername");
+
+    HttpEntity<UserDto> httpEntity = new HttpEntity<>(userDto, createHeadersWithToken());
+
+    ResponseEntity<UserDto> response =
+        restTemplate.exchange(
+            baseUrl + "/" + authenticatedUser.getId(), HttpMethod.PUT, httpEntity, UserDto.class);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals(authenticatedUser.getId(), Objects.requireNonNull(response.getBody()).getId());
+    assertEquals("newUsername", response.getBody().getUsername());
+
+    ResponseEntity<UserDto> notFoundRequestResponse =
+        restTemplate.exchange(baseUrl + "/999999999", HttpMethod.PUT, httpEntity, UserDto.class);
+
+    assertEquals(HttpStatus.NOT_FOUND, notFoundRequestResponse.getStatusCode());
+
+    ResponseEntity<UserDto> badRequestResponse =
+        restTemplate.exchange(baseUrl + "/undefined", HttpMethod.PUT, httpEntity, UserDto.class);
+
+    assertEquals(HttpStatus.BAD_REQUEST, badRequestResponse.getStatusCode());
+  }
 }

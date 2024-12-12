@@ -43,7 +43,7 @@ class ArticleMapperTests {
 
   @Test
   void testToEntity() {
-    User user = makeUser(1);
+    User user = makeUser(1, false);
     Theme theme = makeTheme(1);
     ArticleDto articleDto = makeArticleDto(1, theme, user);
 
@@ -62,7 +62,7 @@ class ArticleMapperTests {
 
   @Test
   void testToDto() {
-    User user = makeUser(1);
+    User user = makeUser(1, false);
     Theme theme = makeTheme(1);
     Article article = makeArticle(1, theme, user);
 
@@ -81,7 +81,7 @@ class ArticleMapperTests {
     List<ArticleDto> dtoList = new ArrayList<>();
 
     for (int i = 0; i < 10; i++) {
-      User user = makeUser(1);
+      User user = makeUser(1, false);
       Theme theme = makeTheme(1);
       ArticleDto articleDto = makeArticleDto(1, theme, user);
       dtoList.add(articleDto);
@@ -101,7 +101,7 @@ class ArticleMapperTests {
     List<Article> entityList = new ArrayList<>();
 
     for (int i = 0; i < 10; i++) {
-      User user = makeUser(1);
+      User user = makeUser(1, false);
       Theme theme = makeTheme(1);
       Article article = makeArticle(1, theme, user);
       entityList.add(article);
