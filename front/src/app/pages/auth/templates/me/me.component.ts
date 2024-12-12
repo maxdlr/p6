@@ -26,7 +26,12 @@ export class MeComponent implements OnInit {
   public ngOnInit(): void {
     this.userService
       .getById(this.sessionService.sessionInformation!.id)
-      .subscribe((user: User) => (this.user = user));
+      .subscribe({
+        next: (user: User) => {
+          this.user = user;
+          console.log(user);
+        },
+      });
 
     console.log(this.user);
 
@@ -47,6 +52,9 @@ export class MeComponent implements OnInit {
             duration: 3000,
           });
           this.user = response;
+        },
+        error: (error) => {
+          console.error(error);
         },
       });
   }

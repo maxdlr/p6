@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
 
   public submit(): void {
     const loginRequest = this.form.value as LoginRequest;
-    console.log(loginRequest);
+    console.log('loginRequest:', loginRequest);
     this.authService.login(loginRequest).subscribe({
       next: (response: SessionInformation) => {
         this.sessionService.logIn(response);

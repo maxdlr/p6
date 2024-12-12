@@ -1,11 +1,17 @@
 package com.openclassrooms.mddapi.controller;
 
+import static com.openclassrooms.mddapi.TestUtils.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.payload.request.LoginRequest;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import java.time.LocalDateTime;
+import java.util.Objects;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,13 +22,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.time.LocalDateTime;
-import java.util.Objects;
-
-import static com.openclassrooms.mddapi.TestUtils.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -47,7 +46,13 @@ public class UserControllerIntegrationTests {
   }
 
   private String getJwtToken() throws JsonProcessingException {
-    authenticatedUser = makeUser(1, true);
+    authenticatedUser = new User();
+    authenticatedUser
+        .setUsername("username1")
+        .setPassword(passwordEncoder.encode("password1"))
+        .setEmail("email@email.com1")
+        .setCreatedAt(LocalDateTime.now());
+
     userRepository.save(authenticatedUser);
 
     LoginRequest loginRequest = new LoginRequest();
@@ -102,7 +107,7 @@ public class UserControllerIntegrationTests {
     assertEquals(HttpStatus.BAD_REQUEST, badRequestResponse.getStatusCode());
 
     ResponseEntity<UserDto> notFoundRequestResponse =
-        restTemplate.exchange(baseUrl + "/5", HttpMethod.GET, httpEntity, UserDto.class);
+        restTemplate.exchange(baseUrl + "/681420685", HttpMethod.GET, httpEntity, UserDto.class);
 
     assertEquals(HttpStatus.NOT_FOUND, notFoundRequestResponse.getStatusCode());
   }
