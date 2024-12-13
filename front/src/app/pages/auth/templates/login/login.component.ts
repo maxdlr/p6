@@ -10,7 +10,6 @@ import { AuthService } from '../../services/auth.service';
 import { SessionInformation } from '../../../../interfaces/session-information';
 import { SessionService } from '../../../../services/session.service';
 import { LoginRequest } from '../../interfaces/login-request';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -20,13 +19,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
-  public hide = true;
   public onError = false;
   form!: FormGroup;
   private authService = inject(AuthService);
   private router = inject(Router);
   private sessionService = inject(SessionService);
-  private snackBar = inject(MatSnackBar);
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -40,7 +37,6 @@ export class LoginComponent implements OnInit {
     this.authService.login(loginRequest).subscribe({
       next: (response: SessionInformation) => {
         this.sessionService.logIn(response);
-        this.snackBar.open('Welcome back !', '', { duration: 3000 });
         this.router.navigate(['/me']);
       },
       error: (error) => {

@@ -5,7 +5,7 @@ import { UserService } from '../../../../services/user.service';
 import { User } from '../../../../interfaces/user';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserEditRequest } from '../../interfaces/user-edit-request';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackService } from '../../../../services/snack.service';
 
 @Component({
   selector: 'app-me',
@@ -19,7 +19,7 @@ export class MeComponent implements OnInit {
   private router = inject(Router);
   private sessionService = inject(SessionService);
   private userService = inject(UserService);
-  private snackBar = inject(MatSnackBar);
+  private snack = inject(SnackService);
 
   public ngOnInit(): void {
     this.form = new FormGroup({
@@ -46,9 +46,8 @@ export class MeComponent implements OnInit {
       .$edit(this.sessionService.sessionInformation!.id, userEditRequest)
       .subscribe({
         next: (response: User) => {
-          this.snackBar.open('Account information edited successfully', '', {
-            duration: 3000,
-          });
+          this.snack.inform('Informations modifiée');
+
           this.user = response;
           this.form.controls['email'].setValue(this.user.email);
           this.form.controls['username'].setValue(this.user.username);
@@ -61,9 +60,7 @@ export class MeComponent implements OnInit {
 
   public logOut(): void {
     this.sessionService.logOut();
-    this.snackBar.open('Bye !', '', {
-      duration: 3000,
-    });
+    this.snack.inform('A bientôt!');
     this.router.navigate(['/']);
   }
 }

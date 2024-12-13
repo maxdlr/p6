@@ -21,7 +21,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipInput } from '@angular/material/chips';
 import { RegisterComponent } from './templates/register/register.component';
 import { AuthBaseComponent } from './components/auth-base/auth-base.component';
-import { BaseComponent } from '../../components/atom/base/base.component';
+import { BaseComponent } from '../../components/base/base.component';
 import { MeComponent } from './templates/me/me.component';
 
 const mats = [
