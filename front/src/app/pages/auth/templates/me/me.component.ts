@@ -24,18 +24,21 @@ export class MeComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
 
   public ngOnInit(): void {
+    this.form = new FormGroup({
+      email: new FormControl('', [Validators.email]),
+      username: new FormControl(''),
+    });
+
     this.userService
       .$getById(this.sessionService.sessionInformation!.id)
       .subscribe({
         next: (user: User) => {
           this.user = user;
+
+          this.form.controls['email'].setValue(this.user.email);
+          this.form.controls['username'].setValue(this.user.username);
         },
       });
-
-    this.form = new FormGroup({
-      email: new FormControl('', [Validators.email]),
-      username: new FormControl(''),
-    });
   }
 
   public submit(): void {

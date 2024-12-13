@@ -17,6 +17,6 @@ export class UserService {
   }
 
   public $edit(id: number, payload: UserEditRequest): Observable<User> {
-    return this.httpClient.patch<User>(`${this.pathService}/${id}`, payload);
+    return this.httpClient.put<User>(`${this.pathService}/${id}`, payload);
   }
 }

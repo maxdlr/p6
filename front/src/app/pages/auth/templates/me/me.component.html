@@ -5,7 +5,6 @@
       <mat-label>Username</mat-label>
 
       <input
-        autocomplete="username"
         formControlName="username"
         matInput
         type="text">
@@ -14,7 +13,6 @@
     <mat-form-field>
       <mat-label>Email</mat-label>
       <input
-        autocomplete
         formControlName="email"
         matInput
         placeholder="Ex. pat@example.com"
@@ -25,6 +23,8 @@
     </mat-form-field>
 
     <app-button (clicked)="submit()" label="enregistrer" type="submit" />
+    <app-button (clicked)="logOut()" color="secondary" label="se deconnecter" type="button" />
   </form>
-  <app-button (clicked)="logOut()" color="secondary" label="se deconnecter" type="button" />
+
+
 </app-auth-base>
