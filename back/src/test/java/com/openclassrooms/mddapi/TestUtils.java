@@ -18,11 +18,8 @@ import java.time.LocalDateTime;
 @Service
 public class TestUtils {
 
-    //    @Autowired
-    private static PasswordEncoder passwordEncoder;
-
     public static User makeUser(Integer id, Boolean encoded) {
-        passwordEncoder = new BCryptPasswordEncoder();
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         User user = new User();
         user.setId((long) id)
                 .setUsername("username" + id)

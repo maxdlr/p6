@@ -8,6 +8,7 @@ import com.openclassrooms.mddapi.payload.response.MessageResponse;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.security.jwt.JwtUtils;
 import com.openclassrooms.mddapi.security.services.UserDetailsImpl;
+import com.openclassrooms.mddapi.service.UserService;
 import jakarta.validation.Valid;
 
 import java.time.LocalDateTime;
@@ -28,30 +29,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     public AuthController(
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager,
-            JwtUtils jwtUtils) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+            JwtUtils jwtUtils,
+            UserService userService
+    ) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
-
-        Optional<User> user = userRepository.findByEmail(loginRequest.getEmail());
-
-        if (user.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        User user = userService.findUser(loginRequest);
 
         Authentication authentication =
                 authenticationManager.authenticate(
@@ -64,29 +58,12 @@ public class AuthController {
 
         return ResponseEntity.ok(
                 new JwtResponse(
-                        jwt, userDetails.getId(), userDetails.getUsername(), user.get().getUsername()));
+                        jwt, userDetails.getId(), userDetails.getUsername(), user.getUsername()));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody SignUpRequest signUpRequest) {
-        try {
-            if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-                return ResponseEntity.badRequest().body(new MessageResponse("Email already exists"));
-            }
-
-            String password = passwordEncoder.encode(signUpRequest.getPassword());
-            User user = new User();
-            user.setUsername(signUpRequest.getUsername())
-                    .setEmail(signUpRequest.getEmail())
-                    .setPassword(password)
-                    .setCreatedAt(LocalDateTime.now())
-            ;
-
-            userRepository.save(user);
-
-            return ResponseEntity.ok().body(new MessageResponse("User registered successfully"));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
-        }
+    public ResponseEntity<?> register(@Valid @RequestBody SignUpRequest signUpRequest) {
+        userService.saveUser(signUpRequest);
+        return ResponseEntity.ok().body(new MessageResponse("User registered successfully"));
     }
 }
