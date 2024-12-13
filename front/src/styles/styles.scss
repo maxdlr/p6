@@ -34,6 +34,8 @@ html {
     filled-label-text-weight: bold,
     outlined-container-shape: 10px,
     outlined-label-text-weight: bold,
+    text-container-shape: 10px,
+    text-label-text-weight: bold,
   ));
   @include mat.form-field-overrides((
     outlined-container-shape: 10px,

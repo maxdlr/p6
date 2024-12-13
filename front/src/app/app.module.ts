@@ -10,7 +10,6 @@ import { MatButtonToggle } from '@angular/material/button-toggle';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AuthModule } from './pages/auth/auth.module';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
-import { ButtonComponent } from './components/atom/button/button.component';
 import { jwtInterceptor } from './interceptors/jwt.interceptor';
 
 const mats = [MatButtonModule, MatButtonToggle];
@@ -22,9 +21,7 @@ const mats = [MatButtonModule, MatButtonToggle];
     AppRoutingModule,
     BrowserAnimationsModule,
     NgOptimizedImage,
-    // AuthModule,
     ...mats,
-    ButtonComponent,
     AuthModule,
   ],
   providers: [

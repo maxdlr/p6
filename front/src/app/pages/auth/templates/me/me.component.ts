@@ -4,8 +4,6 @@ import { SessionService } from '../../../../services/session.service';
 import { UserService } from '../../../../services/user.service';
 import { User } from '../../../../interfaces/user';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { LoginRequest } from '../../interfaces/login-request';
-import { SessionInformation } from '../../../../interfaces/session-information';
 import { UserEditRequest } from '../../interfaces/user-edit-request';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -52,6 +50,8 @@ export class MeComponent implements OnInit {
             duration: 3000,
           });
           this.user = response;
+          this.form.controls['email'].setValue(this.user.email);
+          this.form.controls['username'].setValue(this.user.username);
         },
         error: (error) => {
           console.error(error);
@@ -61,6 +61,9 @@ export class MeComponent implements OnInit {
 
   public logOut(): void {
     this.sessionService.logOut();
+    this.snackBar.open('Bye !', '', {
+      duration: 3000,
+    });
     this.router.navigate(['/']);
   }
 }
