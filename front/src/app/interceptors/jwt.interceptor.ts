@@ -16,8 +16,5 @@ export function jwtInterceptor(
       },
     });
   }
-
-  console.log(request);
-
   return next(request);
 }

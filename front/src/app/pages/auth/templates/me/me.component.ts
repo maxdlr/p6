@@ -29,11 +29,8 @@ export class MeComponent implements OnInit {
       .subscribe({
         next: (user: User) => {
           this.user = user;
-          console.log(user);
         },
       });
-
-    console.log(this.user);
 
     this.form = new FormGroup({
       email: new FormControl('', [Validators.email]),
@@ -45,7 +42,7 @@ export class MeComponent implements OnInit {
     const userEditRequest = this.form.value as UserEditRequest;
 
     this.userService
-      .edit(this.sessionService.sessionInformation!.id, userEditRequest)
+      .$edit(this.sessionService.sessionInformation!.id, userEditRequest)
       .subscribe({
         next: (response: User) => {
           this.snackBar.open('Account information edited successfully', '', {
@@ -60,7 +57,6 @@ export class MeComponent implements OnInit {
   }
 
   public logOut(): void {
-    console.log('logging out');
     this.sessionService.logOut();
     this.router.navigate(['/']);
   }

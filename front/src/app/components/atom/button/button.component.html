@@ -3,14 +3,14 @@
     @if (route) {
       <a [href]="route" [color]="color" [type]="type" mat-flat-button>{{ label }}</a>
     } @else {
-      <button [color]="color" [type]="type" mat-flat-button>{{ label }}</button>
+      <button (click)="clicked.emit()" [color]="color" [type]="type" mat-flat-button>{{ label }}</button>
     }
   }
   @case ('secondary') {
     @if (route) {
       <a [href]="route" [color]="color" [type]="type" mat-stroked-button>{{ label }}</a>
     } @else {
-      <button [color]="color" [type]="type" mat-stroked-button>{{ label }}</button>
+      <button (click)="clicked.emit()" [color]="color" [type]="type" mat-stroked-button>{{ label }}</button>
     }
   }
 }
