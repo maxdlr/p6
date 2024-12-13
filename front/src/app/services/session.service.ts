@@ -12,15 +12,16 @@ export class SessionService {
   private isLoggedSubject = new BehaviorSubject<boolean>(this.isLogged);
 
   constructor() {
-    const token = localStorage.getItem('token');
-    if (token && !this.isTokenExpired(token)) {
-      this.sessionInformation = jwtDecode<SessionInformation>(token);
-      this.isLogged = true;
-      this.next();
-      console.log('online');
-    }
+    const session: string | null = sessionStorage.getItem('sessionInformation');
 
-    console.log(localStorage);
+    if (session) {
+      this.sessionInformation = JSON.parse(session);
+
+      if (!this.isTokenExpired(this.sessionInformation?.token as string)) {
+        this.isLogged = true;
+        this.next();
+      }
+    }
   }
 
   public $isLogged(): Observable<boolean> {
@@ -28,14 +29,17 @@ export class SessionService {
   }
 
   public logIn(sessionInformation: SessionInformation): void {
-    localStorage.setItem('token', sessionInformation.token);
+    sessionStorage.setItem(
+      'sessionInformation',
+      JSON.stringify(sessionInformation),
+    );
     this.sessionInformation = sessionInformation;
     this.isLogged = true;
     this.next();
   }
 
   public logOut(): void {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('sessionInformation');
     this.sessionInformation = undefined;
     this.isLogged = false;
     this.next();

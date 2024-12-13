@@ -12,7 +12,7 @@ export class UserService {
   private pathService = environment.apiUrl + 'users';
   private httpClient = inject(HttpClient);
 
-  public getById(id: number): Observable<User> {
+  public $getById(id: number): Observable<User> {
     return this.httpClient.get<User>(`${this.pathService}/${id}`);
   }
 

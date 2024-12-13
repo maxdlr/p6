@@ -25,7 +25,7 @@ export class MeComponent implements OnInit {
 
   public ngOnInit(): void {
     this.userService
-      .getById(this.sessionService.sessionInformation!.id)
+      .$getById(this.sessionService.sessionInformation!.id)
       .subscribe({
         next: (user: User) => {
           this.user = user;

@@ -7,10 +7,11 @@ import { HomeComponent } from './pages/home/home.component';
 import { NgOptimizedImage } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggle } from '@angular/material/button-toggle';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AuthModule } from './pages/auth/auth.module';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { ButtonComponent } from './components/atom/button/button.component';
+import { jwtInterceptor } from './interceptors/jwt.interceptor';
 
 const mats = [MatButtonModule, MatButtonToggle];
 
@@ -24,9 +25,10 @@ const mats = [MatButtonModule, MatButtonToggle];
     // AuthModule,
     ...mats,
     ButtonComponent,
+    AuthModule,
   ],
   providers: [
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([jwtInterceptor])),
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: { floatLabel: 'auto', appearance: 'outline' },
