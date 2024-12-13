@@ -46,7 +46,7 @@ public class UserControllerTests {
   @Test
   public void testReadUserById() throws Exception {
     UserDto userDto = makeUserDto(1);
-    User user = makeUser(1);
+    User user = makeUser(1, false);
 
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     when(userMapper.toDto(any(User.class))).thenReturn(userDto);
@@ -73,7 +73,7 @@ public class UserControllerTests {
 
   @Test
   public void testUpdateUser() throws Exception {
-    User user = makeUser(1);
+    User user = makeUser(1, false);
     UserDto putRequest =
         new UserDto().setEmail("edited-email@email.com").setUsername("edited-username");
     User editUser =
@@ -96,7 +96,6 @@ public class UserControllerTests {
     when(authentication.getPrincipal()).thenReturn(userDetails);
 
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-    when(userMapper.toEntity(putRequest)).thenReturn(user);
     when(userRepository.save(any(User.class))).thenReturn(editUser);
     when(userMapper.toDto(any(User.class))).thenReturn(putResponseBody);
 

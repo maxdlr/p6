@@ -1,10 +1,44 @@
 /* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@import 'src/styles/_theme-colors.scss';
 
-html,
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
-  height: 100%;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
 }
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+html {
+  color-scheme: light dark;
+  @include mat.theme((
+    color: (
+      primary: $primary-palette,
+      tertiary: $tertiary-palette,
+      theme-type: light,
+    ),
+    typography: (
+      plain-family: Roboto,
+      brand-family: Open Sans,
+      bold-weight: 900,
+      medium-weight: 500,
+      regular-weight: 300,
+    ),
+    density: -2,
+  ));
+  @include mat.button-overrides((
+    filled-container-shape: 10px,
+    filled-label-text-weight: bold,
+    outlined-container-shape: 10px,
+    outlined-label-text-weight: bold,
+    text-container-shape: 10px,
+    text-label-text-weight: bold,
+  ));
+  @include mat.form-field-overrides((
+    outlined-container-shape: 10px,
+  ))
 }
+
+

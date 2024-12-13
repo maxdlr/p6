@@ -6,6 +6,8 @@ import lombok.experimental.Accessors;
 
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Accessors(chain = true)
 public class SignUpRequest {
   @NotBlank

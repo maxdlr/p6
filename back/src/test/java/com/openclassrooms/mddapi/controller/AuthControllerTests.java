@@ -55,7 +55,7 @@ public class AuthControllerTests {
     UserDetailsImpl userDetails =
         new UserDetailsImpl(1L, loginRequest.getEmail(), loginRequest.getPassword());
 
-    when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.of(makeUser(1)));
+    when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.of(makeUser(1, false)));
     when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
         .thenReturn(authentication);
     when(authentication.getPrincipal()).thenReturn(userDetails);
@@ -94,7 +94,7 @@ public class AuthControllerTests {
 
   @Test
   public void testRegisterUser() throws Exception {
-    User user = makeUser(1);
+    User user = makeUser(1, false);
 
     when(userRepository.save(any(User.class))).thenReturn(user);
 

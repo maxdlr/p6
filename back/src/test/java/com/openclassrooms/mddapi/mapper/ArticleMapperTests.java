@@ -1,25 +1,30 @@
 package com.openclassrooms.mddapi.mapper;
 
-import com.openclassrooms.mddapi.dto.ArticleDto;
-import com.openclassrooms.mddapi.models.Article;
-import com.openclassrooms.mddapi.models.Theme;
-import com.openclassrooms.mddapi.models.User;
-import com.openclassrooms.mddapi.repository.ThemeRepository;
-import com.openclassrooms.mddapi.repository.UserRepository;
+import static com.openclassrooms.mddapi.TestUtils.makeArticle;
+import static com.openclassrooms.mddapi.TestUtils.makeArticleDto;
+import static com.openclassrooms.mddapi.TestUtils.makeTheme;
+import static com.openclassrooms.mddapi.TestUtils.makeUser;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static com.openclassrooms.mddapi.TestUtils.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import com.openclassrooms.mddapi.dto.ArticleDto;
+import com.openclassrooms.mddapi.models.Article;
+import com.openclassrooms.mddapi.models.Theme;
+import com.openclassrooms.mddapi.models.User;
+import com.openclassrooms.mddapi.repository.ThemeRepository;
+import com.openclassrooms.mddapi.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class ArticleMapperTests {
@@ -38,7 +43,7 @@ class ArticleMapperTests {
 
   @Test
   void testToEntity() {
-    User user = makeUser(1);
+    User user = makeUser(1, false);
     Theme theme = makeTheme(1);
     ArticleDto articleDto = makeArticleDto(1, theme, user);
 
@@ -57,7 +62,7 @@ class ArticleMapperTests {
 
   @Test
   void testToDto() {
-    User user = makeUser(1);
+    User user = makeUser(1, false);
     Theme theme = makeTheme(1);
     Article article = makeArticle(1, theme, user);
 
@@ -76,7 +81,7 @@ class ArticleMapperTests {
     List<ArticleDto> dtoList = new ArrayList<>();
 
     for (int i = 0; i < 10; i++) {
-      User user = makeUser(1);
+      User user = makeUser(1, false);
       Theme theme = makeTheme(1);
       ArticleDto articleDto = makeArticleDto(1, theme, user);
       dtoList.add(articleDto);
@@ -96,7 +101,7 @@ class ArticleMapperTests {
     List<Article> entityList = new ArrayList<>();
 
     for (int i = 0; i < 10; i++) {
-      User user = makeUser(1);
+      User user = makeUser(1, false);
       Theme theme = makeTheme(1);
       Article article = makeArticle(1, theme, user);
       entityList.add(article);

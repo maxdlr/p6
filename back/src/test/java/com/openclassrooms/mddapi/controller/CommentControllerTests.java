@@ -45,7 +45,7 @@ public class CommentControllerTests {
   @Test
   public void testAddCommentToArticle() throws Exception {
     Theme theme = makeTheme(1);
-    User user = makeUser(1);
+    User user = makeUser(1, false);
     Article article = makeArticle(1, theme, user);
 
     CommentDto commentDto = new CommentDto();

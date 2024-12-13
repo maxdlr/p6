@@ -37,7 +37,7 @@ public class ArticleServiceTests {
 
   @Test
   void getAllArticlesOfUser() {
-    User user = makeUser(1);
+    User user = makeUser(1, false);
     Theme theme = makeTheme(1);
     List<Article> articleList = new ArrayList<>();
     List<ArticleDto> articleDtoList = new ArrayList<>();
