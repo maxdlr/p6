@@ -15,4 +15,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
   Optional<Subscription> findByUserAndTheme(User user, Theme theme);
 
   void removeById(Long id);
+
+  boolean existsByUserIdAndThemeId(Long userId, Long themeId);
 }
