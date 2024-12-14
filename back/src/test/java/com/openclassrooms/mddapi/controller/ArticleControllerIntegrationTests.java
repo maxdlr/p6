@@ -1,12 +1,13 @@
 package com.openclassrooms.mddapi.controller;
 
+import static com.openclassrooms.mddapi.TestUtils.createHeadersWithToken;
+import static com.openclassrooms.mddapi.TestUtils.getAuthenticatedUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.mddapi.dto.ArticleDto;
 import com.openclassrooms.mddapi.models.*;
-import com.openclassrooms.mddapi.payload.request.LoginRequest;
 import com.openclassrooms.mddapi.repository.ArticleRepository;
 import com.openclassrooms.mddapi.repository.SubscriptionRepository;
 import com.openclassrooms.mddapi.repository.ThemeRepository;
@@ -39,7 +40,6 @@ public class ArticleControllerIntegrationTests {
   @Autowired private PasswordEncoder passwordEncoder;
 
   private String baseUrl;
-  private String jwtToken;
 
   private User authenticatedUser;
   @Autowired private ThemeRepository themeRepository;
@@ -48,32 +48,7 @@ public class ArticleControllerIntegrationTests {
   @BeforeEach()
   public void setUp() throws JsonProcessingException {
     baseUrl = "http://localhost:" + port + "/api/articles";
-    jwtToken = getJwtToken();
-  }
-
-  private String getJwtToken() throws JsonProcessingException {
-    authenticatedUser = new User();
-    authenticatedUser
-        .setUsername("username1")
-        .setPassword(passwordEncoder.encode("password1"))
-        .setEmail("email@email.com1")
-        .setCreatedAt(LocalDateTime.now());
-
-    userRepository.save(authenticatedUser);
-
-    LoginRequest loginRequest = new LoginRequest();
-    loginRequest.setEmail(authenticatedUser.getEmail());
-    loginRequest.setPassword("password1");
-
-    ResponseEntity<String> loginResponse =
-        restTemplate.postForEntity(
-            "http://localhost:" + port + "/api/auth/login", loginRequest, String.class);
-    assertEquals(HttpStatusCode.valueOf(200), loginResponse.getStatusCode());
-
-    String responseBody = loginResponse.getBody();
-    assert responseBody != null;
-
-    return new ObjectMapper().readTree(responseBody).get("token").asText();
+    authenticatedUser = getAuthenticatedUser(passwordEncoder, userRepository);
   }
 
   @AfterEach
@@ -84,14 +59,8 @@ public class ArticleControllerIntegrationTests {
     themeRepository.deleteAll();
   }
 
-  private HttpHeaders createHeadersWithToken() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Authorization", "Bearer " + jwtToken);
-    return headers;
-  }
-
   @Test
-  public void testCreateArticle() {
+  public void testCreateArticle() throws JsonProcessingException {
     Theme theme = new Theme();
     theme.setName("name").setCreatedAt(LocalDateTime.now());
     themeRepository.save(theme);
@@ -103,7 +72,7 @@ public class ArticleControllerIntegrationTests {
         .setContent("content")
         .setAuthorId(authenticatedUser.getId());
 
-    HttpEntity<ArticleDto> httpEntity = new HttpEntity<>(articleDto, createHeadersWithToken());
+    HttpEntity<ArticleDto> httpEntity = new HttpEntity<>(articleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     ResponseEntity<?> response = restTemplate.postForEntity(baseUrl, httpEntity, String.class);
 
@@ -111,7 +80,7 @@ public class ArticleControllerIntegrationTests {
 
     articleDto.setThemeId(96325L);
     HttpEntity<ArticleDto> themeNotFoundHttpEntity =
-        new HttpEntity<>(articleDto, createHeadersWithToken());
+        new HttpEntity<>(articleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     ResponseEntity<?> themeNotFoundResponse =
         restTemplate.postForEntity(baseUrl, themeNotFoundHttpEntity, String.class);
@@ -120,7 +89,7 @@ public class ArticleControllerIntegrationTests {
 
     articleDto.setAuthorId(96325L);
     HttpEntity<ArticleDto> authorNotFoundHttpEntity =
-        new HttpEntity<>(articleDto, createHeadersWithToken());
+        new HttpEntity<>(articleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     ResponseEntity<?> authorNotFoundResponse =
         restTemplate.postForEntity(baseUrl, authorNotFoundHttpEntity, String.class);
@@ -131,7 +100,7 @@ public class ArticleControllerIntegrationTests {
     articleDto.setAuthorId(authenticatedUser.getId());
     articleDto.setThemeId(theme.getId());
     HttpEntity<ArticleDto> badRequestHttpEntity =
-        new HttpEntity<>(badRequestArticleDto, createHeadersWithToken());
+        new HttpEntity<>(badRequestArticleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
     ResponseEntity<?> badRequestResponse =
         restTemplate.postForEntity(baseUrl, badRequestHttpEntity, String.class);
 
@@ -139,8 +108,8 @@ public class ArticleControllerIntegrationTests {
   }
 
   @Test
-  public void testGetArticleById() {
-    HttpEntity<?> httpEntity = new HttpEntity<>(createHeadersWithToken());
+  public void testGetArticleById() throws JsonProcessingException {
+    HttpEntity<?> httpEntity = new HttpEntity<>(createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     Theme theme = new Theme();
     theme.setName("name").setCreatedAt(LocalDateTime.now());
@@ -176,7 +145,7 @@ public class ArticleControllerIntegrationTests {
 
   @Test
   public void testFindArticlesOfUser() throws IOException {
-    HttpEntity<List<ArticleDto>> httpEntity = new HttpEntity<>(createHeadersWithToken());
+    HttpEntity<List<ArticleDto>> httpEntity = new HttpEntity<>(createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     Theme theme = new Theme();
     theme.setName("name").setCreatedAt(LocalDateTime.now());

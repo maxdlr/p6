@@ -38,19 +38,20 @@ public class SubscriptionService {
 
       if (subscriptionRepository.existsByUserIdAndThemeId(
           subscriptionRequest.getUserId(), subscriptionRequest.getThemeId())) {
-        throw new ApiResourceNotFoundException("User already subscribed");
+        throw new ApiBadPostRequestException("User already subscribed");
       }
 
       Subscription subscription = new Subscription();
       subscription.setTheme(theme);
       subscription.setUser(user);
       subscription.setCreatedAt(LocalDateTime.now());
+      subscriptionRepository.save(subscription);
     } catch (IllegalArgumentException e) {
       throw new ApiBadPostRequestException(e.getMessage());
     }
   }
 
-  public void UnsubscribeUserFromTheme(SubscriptionRequest subscriptionRequest) {
+  public void unsubscribeUserFromTheme(SubscriptionRequest subscriptionRequest) {
     HashMap<String, Object> validated = validateUserAndTheme(subscriptionRequest);
     User user = (User) validated.get("user");
     Theme theme = (Theme) validated.get("theme");

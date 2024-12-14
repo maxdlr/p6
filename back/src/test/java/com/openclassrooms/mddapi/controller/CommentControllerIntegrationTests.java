@@ -1,14 +1,14 @@
 package com.openclassrooms.mddapi.controller;
 
+import static com.openclassrooms.mddapi.TestUtils.createHeadersWithToken;
+import static com.openclassrooms.mddapi.TestUtils.getAuthenticatedUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.mddapi.dto.CommentDto;
 import com.openclassrooms.mddapi.models.Article;
 import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
-import com.openclassrooms.mddapi.payload.request.LoginRequest;
 import com.openclassrooms.mddapi.repository.ArticleRepository;
 import com.openclassrooms.mddapi.repository.CommentRepository;
 import com.openclassrooms.mddapi.repository.ThemeRepository;
@@ -37,7 +37,6 @@ public class CommentControllerIntegrationTests {
   @Autowired private PasswordEncoder passwordEncoder;
 
   private String baseUrl;
-  private String jwtToken;
 
   private User authenticatedUser;
   @Autowired private UserRepository userRepository;
@@ -48,32 +47,7 @@ public class CommentControllerIntegrationTests {
   @BeforeEach()
   public void setUp() throws JsonProcessingException {
     baseUrl = "http://localhost:" + port + "/api/comments";
-    jwtToken = getJwtToken();
-  }
-
-  private String getJwtToken() throws JsonProcessingException {
-    authenticatedUser = new User();
-    authenticatedUser
-        .setUsername("username1")
-        .setPassword(passwordEncoder.encode("password1"))
-        .setEmail("email@email.com1")
-        .setCreatedAt(LocalDateTime.now());
-
-    userRepository.save(authenticatedUser);
-
-    LoginRequest loginRequest = new LoginRequest();
-    loginRequest.setEmail(authenticatedUser.getEmail());
-    loginRequest.setPassword("password1");
-
-    ResponseEntity<String> loginResponse =
-        restTemplate.postForEntity(
-            "http://localhost:" + port + "/api/auth/login", loginRequest, String.class);
-    assertEquals(HttpStatusCode.valueOf(200), loginResponse.getStatusCode());
-
-    String responseBody = loginResponse.getBody();
-    assert responseBody != null;
-
-    return new ObjectMapper().readTree(responseBody).get("token").asText();
+    authenticatedUser = getAuthenticatedUser(passwordEncoder, userRepository);
   }
 
   @AfterEach
@@ -84,14 +58,8 @@ public class CommentControllerIntegrationTests {
     userRepository.deleteAll();
   }
 
-  private HttpHeaders createHeadersWithToken() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Authorization", "Bearer " + jwtToken);
-    return headers;
-  }
-
   @Test
-  public void testAddComment() {
+  public void testAddComment() throws JsonProcessingException {
     Theme theme = new Theme();
     theme.setName("theme168541").setCreatedAt(LocalDateTime.now());
     themeRepository.save(theme);
@@ -111,7 +79,8 @@ public class CommentControllerIntegrationTests {
     commentDto.setArticleId(article.getId());
     commentDto.setCreatedAt(LocalDateTime.now());
 
-    HttpEntity<CommentDto> httpEntity = new HttpEntity<>(commentDto, createHeadersWithToken());
+    HttpEntity<CommentDto> httpEntity =
+        new HttpEntity<>(commentDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     ResponseEntity<String> response =
         restTemplate.exchange(baseUrl, HttpMethod.POST, httpEntity, String.class);

@@ -28,7 +28,7 @@ public class SubscriptionController {
   @PostMapping("/unsubscribe")
   public ResponseEntity<MessageResponse> unsubscribe(
       @RequestBody SubscriptionRequest subscriptionRequest) {
-    subscriptionService.UnsubscribeUserFromTheme(subscriptionRequest);
+    subscriptionService.unsubscribeUserFromTheme(subscriptionRequest);
     return ResponseEntity.ok().build();
   }
 }

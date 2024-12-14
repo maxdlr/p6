@@ -1,13 +1,13 @@
 package com.openclassrooms.mddapi.controller;
 
+import static com.openclassrooms.mddapi.TestUtils.createHeadersWithToken;
+import static com.openclassrooms.mddapi.TestUtils.getAuthenticatedUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.mddapi.models.Subscription;
 import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
-import com.openclassrooms.mddapi.payload.request.LoginRequest;
 import com.openclassrooms.mddapi.payload.request.SubscriptionRequest;
 import com.openclassrooms.mddapi.repository.ArticleRepository;
 import com.openclassrooms.mddapi.repository.SubscriptionRepository;
@@ -39,7 +39,6 @@ public class SubscriptionControllerIntegrationTests {
   @Autowired private PasswordEncoder passwordEncoder;
 
   private String baseUrl;
-  private String jwtToken;
 
   private User authenticatedUser;
   @Autowired private ThemeRepository themeRepository;
@@ -48,32 +47,7 @@ public class SubscriptionControllerIntegrationTests {
   @BeforeEach()
   public void setUp() throws JsonProcessingException {
     baseUrl = "http://localhost:" + port + "/api/subscriptions";
-    jwtToken = getJwtToken();
-  }
-
-  private String getJwtToken() throws JsonProcessingException {
-    authenticatedUser = new User();
-    authenticatedUser
-        .setUsername("username1")
-        .setPassword(passwordEncoder.encode("password1"))
-        .setEmail("email@email.com1")
-        .setCreatedAt(LocalDateTime.now());
-
-    userRepository.save(authenticatedUser);
-
-    LoginRequest loginRequest = new LoginRequest();
-    loginRequest.setEmail(authenticatedUser.getEmail());
-    loginRequest.setPassword("password1");
-
-    ResponseEntity<String> loginResponse =
-        restTemplate.postForEntity(
-            "http://localhost:" + port + "/api/auth/login", loginRequest, String.class);
-    assertEquals(HttpStatusCode.valueOf(200), loginResponse.getStatusCode());
-
-    String responseBody = loginResponse.getBody();
-    assert responseBody != null;
-
-    return new ObjectMapper().readTree(responseBody).get("token").asText();
+    authenticatedUser = getAuthenticatedUser(passwordEncoder, userRepository);
   }
 
   @AfterEach
@@ -84,14 +58,8 @@ public class SubscriptionControllerIntegrationTests {
     themeRepository.deleteAll();
   }
 
-  private HttpHeaders createHeadersWithToken() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Authorization", "Bearer " + jwtToken);
-    return headers;
-  }
-
   @Test
-  public void testSubscribe() {
+  public void testSubscribe() throws JsonProcessingException {
     Theme theme = new Theme();
     theme.setName("name").setCreatedAt(LocalDateTime.now());
     themeRepository.save(theme);
@@ -101,7 +69,8 @@ public class SubscriptionControllerIntegrationTests {
     subscriptionRequest.setThemeId(theme.getId());
 
     HttpEntity<SubscriptionRequest> httpEntity =
-        new HttpEntity<>(subscriptionRequest, createHeadersWithToken());
+        new HttpEntity<>(
+            subscriptionRequest, createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     ResponseEntity<String> response =
         restTemplate.exchange(baseUrl + "/subscribe", HttpMethod.POST, httpEntity, String.class);
@@ -113,7 +82,9 @@ public class SubscriptionControllerIntegrationTests {
     userNotFoundSubscriptionRequest.setThemeId(theme.getId());
 
     HttpEntity<SubscriptionRequest> userNotFountHttpEntity =
-        new HttpEntity<>(userNotFoundSubscriptionRequest, createHeadersWithToken());
+        new HttpEntity<>(
+            userNotFoundSubscriptionRequest,
+            createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     ResponseEntity<String> userNotFoundResponse =
         restTemplate.exchange(
@@ -126,7 +97,9 @@ public class SubscriptionControllerIntegrationTests {
     themeNotFoundSubscriptionRequest.setThemeId(888L);
 
     HttpEntity<SubscriptionRequest> themeNotFountHttpEntity =
-        new HttpEntity<>(themeNotFoundSubscriptionRequest, createHeadersWithToken());
+        new HttpEntity<>(
+            themeNotFoundSubscriptionRequest,
+            createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     ResponseEntity<String> themeNotFoundResponse =
         restTemplate.exchange(
@@ -137,7 +110,9 @@ public class SubscriptionControllerIntegrationTests {
     SubscriptionRequest badRequestSubscriptionRequest = new SubscriptionRequest();
 
     HttpEntity<SubscriptionRequest> badRequesttHttpEntity =
-        new HttpEntity<>(badRequestSubscriptionRequest, createHeadersWithToken());
+        new HttpEntity<>(
+            badRequestSubscriptionRequest,
+            createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     ResponseEntity<String> badRequestResponse =
         restTemplate.exchange(
@@ -147,7 +122,7 @@ public class SubscriptionControllerIntegrationTests {
   }
 
   @Test
-  public void testUnsubscribe() {
+  public void testUnsubscribe() throws JsonProcessingException {
     Theme theme = new Theme();
     theme.setName("name").setCreatedAt(LocalDateTime.now());
     themeRepository.save(theme);
@@ -161,7 +136,8 @@ public class SubscriptionControllerIntegrationTests {
     subscriptionRequest.setThemeId(theme.getId());
 
     HttpEntity<SubscriptionRequest> httpEntity =
-        new HttpEntity<>(subscriptionRequest, createHeadersWithToken());
+        new HttpEntity<>(
+            subscriptionRequest, createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     ResponseEntity<String> response =
         restTemplate.exchange(baseUrl + "/unsubscribe", HttpMethod.POST, httpEntity, String.class);
@@ -173,7 +149,9 @@ public class SubscriptionControllerIntegrationTests {
     userNotFoundSubscriptionRequest.setThemeId(theme.getId());
 
     HttpEntity<SubscriptionRequest> userNotFountHttpEntity =
-        new HttpEntity<>(userNotFoundSubscriptionRequest, createHeadersWithToken());
+        new HttpEntity<>(
+            userNotFoundSubscriptionRequest,
+            createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     ResponseEntity<String> userNotFoundResponse =
         restTemplate.exchange(
@@ -186,7 +164,9 @@ public class SubscriptionControllerIntegrationTests {
     themeNotFoundSubscriptionRequest.setThemeId(888L);
 
     HttpEntity<SubscriptionRequest> themeNotFountHttpEntity =
-        new HttpEntity<>(themeNotFoundSubscriptionRequest, createHeadersWithToken());
+        new HttpEntity<>(
+            themeNotFoundSubscriptionRequest,
+            createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     ResponseEntity<String> themeNotFoundResponse =
         restTemplate.exchange(
@@ -197,7 +177,9 @@ public class SubscriptionControllerIntegrationTests {
     SubscriptionRequest badRequestSubscriptionRequest = new SubscriptionRequest();
 
     HttpEntity<SubscriptionRequest> badRequesttHttpEntity =
-        new HttpEntity<>(badRequestSubscriptionRequest, createHeadersWithToken());
+        new HttpEntity<>(
+            badRequestSubscriptionRequest,
+            createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     ResponseEntity<String> badRequestResponse =
         restTemplate.exchange(
