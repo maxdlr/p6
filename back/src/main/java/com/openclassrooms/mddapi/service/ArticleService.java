@@ -4,6 +4,7 @@ import com.openclassrooms.mddapi.dto.ArticleDto;
 import com.openclassrooms.mddapi.dto.CommentDto;
 import com.openclassrooms.mddapi.exception.ApiBadPostRequestException;
 import com.openclassrooms.mddapi.exception.ApiResourceNotFoundException;
+import com.openclassrooms.mddapi.exception.ValidationFailureException;
 import com.openclassrooms.mddapi.mapper.ArticleMapper;
 import com.openclassrooms.mddapi.mapper.CommentMapper;
 import com.openclassrooms.mddapi.models.Article;
@@ -17,7 +18,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -86,7 +86,7 @@ public class ArticleService {
       }
 
       return executeFindArticlesByUserQuery(user.get());
-    } catch (NumberFormatException e) {
+    } catch (ValidationFailureException e) {
       throw new ApiBadPostRequestException(e.getMessage());
     }
   }
@@ -103,7 +103,7 @@ public class ArticleService {
 
       Article article = articleMapper.toEntity(articleDto);
       articleRepository.save(article);
-    } catch (HttpMessageNotReadableException e) {
+    } catch (ValidationFailureException e) {
       throw new ApiBadPostRequestException(e.getMessage());
     }
   }
@@ -117,7 +117,7 @@ public class ArticleService {
       }
 
       return article.get();
-    } catch (NumberFormatException e) {
+    } catch (ValidationFailureException e) {
       throw new ApiBadPostRequestException(e.getMessage());
     }
   }

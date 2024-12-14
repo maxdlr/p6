@@ -14,6 +14,10 @@ export class SessionService {
   constructor() {
     const session: string | null = sessionStorage.getItem('sessionInformation');
 
+    //todo: use cookies rather than sessionStorage, get current token
+    //todo: await validate token from backend
+    // 200 ? carry on : isLogged = false;
+
     if (session) {
       this.sessionInformation = JSON.parse(session);
 

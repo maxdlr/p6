@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
@@ -14,6 +14,13 @@ export class SnackService {
   public inform(message: string) {
     this._snack.open(message, undefined, {
       duration: 3000,
+      verticalPosition: 'top',
+    });
+  }
+
+  public error(message: string) {
+    this._snack.open(message, 'OK', {
+      duration: 10000,
       verticalPosition: 'top',
     });
   }

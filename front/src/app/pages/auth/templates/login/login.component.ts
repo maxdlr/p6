@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
 import { SessionInformation } from '../../../../interfaces/session-information';
 import { SessionService } from '../../../../services/session.service';
 import { LoginRequest } from '../../interfaces/login-request';
+import { SnackService } from '../../../../services/snack.service';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ export class LoginComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private sessionService = inject(SessionService);
+  private snackService = inject(SnackService);
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -42,6 +44,7 @@ export class LoginComponent implements OnInit {
       error: (error) => {
         this.onError = true;
         console.error(error);
+        this.snackService.error(error.error.message);
       },
     });
   }

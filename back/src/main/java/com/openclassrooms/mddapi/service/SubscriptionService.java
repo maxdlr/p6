@@ -2,6 +2,7 @@ package com.openclassrooms.mddapi.service;
 
 import com.openclassrooms.mddapi.exception.ApiBadPostRequestException;
 import com.openclassrooms.mddapi.exception.ApiResourceNotFoundException;
+import com.openclassrooms.mddapi.exception.ValidationFailureException;
 import com.openclassrooms.mddapi.models.Subscription;
 import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
@@ -46,7 +47,7 @@ public class SubscriptionService {
       subscription.setUser(user);
       subscription.setCreatedAt(LocalDateTime.now());
       subscriptionRepository.save(subscription);
-    } catch (IllegalArgumentException e) {
+    } catch (ValidationFailureException e) {
       throw new ApiBadPostRequestException(e.getMessage());
     }
   }
