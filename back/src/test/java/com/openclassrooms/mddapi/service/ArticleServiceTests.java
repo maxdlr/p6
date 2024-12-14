@@ -2,16 +2,18 @@ package com.openclassrooms.mddapi.service;
 
 import static com.openclassrooms.mddapi.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.openclassrooms.mddapi.dto.ArticleDto;
+import com.openclassrooms.mddapi.dto.CommentDto;
 import com.openclassrooms.mddapi.exception.ApiBadPostRequestException;
 import com.openclassrooms.mddapi.exception.ApiResourceNotFoundException;
 import com.openclassrooms.mddapi.mapper.ArticleMapper;
 import com.openclassrooms.mddapi.mapper.CommentMapper;
 import com.openclassrooms.mddapi.models.Article;
+import com.openclassrooms.mddapi.models.Comment;
 import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.repository.ArticleRepository;
@@ -91,7 +93,7 @@ public class ArticleServiceTests {
   }
 
   @Test
-  public void testFindArticle() {
+  public void testFindArticleByString() {
     Theme theme = makeTheme(1);
     User author = makeUser(987, true);
     Article article = makeArticle(1, theme, author);
@@ -106,6 +108,24 @@ public class ArticleServiceTests {
 
     assertThrows(ApiResourceNotFoundException.class, () -> articleService.findArticle("7987"));
 
+    assertThrows(ApiBadPostRequestException.class, () -> articleService.findArticle("bad-request"));
+  }
+
+  @Test
+  public void testFindArticleByLong() {
+    Theme theme = makeTheme(1);
+    User author = makeUser(987, true);
+    Article article = makeArticle(1, theme, author);
+
+    when(articleRepository.findById(article.getId())).thenReturn(Optional.of(article));
+
+    Article articleByString = articleService.findArticle(article.getId());
+    Article articleByLong = articleService.findArticle(article.getId());
+
+    assertEquals(articleByString.getId(), article.getId());
+    assertEquals(articleByLong.getId(), article.getId());
+
+    assertThrows(ApiResourceNotFoundException.class, () -> articleService.findArticle(7987L));
     assertThrows(ApiBadPostRequestException.class, () -> articleService.findArticle("bad-request"));
   }
 
@@ -127,5 +147,40 @@ public class ArticleServiceTests {
 
     when(articleMapper.toEntity(articleDto)).thenReturn(article);
     articleService.save(articleDto);
+
+    verify(articleRepository).save(any(Article.class));
+
+    assertThrows(ApiResourceNotFoundException.class, () -> articleService.save(new ArticleDto()));
+  }
+
+  @Test
+  public void testAddCommentToArticle() {
+    User user = makeUser(1, true);
+    Theme theme = makeTheme(1);
+    Article article = new Article();
+    article.setId(1L).setAuthor(user).setTheme(theme).setContent("content").setTitle("title");
+
+    Comment comment = new Comment();
+    comment.setArticle(article).setAuthor(user).setContent("comment");
+
+    CommentDto commentDto = new CommentDto();
+    commentDto.setArticleId(article.getId()).setAuthorId(user.getId()).setContent("comment");
+
+    when(commentMapper.toEntity(commentDto)).thenReturn(comment);
+    when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+    when(articleRepository.findById(article.getId())).thenReturn(Optional.of(article));
+
+    articleService.addCommentToArticle(commentDto);
+
+    verify(commentRepository).save(any(Comment.class));
+
+    commentDto.setAuthorId(anyLong());
+    assertThrows(
+        ApiResourceNotFoundException.class, () -> articleService.addCommentToArticle(commentDto));
+
+    commentDto.setAuthorId(user.getId());
+    commentDto.setArticleId(anyLong());
+    assertThrows(
+        ApiResourceNotFoundException.class, () -> articleService.addCommentToArticle(commentDto));
   }
 }

@@ -1,12 +1,22 @@
 package com.openclassrooms.mddapi.service;
 
+import static com.openclassrooms.mddapi.TestUtils.makeUser;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.exception.ApiBadPostRequestException;
 import com.openclassrooms.mddapi.exception.ApiResourceNotFoundException;
+import com.openclassrooms.mddapi.exception.UnauthorizedAccessException;
 import com.openclassrooms.mddapi.models.User;
+import com.openclassrooms.mddapi.payload.request.LoginRequest;
 import com.openclassrooms.mddapi.payload.request.SignUpRequest;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.security.services.UserDetailsImpl;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,76 +28,85 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
-
-import static com.openclassrooms.mddapi.TestUtils.makeUser;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
-    @Mock
-    Authentication authentication;
-    private UserService userService;
-    @Mock
-    private UserRepository userRepository;
+  @Mock Authentication authentication;
+  private UserService userService;
+  @Mock private UserRepository userRepository;
 
-    @BeforeEach
-    public void setUp() {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        userService = new UserService(userRepository, passwordEncoder);
-    }
+  @BeforeEach
+  public void setUp() {
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    userService = new UserService(userRepository, passwordEncoder);
+  }
 
-    @Test
-    public void testFindUser() {
-        User user = makeUser(1, true);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+  @Test
+  public void testFindUserByString() {
+    User user = makeUser(1, true);
+    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        User foundUser = userService.findUser("1");
-        assertEquals(foundUser.getEmail(), user.getEmail());
+    User foundUser = userService.findUser("1");
+    assertEquals(foundUser.getEmail(), user.getEmail());
 
-        assertThrows(ApiResourceNotFoundException.class,
-                () -> userService.findUser("2"));
+    assertThrows(ApiResourceNotFoundException.class, () -> userService.findUser("2"));
 
-        assertThrows(ApiBadPostRequestException.class,
-                () -> userService.findUser("bad-request"));
-    }
+    assertThrows(ApiBadPostRequestException.class, () -> userService.findUser("bad-request"));
+  }
 
-    @Test
-    public void testSaveUser() {
-        SignUpRequest signUpRequest = new SignUpRequest(
-                "email@email.com1",
-                "username1",
-                "password1"
-        );
+  @Test
+  public void testFindUserByLoginRequest() {
+    User user = makeUser(1, true);
+    when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
-        userService.saveUser(signUpRequest);
-        verify(userRepository).save(any(User.class));
+    LoginRequest loginRequest = new LoginRequest();
+    loginRequest.setEmail(user.getEmail());
+    loginRequest.setPassword("password1");
 
-        SignUpRequest badRequest = new SignUpRequest();
+    User foundUser = userService.findUser(loginRequest);
+    assertEquals(foundUser.getEmail(), user.getEmail());
 
-        assertThrows(ApiBadPostRequestException.class, () -> userService.saveUser(badRequest));
-    }
+    assertThrows(ApiBadPostRequestException.class, () -> userService.findUser(new LoginRequest()));
 
-    @Test
-    public void testUpdateUser() {
-        UserDto userDto = new UserDto();
-        userDto.setEmail("edited-email@email.com");
-        User user = makeUser(98654, true);
+    when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.empty());
 
-        when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(user));
+    assertThrows(ApiResourceNotFoundException.class, () -> userService.findUser(loginRequest));
 
-        UserDetails userDetails = new UserDetailsImpl(user.getId(), user.getEmail(), user.getPassword());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        when(authentication.getPrincipal()).thenReturn(userDetails);
+    assertThrows(ApiBadPostRequestException.class, () -> userService.findUser("bad-request"));
+  }
 
-        User updatedUser = userService.updateUser(user.getId().toString(), userDto);
+  @Test
+  public void testSaveUser() {
+    SignUpRequest signUpRequest = new SignUpRequest("email@email.com1", "username1", "password1");
 
-        verify(userRepository).save(any(User.class));
+    userService.saveUser(signUpRequest);
+    verify(userRepository).save(any(User.class));
 
-        assertEquals(userDto.getEmail(), updatedUser.getEmail());
-    }
+    SignUpRequest badRequest = new SignUpRequest();
+
+    assertThrows(ApiBadPostRequestException.class, () -> userService.saveUser(badRequest));
+  }
+
+  @Test
+  public void testUpdateUser() {
+    UserDto userDto = new UserDto();
+    userDto.setEmail("edited-email@email.com");
+    User user = makeUser(98654, true);
+    User wrongUser = makeUser(654654, true);
+
+    when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+
+    UserDetails userDetails =
+        new UserDetailsImpl(user.getId(), user.getEmail(), user.getPassword());
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    when(authentication.getPrincipal()).thenReturn(userDetails);
+
+    User updatedUser = userService.updateUser(user.getId().toString(), userDto);
+
+    verify(userRepository).save(any(User.class));
+    assertEquals(userDto.getEmail(), updatedUser.getEmail());
+
+    assertThrows(
+        UnauthorizedAccessException.class,
+        () -> userService.updateUser(wrongUser.getId().toString(), userDto));
+  }
 }

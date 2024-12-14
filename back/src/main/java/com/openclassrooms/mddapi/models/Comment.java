@@ -1,7 +1,6 @@
 package com.openclassrooms.mddapi.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -10,7 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "ARTICLES")
+  @Table(name = "COMMENTS")
 @Data
 @Accessors(chain = true)
 @EntityListeners(AuditingEntityListener.class)

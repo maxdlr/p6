@@ -121,6 +121,12 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.12</version>
+                <configuration>
+                    <excludes>
+                        <exclude>/com/openclassrooms/mddapi/dto/*Dto.*</exclude>
+                        <exclude>/com/openclassrooms/mddapi/*MddApiApplication.*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>

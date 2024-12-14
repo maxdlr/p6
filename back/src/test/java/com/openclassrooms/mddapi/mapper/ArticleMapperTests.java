@@ -9,22 +9,20 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import com.openclassrooms.mddapi.dto.ArticleDto;
 import com.openclassrooms.mddapi.models.Article;
 import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.repository.ThemeRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class ArticleMapperTests {
@@ -79,11 +77,14 @@ class ArticleMapperTests {
   @Test
   void testToEntityList() {
     List<ArticleDto> dtoList = new ArrayList<>();
+    User user = makeUser(22, false);
+    Theme theme = makeTheme(23);
 
-    for (int i = 0; i < 10; i++) {
-      User user = makeUser(1, false);
-      Theme theme = makeTheme(1);
-      ArticleDto articleDto = makeArticleDto(1, theme, user);
+    when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+    when(themeRepository.findById(theme.getId())).thenReturn(Optional.of(theme));
+
+    for (int i = 1; i <= 10; i++) {
+      ArticleDto articleDto = makeArticleDto(i, theme, user);
       dtoList.add(articleDto);
     }
 
@@ -99,11 +100,11 @@ class ArticleMapperTests {
   @Test
   void testToDtoList() {
     List<Article> entityList = new ArrayList<>();
+    User user = makeUser(1, false);
+    Theme theme = makeTheme(1);
 
     for (int i = 0; i < 10; i++) {
-      User user = makeUser(1, false);
-      Theme theme = makeTheme(1);
-      Article article = makeArticle(1, theme, user);
+      Article article = makeArticle(i, theme, user);
       entityList.add(article);
     }
 
