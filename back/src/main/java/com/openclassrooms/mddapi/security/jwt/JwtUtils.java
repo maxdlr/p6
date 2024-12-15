@@ -1,24 +1,24 @@
 package com.openclassrooms.mddapi.security.jwt;
 
-import java.util.Date;
-
+import com.openclassrooms.mddapi.security.services.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import java.security.Key;
+import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.openclassrooms.mddapi.security.services.UserDetailsImpl;
-
 @Component
 public class JwtUtils {
   private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-  @Value("${oc.app.jwtSecret}")
-  private String jwtSecret;
+  //  @Value("${oc.app.jwtSecret}")
+  //  private String jwtSecret;
+  private final Key jwtSecret = Jwts.SIG.HS512.key().build();
 
   @Value("${oc.app.jwtExpirationMs}")
   private int jwtExpirationMs;
@@ -31,13 +31,13 @@ public class JwtUtils {
         .subject((userPrincipal.getUsername()))
         .issuedAt(new Date())
         .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
-        .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()), Jwts.SIG.HS512)
+        .signWith(jwtSecret)
         .compact();
   }
 
   public String getUserNameFromJwtToken(String token) {
     return Jwts.parser()
-        .verifyWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
+        .verifyWith(Keys.hmacShaKeyFor(jwtSecret.getEncoded()))
         .build()
         .parseSignedClaims(token)
         .getPayload()
@@ -46,9 +46,8 @@ public class JwtUtils {
 
   public boolean validateJwtToken(String authToken) {
     try {
-      byte[] secretKeyBytes = jwtSecret.getBytes();
       Jwts.parser()
-          .verifyWith(Keys.hmacShaKeyFor(secretKeyBytes))
+          .verifyWith(Keys.hmacShaKeyFor(jwtSecret.getEncoded()))
           .build()
           .parseSignedClaims(authToken);
       return true;

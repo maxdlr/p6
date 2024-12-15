@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { SessionService } from '../../../../services/session.service';
 import { RegisterRequest } from '../../interfaces/register-request';
 import { SessionInformation } from '../../../../interfaces/session-information';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackService } from '../../../../services/snack.service';
 
 @Component({
   selector: 'app-register',
@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private sessionService = inject(SessionService);
-  private snackBar = inject(MatSnackBar);
+  private snack = inject(SnackService);
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -44,7 +44,7 @@ export class RegisterComponent implements OnInit {
         this.authService.login(registerRequest).subscribe({
           next: (response: SessionInformation) => {
             this.sessionService.logIn(response);
-            this.snackBar.open('Welcome !', '', { duration: 3000 });
+            this.snack.inform('Welcome !');
             this.router.navigate(['/']);
           },
         });
@@ -52,6 +52,7 @@ export class RegisterComponent implements OnInit {
       error: (error) => {
         this.onError = true;
         console.error(error);
+        this.snack.error(error.error.message);
       },
     });
   }

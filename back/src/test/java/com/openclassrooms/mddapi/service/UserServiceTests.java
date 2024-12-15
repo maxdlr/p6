@@ -15,6 +15,7 @@ import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.payload.request.LoginRequest;
 import com.openclassrooms.mddapi.payload.request.SignUpRequest;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import com.openclassrooms.mddapi.security.jwt.JwtUtils;
 import com.openclassrooms.mddapi.security.services.UserDetailsImpl;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,11 +34,12 @@ public class UserServiceTests {
   @Mock Authentication authentication;
   private UserService userService;
   @Mock private UserRepository userRepository;
+  @Mock private JwtUtils jwtUtils;
 
   @BeforeEach
   public void setUp() {
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    userService = new UserService(userRepository, passwordEncoder);
+    userService = new UserService(userRepository, jwtUtils, passwordEncoder);
   }
 
   @Test

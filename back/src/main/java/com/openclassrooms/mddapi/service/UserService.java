@@ -1,14 +1,13 @@
 package com.openclassrooms.mddapi.service;
 
 import com.openclassrooms.mddapi.dto.UserDto;
-import com.openclassrooms.mddapi.exception.ApiBadPostRequestException;
-import com.openclassrooms.mddapi.exception.ApiResourceNotFoundException;
-import com.openclassrooms.mddapi.exception.UnauthorizedAccessException;
-import com.openclassrooms.mddapi.exception.ValidationFailureException;
+import com.openclassrooms.mddapi.exception.*;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.payload.request.LoginRequest;
 import com.openclassrooms.mddapi.payload.request.SignUpRequest;
+import com.openclassrooms.mddapi.payload.request.TokenValidationRequest;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import com.openclassrooms.mddapi.security.jwt.JwtUtils;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -20,12 +19,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
+  private final JwtUtils jwtUtils;
   UserRepository userRepository;
   PasswordEncoder passwordEncoder;
 
-  public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+  public UserService(
+      UserRepository userRepository, JwtUtils jwtUtils, PasswordEncoder passwordEncoder) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
+    this.jwtUtils = jwtUtils;
   }
 
   public User findUser(LoginRequest loginRequest) {
@@ -40,6 +42,15 @@ public class UserService {
       throw new ApiResourceNotFoundException("Cannot find User");
     }
 
+    return user.get();
+  }
+
+  public User findUserByEmail(String email) {
+    Optional<User> user = userRepository.findByEmail(jwtUtils.getUserNameFromJwtToken(email));
+
+    if (user.isEmpty()) {
+      throw new ApiResourceNotFoundException("User not found");
+    }
     return user.get();
   }
 
@@ -63,18 +74,26 @@ public class UserService {
       throw new ApiBadPostRequestException("Email already exists");
     }
 
-    try {
-      String password = passwordEncoder.encode(signUpRequest.getPassword());
-      User user = new User();
-      user.setUsername(signUpRequest.getUsername())
-          .setEmail(signUpRequest.getEmail())
-          .setPassword(password)
-          .setCreatedAt(LocalDateTime.now());
-
-      userRepository.save(user);
-    } catch (ValidationFailureException e) {
-      throw new ApiBadPostRequestException("Email, username or password missing");
+    if (signUpRequest.getEmail().isEmpty()) {
+      throw new ApiBadPostRequestException("Email missing");
     }
+
+    if (signUpRequest.getUsername().isEmpty()) {
+      throw new ApiBadPostRequestException("Username missing");
+    }
+
+    if (signUpRequest.getPassword().isEmpty()) {
+      throw new ApiBadPostRequestException("Password missing");
+    }
+
+    String password = passwordEncoder.encode(signUpRequest.getPassword());
+    User user = new User();
+    user.setUsername(signUpRequest.getUsername())
+        .setEmail(signUpRequest.getEmail())
+        .setPassword(password)
+        .setCreatedAt(LocalDateTime.now());
+
+    userRepository.save(user);
   }
 
   public User updateUser(String id, UserDto userDto) {
@@ -103,6 +122,14 @@ public class UserService {
       return updatedUser;
     } catch (ValidationFailureException e) {
       throw new ApiBadPostRequestException(e.getMessage());
+    }
+  }
+
+  public void validateUser(TokenValidationRequest tokenValidationRequest) {
+    boolean isTokenValid = jwtUtils.validateJwtToken(tokenValidationRequest.getToken());
+
+    if (!isTokenValid) {
+      throw new ExpiredJwtException("Session is expired");
     }
   }
 }
