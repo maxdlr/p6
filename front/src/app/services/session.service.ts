@@ -21,7 +21,6 @@ export class SessionService {
   private snackService = inject(SnackService);
 
   public $isLogged(): Observable<boolean> {
-    this.validateToken();
     return this.isLoggedSubject.asObservable();
   }
 
@@ -46,12 +45,12 @@ export class SessionService {
     this.next();
   }
 
-  private validateToken(): Subscription {
+  public $validateToken(): SessionService {
     const storedToken: string | undefined = this.cookieService.get('token');
 
-    console.log('storedToken', storedToken);
+    console.log('validating token', storedToken);
 
-    return this.authService
+    this.authService
       .me({ token: storedToken } as TokenValidationRequest)
       .subscribe({
         next: (user) => {
@@ -63,16 +62,19 @@ export class SessionService {
             id: user.id,
           };
 
+          console.log('token has been validated', this.sessionInformation);
+
           this.isLogged = true;
           this.next();
         },
         error: (error: any) => {
           this.sessionInformation = undefined;
           this.isLogged = false;
-          console.error(error.error.message);
+          console.error('token has been refused', error.error.message);
           this.snackService.error(error.error.message);
         },
       });
+    return this;
   }
 
   private next(): void {

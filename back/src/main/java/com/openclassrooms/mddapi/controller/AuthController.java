@@ -69,7 +69,11 @@ public class AuthController {
       @RequestBody TokenValidationRequest tokenValidationRequest) {
     userService.validateUser(tokenValidationRequest);
 
-    User user = userService.findUserByEmail(jwtUtils.getUserNameFromJwtToken(tokenValidationRequest.getToken()));
+    System.out.println(tokenValidationRequest);
+
+    User user =
+        userService.findUserByEmail(
+            jwtUtils.getUserNameFromJwtToken(tokenValidationRequest.getToken()));
 
     return ResponseEntity.ok(userMapper.toDto(user));
   }

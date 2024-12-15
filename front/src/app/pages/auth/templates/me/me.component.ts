@@ -22,16 +22,22 @@ export class MeComponent implements OnInit {
   private snack = inject(SnackService);
 
   public ngOnInit(): void {
+    console.log('mounting /me');
     this.form = new FormGroup({
       email: new FormControl('', [Validators.email]),
       username: new FormControl(''),
     });
 
+    console.log(
+      'fetching current logger, id: ' +
+        this.sessionService.sessionInformation!.id,
+    );
     this.userService
       .$getById(this.sessionService.sessionInformation!.id)
       .subscribe({
         next: (user: User) => {
           this.user = user;
+          console.log('user found:', this.user);
 
           this.form.controls['email'].setValue(this.user.email);
           this.form.controls['username'].setValue(this.user.username);
