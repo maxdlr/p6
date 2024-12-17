@@ -8,9 +8,7 @@ export function jwtInterceptor(
   request: HttpRequest<unknown>,
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> {
-  const token = inject(CookieService).get('token');
-
-  console.log('interceptor', token);
+  const token = inject(SessionService).sessionInformation?.token;
 
   if (inject(SessionService).isLogged) {
     request = request.clone({
@@ -19,5 +17,6 @@ export function jwtInterceptor(
       },
     });
   }
+
   return next(request);
 }

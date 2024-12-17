@@ -38,7 +38,6 @@ export class RegisterComponent implements OnInit {
 
   public submit(): void {
     const registerRequest = this.form.value as RegisterRequest;
-    console.log(registerRequest);
     this.authService.register(registerRequest).subscribe({
       next: () => {
         this.authService.login(registerRequest).subscribe({

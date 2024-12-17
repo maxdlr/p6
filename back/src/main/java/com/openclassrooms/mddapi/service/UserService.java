@@ -46,7 +46,10 @@ public class UserService {
   }
 
   public User findUserByEmail(String email) {
-    Optional<User> user = userRepository.findByEmail(jwtUtils.getUserNameFromJwtToken(email));
+    System.out.println(email);
+    Optional<User> user = userRepository.findByEmail(email);
+
+    System.out.println(user);
 
     if (user.isEmpty()) {
       throw new ApiResourceNotFoundException("User not found");
@@ -63,37 +66,46 @@ public class UserService {
       }
 
       return user.get();
-    } catch (ValidationFailureException e) {
+    } catch (ValidationFailureException | NumberFormatException e) {
       throw new ApiBadPostRequestException(e.getMessage());
     }
   }
 
   public void saveUser(SignUpRequest signUpRequest) {
-    Boolean isPresent = userRepository.existsByEmail(signUpRequest.getEmail());
-    if (isPresent) {
-      throw new ApiBadPostRequestException("Email already exists");
+    try {
+
+      if (signUpRequest.equals(new SignUpRequest())) {
+        throw new ApiBadPostRequestException("Request is empty");
+      }
+
+      Boolean isPresent = userRepository.existsByEmail(signUpRequest.getEmail());
+      if (isPresent) {
+        throw new ApiBadPostRequestException("Email already exists");
+      }
+
+      if (signUpRequest.getEmail() != null && signUpRequest.getEmail().isEmpty()) {
+        throw new ApiBadPostRequestException("Email missing");
+      }
+
+      if (signUpRequest.getUsername() != null && signUpRequest.getUsername().isEmpty()) {
+        throw new ApiBadPostRequestException("Username missing");
+      }
+
+      if (signUpRequest.getPassword() != null && signUpRequest.getPassword().isEmpty()) {
+        throw new ApiBadPostRequestException("Password missing");
+      }
+
+      String password = passwordEncoder.encode(signUpRequest.getPassword());
+      User user = new User();
+      user.setUsername(signUpRequest.getUsername())
+          .setEmail(signUpRequest.getEmail())
+          .setPassword(password)
+          .setCreatedAt(LocalDateTime.now());
+
+      userRepository.save(user);
+    } catch (ValidationFailureException | IllegalArgumentException e) {
+      throw new ApiBadPostRequestException(e.getMessage());
     }
-
-    if (signUpRequest.getEmail().isEmpty()) {
-      throw new ApiBadPostRequestException("Email missing");
-    }
-
-    if (signUpRequest.getUsername().isEmpty()) {
-      throw new ApiBadPostRequestException("Username missing");
-    }
-
-    if (signUpRequest.getPassword().isEmpty()) {
-      throw new ApiBadPostRequestException("Password missing");
-    }
-
-    String password = passwordEncoder.encode(signUpRequest.getPassword());
-    User user = new User();
-    user.setUsername(signUpRequest.getUsername())
-        .setEmail(signUpRequest.getEmail())
-        .setPassword(password)
-        .setCreatedAt(LocalDateTime.now());
-
-    userRepository.save(user);
   }
 
   public User updateUser(String id, UserDto userDto) {
@@ -120,7 +132,7 @@ public class UserService {
 
       userRepository.save(updatedUser);
       return updatedUser;
-    } catch (ValidationFailureException e) {
+    } catch (ValidationFailureException | NumberFormatException e) {
       throw new ApiBadPostRequestException(e.getMessage());
     }
   }

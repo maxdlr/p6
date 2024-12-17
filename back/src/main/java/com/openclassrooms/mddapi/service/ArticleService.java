@@ -86,7 +86,7 @@ public class ArticleService {
       }
 
       return executeFindArticlesByUserQuery(user.get());
-    } catch (ValidationFailureException e) {
+    } catch (ValidationFailureException | NumberFormatException e) {
       throw new ApiBadPostRequestException(e.getMessage());
     }
   }
@@ -103,7 +103,7 @@ public class ArticleService {
 
       Article article = articleMapper.toEntity(articleDto);
       articleRepository.save(article);
-    } catch (ValidationFailureException e) {
+    } catch (ValidationFailureException | NumberFormatException e) {
       throw new ApiBadPostRequestException(e.getMessage());
     }
   }
@@ -117,7 +117,7 @@ public class ArticleService {
       }
 
       return article.get();
-    } catch (ValidationFailureException e) {
+    } catch (ValidationFailureException | NumberFormatException e) {
       throw new ApiBadPostRequestException(e.getMessage());
     }
   }
