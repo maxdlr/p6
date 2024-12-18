@@ -3,6 +3,8 @@ package com.openclassrooms.mddapi.exception;
 import com.openclassrooms.mddapi.payload.response.ErrorMessageResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -14,6 +16,27 @@ public class ApiExceptionHandler {
       ApiResourceNotFoundException exception) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(new ErrorMessageResponse(exception.getMessage(), HttpStatus.NOT_FOUND));
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<Object> handleIllegalArgumentException(
+      ApiBadPostRequestException exception) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(new ErrorMessageResponse(exception.getMessage(), HttpStatus.BAD_REQUEST));
+  }
+
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public ResponseEntity<Object> handleHttpMessageNotReadableException(
+      ValidationFailureException exception) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(new ErrorMessageResponse(exception.getMessage(), HttpStatus.BAD_REQUEST));
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<Object> handleMethodArgumentNotValidException(
+      ValidationFailureException exception) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(new ErrorMessageResponse(exception.getMessage(), HttpStatus.BAD_REQUEST));
   }
 
   @ExceptionHandler(ApiBadPostRequestException.class)

@@ -2,14 +2,12 @@ package com.openclassrooms.mddapi.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "THEMES")
@@ -30,8 +28,6 @@ public class Theme {
   @NonNull
   @Size(max = 200)
   private String name;
-
-  @OneToMany private List<Article> articleList;
 
   @CreatedDate
   @Column(name = "created_at", updatable = false)

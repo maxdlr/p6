@@ -1,24 +1,21 @@
 package com.openclassrooms.mddapi.controller;
 
+import com.openclassrooms.mddapi.dto.UserDto;
+import com.openclassrooms.mddapi.mapper.UserMapper;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.payload.request.LoginRequest;
 import com.openclassrooms.mddapi.payload.request.SignUpRequest;
+import com.openclassrooms.mddapi.payload.request.TokenValidationRequest;
 import com.openclassrooms.mddapi.payload.response.JwtResponse;
 import com.openclassrooms.mddapi.payload.response.MessageResponse;
-import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.security.jwt.JwtUtils;
 import com.openclassrooms.mddapi.security.services.UserDetailsImpl;
-import jakarta.validation.Valid;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-
+import com.openclassrooms.mddapi.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,65 +25,56 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtils jwtUtils;
-    private final UserRepository userRepository;
+  private final AuthenticationManager authenticationManager;
+  private final JwtUtils jwtUtils;
+  private final UserService userService;
+  private final UserMapper userMapper;
 
-    public AuthController(
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager,
-            JwtUtils jwtUtils) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
-    }
+  public AuthController(
+      AuthenticationManager authenticationManager,
+      JwtUtils jwtUtils,
+      UserService userService,
+      UserMapper userMapper) {
+    this.authenticationManager = authenticationManager;
+    this.jwtUtils = jwtUtils;
+    this.userService = userService;
+    this.userMapper = userMapper;
+  }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
+  @PostMapping("/login")
+  public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    User user = userService.findUser(loginRequest);
 
-        Optional<User> user = userRepository.findByEmail(loginRequest.getEmail());
+    Authentication authentication =
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                loginRequest.getEmail(), loginRequest.getPassword()));
 
-        if (user.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    String jwt = jwtUtils.generateJwtToken(authentication);
+    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                loginRequest.getEmail(), loginRequest.getPassword()));
+    return ResponseEntity.ok(
+        new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), user.getUsername()));
+  }
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+  @PostMapping("/register")
+  public ResponseEntity<?> register(@RequestBody SignUpRequest signUpRequest) {
+    userService.saveUser(signUpRequest);
+    return ResponseEntity.ok().body(new MessageResponse("User registered successfully"));
+  }
 
-        return ResponseEntity.ok(
-                new JwtResponse(
-                        jwt, userDetails.getId(), userDetails.getUsername(), user.get().getUsername()));
-    }
+  @PostMapping("/me")
+  public ResponseEntity<UserDto> validateToken(
+      @RequestBody TokenValidationRequest tokenValidationRequest) {
+    userService.validateUser(tokenValidationRequest);
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody SignUpRequest signUpRequest) {
-        try {
-            if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-                return ResponseEntity.badRequest().body(new MessageResponse("Email already exists"));
-            }
+    System.out.println(tokenValidationRequest);
 
-            String password = passwordEncoder.encode(signUpRequest.getPassword());
-            User user = new User();
-            user.setUsername(signUpRequest.getUsername())
-                    .setEmail(signUpRequest.getEmail())
-                    .setPassword(password)
-                    .setCreatedAt(LocalDateTime.now())
-            ;
+    User user =
+        userService.findUserByEmail(
+            jwtUtils.getUserNameFromJwtToken(tokenValidationRequest.getToken()));
 
-            userRepository.save(user);
-
-            return ResponseEntity.ok().body(new MessageResponse("User registered successfully"));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
-        }
-    }
+    return ResponseEntity.ok(userMapper.toDto(user));
+  }
 }

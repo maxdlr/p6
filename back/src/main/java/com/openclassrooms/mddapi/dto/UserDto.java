@@ -1,16 +1,11 @@
 package com.openclassrooms.mddapi.dto;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
@@ -20,20 +15,20 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class UserDto {
-  private Long id;
+    private Long id;
 
-  @Size(max = 50)
-  @Email
-  private String email;
+    @Size(max = 50)
+    @Email
+    private String email;
 
-  @Size(max = 20)
-  private String username;
+    @Size(max = 20)
+    private String username;
 
-  @JsonIgnore
-  @Size(max = 120)
-  private String password;
+    @JsonIgnore
+    @Size(max = 120)
+    private String password;
 
-  private LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
-  private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 }

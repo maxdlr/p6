@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SessionInformation } from '../interfaces/session-information';
-import { jwtDecode } from 'jwt-decode';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,18 +10,16 @@ export class SessionService {
   public isLogged = false;
   public sessionInformation: SessionInformation | undefined;
   private isLoggedSubject = new BehaviorSubject<boolean>(this.isLogged);
+  private cookieService = inject(CookieService);
 
   constructor() {
-    const session: string | null = sessionStorage.getItem('sessionInformation');
-
-    if (session) {
-      this.sessionInformation = JSON.parse(session);
-
-      if (!this.isTokenExpired(this.sessionInformation?.token as string)) {
-        this.isLogged = true;
-        this.next();
-      }
+    const cookie: string = this.cookieService.get('current-session');
+    const cookieObject = cookie.length === 0 ? undefined : JSON.parse(cookie);
+    if (cookieObject) {
+      this.isLogged = true;
+      this.sessionInformation = cookieObject;
     }
+    this.next();
   }
 
   public $isLogged(): Observable<boolean> {
@@ -29,17 +27,18 @@ export class SessionService {
   }
 
   public logIn(sessionInformation: SessionInformation): void {
-    sessionStorage.setItem(
-      'sessionInformation',
+    this.cookieService.set(
+      'current-session',
       JSON.stringify(sessionInformation),
     );
+
     this.sessionInformation = sessionInformation;
     this.isLogged = true;
     this.next();
   }
 
   public logOut(): void {
-    sessionStorage.removeItem('sessionInformation');
+    this.cookieService.delete('current-session');
     this.sessionInformation = undefined;
     this.isLogged = false;
     this.next();
@@ -47,11 +46,5 @@ export class SessionService {
 
   private next(): void {
     this.isLoggedSubject.next(this.isLogged);
-  }
-
-  private isTokenExpired(token: string): boolean {
-    const decodedToken: any = jwtDecode(token);
-    const now = Math.floor(Date.now() / 1000);
-    return decodedToken.exp < now;
   }
 }

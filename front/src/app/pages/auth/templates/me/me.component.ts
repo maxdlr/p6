@@ -32,7 +32,6 @@ export class MeComponent implements OnInit {
       .subscribe({
         next: (user: User) => {
           this.user = user;
-
           this.form.controls['email'].setValue(this.user.email);
           this.form.controls['username'].setValue(this.user.username);
         },
@@ -41,6 +40,8 @@ export class MeComponent implements OnInit {
 
   public submit(): void {
     const userEditRequest = this.form.value as UserEditRequest;
+
+    //todo: authenticate to authorize email change, so backend can regenerate new token.
 
     this.userService
       .$edit(this.sessionService.sessionInformation!.id, userEditRequest)

@@ -17,4 +17,11 @@ export class SnackService {
       verticalPosition: 'top',
     });
   }
+
+  public error(message: string) {
+    this._snack.open(message, 'OK', {
+      duration: 10000,
+      verticalPosition: 'top',
+    });
+  }
 }
