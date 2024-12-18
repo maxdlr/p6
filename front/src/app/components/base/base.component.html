@@ -1,4 +1,30 @@
 <mat-toolbar>
   <img alt="logo" height="50" ngSrc="/assets/logo_p6.png" priority width="86">
+  <div class="example-sidenav-content">
+    <!--    <button (click)="snav.toggle()" mat-button type="button">-->
+    <!--      Toggle sidenav-->
+    <!--    </button>-->
+    {{ isMobile }}
+    <button (click)="snav.toggle()" aria-label="Example icon-button with menu icon" class="example-icon"
+            mat-icon-button>
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
 </mat-toolbar>
-<ng-content />
+<mat-sidenav-container autosize class="example-container">
+
+
+  <mat-sidenav #snav class="example-sidenav" mode="side">
+    <mat-nav-list>
+      @for (navigationItem of navigation; track navigationItem) {
+        <a mat-list-item [routerLink]="navigationItem.url">{{ navigationItem.label }}</a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+
+  <mat-sidenav-content>
+    <ng-content />
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
