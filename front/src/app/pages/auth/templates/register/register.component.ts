@@ -43,8 +43,8 @@ export class RegisterComponent implements OnInit {
         this.authService.login(registerRequest).subscribe({
           next: (response: SessionInformation) => {
             this.sessionService.logIn(response);
-            this.snack.inform('Welcome !');
-            this.router.navigate(['/']);
+            this.snack.inform("Account created! Here's your account.");
+            this.router.navigate(['/me']);
           },
         });
       },
