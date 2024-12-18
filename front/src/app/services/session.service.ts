@@ -15,8 +15,10 @@ export class SessionService {
   constructor() {
     const cookie: string = this.cookieService.get('current-session');
     const cookieObject = cookie.length === 0 ? undefined : JSON.parse(cookie);
-    this.isLogged = cookie.length !== 0;
-    this.sessionInformation = cookieObject;
+    if (cookieObject) {
+      this.isLogged = true;
+      this.sessionInformation = cookieObject;
+    }
     this.next();
   }
 
@@ -25,13 +27,10 @@ export class SessionService {
   }
 
   public logIn(sessionInformation: SessionInformation): void {
-    this.cookieService.delete('current-session');
     this.cookieService.set(
       'current-session',
-      JSON.stringify(this.sessionInformation),
+      JSON.stringify(sessionInformation),
     );
-
-    console.log(sessionInformation);
 
     this.sessionInformation = sessionInformation;
     this.isLogged = true;
