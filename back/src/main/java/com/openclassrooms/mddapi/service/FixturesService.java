@@ -40,7 +40,7 @@ public class FixturesService {
 
         for (int i = 0; i < number; i++) {
             Theme theme = new Theme();
-            theme.setName(this.faker.food().spice()).setDescription(this.faker.chuckNorris().fact());
+            theme.setName(this.faker.food().spice()).setDescription(this.faker.chuckNorris().fact() + " " + this.faker.lorem().paragraph());
             themes.add(theme);
         }
         themeRepository.saveAll(themes);
@@ -77,11 +77,13 @@ public class FixturesService {
             users.add(user);
         }
 
-        User dummy = new User();
-        dummy.setEmail("test@test.com")
-                .setUsername("test")
-                .setPassword(password);
-        users.add(dummy);
+        if (!userRepository.existsByEmail("test@test.com")) {
+            User dummy = new User();
+            dummy.setEmail("test@test.com")
+                    .setUsername("test")
+                    .setPassword(password);
+            users.add(dummy);
+        }
 
         userRepository.saveAll(users);
         return users;

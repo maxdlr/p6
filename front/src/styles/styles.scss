@@ -41,6 +41,9 @@ html {
   ));
   @include mat.sidenav-overrides((
     container-background-color: transparent
+  ));
+  @include mat.card-overrides((
+    outlined-container-shape: 10px
   ))
 }
 

@@ -3,7 +3,9 @@
     <button (click)="loadFixtures()" mat-button>Fix</button>
     <button (click)="removeFixtures()" mat-button>Del</button>
   </div>
-  <ng-content />
+  <section class="mx-4">
+    <ng-content />
+  </section>
 </ng-template>
 
 <app-mobile-menu *ngIf="isMobile">

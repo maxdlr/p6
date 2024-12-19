@@ -37,12 +37,12 @@ public class FixturesController {
     public ResponseEntity<MessageResponse> load() {
         try {
             List<User> users = fixturesService.createUsers(10);
-            List<Theme> themes = fixturesService.createThemes(10);
-            fixturesService.createArticles(10, themes.getFirst(), users.get(new Random().nextInt(10)));
+            List<Theme> themes = fixturesService.createThemes(20);
+            fixturesService.createArticles(20, themes.getFirst(), users.get(new Random().nextInt(10)));
 
-            for (int i = 0; i < 50; i++) {
-                fixturesService.createSubscription(users.get(new Random().nextInt(10)), themes.get(new Random().nextInt(10)));
-            }
+//            for (int i = 0; i < 50; i++) {
+//                fixturesService.createSubscription(users.get(new Random().nextInt(10)), themes.get(new Random().nextInt(10)));
+//            }
 
             return ResponseEntity.ok().body(new MessageResponse("Success Fixtures"));
         } catch (Exception e) {
