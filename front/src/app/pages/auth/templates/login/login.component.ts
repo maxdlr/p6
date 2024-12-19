@@ -11,6 +11,7 @@ import { SessionInformation } from '../../../../interfaces/session-information';
 import { SessionService } from '../../../../services/session.service';
 import { LoginRequest } from '../../interfaces/login-request';
 import { SnackService } from '../../../../services/snack.service';
+import _ from 'lodash';
 
 @Component({
   selector: 'app-login',
@@ -39,6 +40,9 @@ export class LoginComponent implements OnInit {
     this.authService.login(loginRequest).subscribe({
       next: (response: SessionInformation) => {
         this.sessionService.logIn(response);
+        this.snackService.inform(
+          `Bonjour ${_.upperFirst(response.username)} !`,
+        );
         this.router.navigate(['/me']);
       },
       error: (error) => {

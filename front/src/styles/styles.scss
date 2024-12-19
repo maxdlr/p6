@@ -38,6 +38,9 @@ html {
   ));
   @include mat.form-field-overrides((
     outlined-container-shape: 10px,
+  ));
+  @include mat.sidenav-overrides((
+    container-background-color: transparent
   ))
 }
 
