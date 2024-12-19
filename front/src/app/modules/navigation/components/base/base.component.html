@@ -1,4 +1,8 @@
 <ng-template #content>
+  <div class="mb-10">
+    <button (click)="loadFixtures()" mat-button>Fix</button>
+    <button (click)="removeFixtures()" mat-button>Del</button>
+  </div>
   <ng-content />
 </ng-template>
 

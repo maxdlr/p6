@@ -10,6 +10,7 @@ import { NavigationItem } from '../../../../interfaces/navigation-item';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { FixturesService } from '../../../../services/fixtures.service';
 
 @Component({
   selector: 'app-base',
@@ -25,6 +26,7 @@ export class BaseComponent implements OnDestroy {
   private breakPoints: BreakpointObserver = inject(BreakpointObserver);
   private cdr = inject(ChangeDetectorRef);
   private destroy$ = new Subject<void>();
+  private fixturesService = inject(FixturesService);
 
   constructor() {
     this.navigation = this.navigationService.navigationItems;
@@ -44,5 +46,21 @@ export class BaseComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  public loadFixtures() {
+    this.fixturesService.loadFixtures().subscribe({
+      next: (value) => {
+        console.log(value);
+      },
+    });
+  }
+
+  public removeFixtures() {
+    this.fixturesService.removeFixtures().subscribe({
+      next: (value) => {
+        console.log(value);
+      },
+    });
   }
 }

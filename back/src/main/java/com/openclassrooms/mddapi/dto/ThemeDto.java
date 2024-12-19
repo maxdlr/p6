@@ -20,6 +20,10 @@ public class ThemeDto {
     @Size(max = 200)
     private String name;
 
+    @NonNull
+    @Size(max = 200)
+    private String description;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

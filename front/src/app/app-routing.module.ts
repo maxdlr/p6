@@ -4,7 +4,8 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/auth/templates/login/login.component';
 import { RegisterComponent } from './pages/auth/templates/register/register.component';
 import { MeComponent } from './pages/auth/templates/me/me.component';
-import { canActivateMe } from './pages/auth/services/auth.guard';
+import { isLogged } from './pages/auth/services/auth.guard';
+import { ThemeComponent } from './pages/theme/theme.component';
 
 // consider a guard combined with canLoad / canActivate route option
 // to manage unauthenticated user to access private routes
@@ -12,7 +13,8 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'me', component: MeComponent, canActivate: [canActivateMe] },
+  { path: 'me', component: MeComponent, canActivate: [isLogged] },
+  { path: 'themes', component: ThemeComponent, canActivate: [isLogged] },
 ];
 
 @NgModule({
