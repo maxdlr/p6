@@ -3,10 +3,13 @@ package com.openclassrooms.mddapi.controller;
 import static com.openclassrooms.mddapi.TestUtils.createHeadersWithToken;
 import static com.openclassrooms.mddapi.TestUtils.getAuthenticatedUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.mddapi.dto.ArticleDto;
+import com.openclassrooms.mddapi.dto.ThemeDto;
+import com.openclassrooms.mddapi.mapper.ThemeMapper;
 import com.openclassrooms.mddapi.models.*;
 import com.openclassrooms.mddapi.repository.ArticleRepository;
 import com.openclassrooms.mddapi.repository.SubscriptionRepository;
@@ -44,6 +47,7 @@ public class ArticleControllerIntegrationTests {
   private User authenticatedUser;
   @Autowired private ThemeRepository themeRepository;
   @Autowired private ArticleRepository articleRepository;
+  @Autowired private ThemeMapper themeMapper;
 
   @BeforeEach()
   public void setUp() throws JsonProcessingException {
@@ -62,23 +66,26 @@ public class ArticleControllerIntegrationTests {
   @Test
   public void testCreateArticle() throws JsonProcessingException {
     Theme theme = new Theme();
-    theme.setName("name").setCreatedAt(LocalDateTime.now());
+    theme.setName("name").setDescription("description").setCreatedAt(LocalDateTime.now());
     themeRepository.save(theme);
+    ThemeDto themeDto = themeMapper.toDto(theme);
     ArticleDto articleDto = new ArticleDto();
 
     articleDto
         .setTitle("title")
-        .setThemeId(theme.getId())
+        .setTheme(themeDto)
         .setContent("content")
         .setAuthorId(authenticatedUser.getId());
 
-    HttpEntity<ArticleDto> httpEntity = new HttpEntity<>(articleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
+    HttpEntity<ArticleDto> httpEntity =
+        new HttpEntity<>(articleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     ResponseEntity<?> response = restTemplate.postForEntity(baseUrl, httpEntity, String.class);
 
     assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
-    articleDto.setThemeId(96325L);
+    articleDto.setTheme(
+        new ThemeDto().setId(321654987L).setName("name").setDescription("description"));
     HttpEntity<ArticleDto> themeNotFoundHttpEntity =
         new HttpEntity<>(articleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
 
@@ -98,9 +105,10 @@ public class ArticleControllerIntegrationTests {
 
     ArticleDto badRequestArticleDto = new ArticleDto();
     articleDto.setAuthorId(authenticatedUser.getId());
-    articleDto.setThemeId(theme.getId());
+    articleDto.setTheme(themeDto);
     HttpEntity<ArticleDto> badRequestHttpEntity =
-        new HttpEntity<>(badRequestArticleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
+        new HttpEntity<>(
+            badRequestArticleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
     ResponseEntity<?> badRequestResponse =
         restTemplate.postForEntity(baseUrl, badRequestHttpEntity, String.class);
 
@@ -109,10 +117,11 @@ public class ArticleControllerIntegrationTests {
 
   @Test
   public void testGetArticleById() throws JsonProcessingException {
-    HttpEntity<?> httpEntity = new HttpEntity<>(createHeadersWithToken(port, authenticatedUser, restTemplate));
+    HttpEntity<?> httpEntity =
+        new HttpEntity<>(createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     Theme theme = new Theme();
-    theme.setName("name").setCreatedAt(LocalDateTime.now());
+    theme.setName("name").setDescription("description").setCreatedAt(LocalDateTime.now());
     themeRepository.save(theme);
 
     Article article = new Article();
@@ -145,10 +154,11 @@ public class ArticleControllerIntegrationTests {
 
   @Test
   public void testFindArticlesOfUser() throws IOException {
-    HttpEntity<List<ArticleDto>> httpEntity = new HttpEntity<>(createHeadersWithToken(port, authenticatedUser, restTemplate));
+    HttpEntity<List<ArticleDto>> httpEntity =
+        new HttpEntity<>(createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     Theme theme = new Theme();
-    theme.setName("name").setCreatedAt(LocalDateTime.now());
+    theme.setName("name").setDescription("description").setCreatedAt(LocalDateTime.now());
     themeRepository.save(theme);
 
     Subscription subscription = new Subscription();

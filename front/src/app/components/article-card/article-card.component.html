@@ -1,0 +1,28 @@
+<mat-card appearance="outlined" class="p-3 h-full w-full">
+
+  <mat-card-header>
+    <mat-card-title>{{ article.title }}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-actions>
+    <button (click)="read(article.id)" color="primary" mat-flat-button>
+      Lire
+    </button>
+  </mat-card-actions>
+
+  <mat-card-subtitle>
+    <mat-basic-chip>
+      {{ article.theme.name }}
+    </mat-basic-chip>
+  </mat-card-subtitle>
+
+  <mat-card-content>
+    <p>{{ _.truncate(article.content, { length: 300 }) }}</p>
+  </mat-card-content>
+
+  <mat-card-footer class="text-center py-5">
+
+  </mat-card-footer>
+
+</mat-card>
+

@@ -1,5 +1,7 @@
 package com.openclassrooms.mddapi;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.mddapi.dto.ArticleDto;
@@ -11,6 +13,7 @@ import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.payload.request.LoginRequest;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import java.time.LocalDateTime;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -18,10 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Service
 public class TestUtils {
@@ -87,12 +86,12 @@ public class TestUtils {
         return article;
     }
 
-    public static ArticleDto makeArticleDto(Integer id, Theme theme, User user) {
+    public static ArticleDto makeArticleDto(Integer id, ThemeDto themeDto, User user) {
         ArticleDto articleDto = new ArticleDto();
         articleDto
                 .setId((long) id)
                 .setTitle("title" + id)
-                .setThemeId(theme.getId())
+                .setTheme(themeDto)
                 .setContent("content" + id)
                 .setAuthorId(user.getId())
                 .setCreatedAt(LocalDateTime.now())

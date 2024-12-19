@@ -2,7 +2,6 @@ import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { SessionService } from '../services/session.service';
 import { Observable } from 'rxjs';
-import { CookieService } from 'ngx-cookie-service';
 
 export function jwtInterceptor(
   request: HttpRequest<unknown>,

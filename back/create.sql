@@ -6,7 +6,7 @@ create table ARTICLES
     theme_id   bigint,
     updated_at datetime(6),
     title      varchar(50),
-    content    varchar(255),
+    content    longtext,
     primary key (id)
 ) engine = InnoDB;
 create table COMMENTS
