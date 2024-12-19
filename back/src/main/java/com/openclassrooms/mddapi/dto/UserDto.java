@@ -3,32 +3,34 @@ package com.openclassrooms.mddapi.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
 public class UserDto {
-    private Long id;
+  private Long id;
 
-    @Size(max = 50)
-    @Email
-    private String email;
+  @Size(max = 50)
+  @Email
+  private String email;
 
-    @Size(max = 20)
-    private String username;
+  @Size(max = 20)
+  private String username;
 
-    @JsonIgnore
-    @Size(max = 120)
-    private String password;
+  @JsonIgnore
+  @Size(max = 120)
+  private String password;
 
-    private LocalDateTime createdAt;
+  private List<Long> subscriptionThemes;
 
-    private LocalDateTime updatedAt;
+  private LocalDateTime createdAt;
+
+  private LocalDateTime updatedAt;
 }

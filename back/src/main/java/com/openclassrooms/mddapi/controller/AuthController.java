@@ -10,6 +10,7 @@ import com.openclassrooms.mddapi.payload.response.JwtResponse;
 import com.openclassrooms.mddapi.payload.response.MessageResponse;
 import com.openclassrooms.mddapi.security.jwt.JwtUtils;
 import com.openclassrooms.mddapi.security.services.UserDetailsImpl;
+import com.openclassrooms.mddapi.service.SubscriptionService;
 import com.openclassrooms.mddapi.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,16 +30,19 @@ public class AuthController {
   private final JwtUtils jwtUtils;
   private final UserService userService;
   private final UserMapper userMapper;
+  private final SubscriptionService subscriptionService;
 
   public AuthController(
       AuthenticationManager authenticationManager,
       JwtUtils jwtUtils,
       UserService userService,
-      UserMapper userMapper) {
+      UserMapper userMapper,
+      SubscriptionService subscriptionService) {
     this.authenticationManager = authenticationManager;
     this.jwtUtils = jwtUtils;
     this.userService = userService;
     this.userMapper = userMapper;
+    this.subscriptionService = subscriptionService;
   }
 
   @PostMapping("/login")
@@ -55,7 +59,12 @@ public class AuthController {
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
     return ResponseEntity.ok(
-        new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), user.getUsername()));
+        new JwtResponse(
+            jwt,
+            userDetails.getId(),
+            userDetails.getUsername(),
+            user.getUsername(),
+            subscriptionService.findAllSubscriptionThemeIdByUser(user)));
   }
 
   @PostMapping("/register")

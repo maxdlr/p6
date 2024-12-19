@@ -9,9 +9,19 @@
   </mat-card-content>
 
   <mat-card-footer class="text-center py-5">
-    <button (click)="subscribeToTheme()" color="primary" mat-flat-button>
-      S'abonner
-    </button>
+    @if (!sessionInformation.subscriptionThemes.includes(theme.id)) {
+      <button (click)="subscribeToTheme()"
+              color="primary" mat-flat-button>
+        S'abonner
+      </button>
+    } @else {
+      <button (click)="unsubscribeToTheme()"
+              color="secondary" mat-flat-button>
+        Se désabonner
+      </button>
+    }
+
+
   </mat-card-footer>
 
 </mat-card>

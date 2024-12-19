@@ -19,4 +19,13 @@ export class SubscriptionService {
       subscriptionRequest,
     );
   }
+
+  public unsubscribeToTheme(
+    subscriptionRequest: SubscriptionRequest,
+  ): Observable<void> {
+    return this.httpClient.post<void>(
+      `${this.pathService}/unsubscribe`,
+      subscriptionRequest,
+    );
+  }
 }
