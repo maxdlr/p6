@@ -10,7 +10,7 @@ import {
 } from '@angular/material/button';
 import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink } from '@angular/router';
-import { MatListItem, MatNavList } from '@angular/material/list';
+import { MatListItem, MatListOption, MatNavList } from '@angular/material/list';
 import {
   MatSidenavContainer,
   MatSidenavModule,
@@ -38,6 +38,7 @@ const mats = [
     MatAnchor,
     MatIconAnchor,
     MatFabAnchor,
+    MatListOption,
   ],
   exports: [MobileMenuComponent, BaseComponent, DesktopMenuComponent],
 })

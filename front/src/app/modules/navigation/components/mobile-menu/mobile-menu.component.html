@@ -12,7 +12,9 @@
   <mat-sidenav #snav mode="side" position="end">
     <mat-nav-list>
       @for (navigationItem of navigation; track navigationItem) {
-        <a mat-list-item [routerLink]="navigationItem.url">{{ navigationItem.label }}</a>
+        <a mat-list-item [routerLink]="navigationItem.url">
+          {{ navigationItem.label }}
+        </a>
       }
     </mat-nav-list>
   </mat-sidenav>
