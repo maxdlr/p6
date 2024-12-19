@@ -21,8 +21,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipInput } from '@angular/material/chips';
 import { RegisterComponent } from './templates/register/register.component';
 import { AuthBaseComponent } from './components/auth-base/auth-base.component';
-import { BaseComponent } from '../../components/base/base.component';
 import { MeComponent } from './templates/me/me.component';
+import { RouterLink } from '@angular/router';
+import { NavigationModule } from '../../modules/navigation/navigation.module';
 
 const mats = [
   MatButton,
@@ -52,8 +53,9 @@ const mats = [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    BaseComponent,
     ...mats,
+    RouterLink,
+    NavigationModule,
   ],
   exports: [LoginComponent, RegisterComponent, MeComponent],
   providers: [

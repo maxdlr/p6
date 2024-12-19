@@ -1,0 +1,11 @@
+<ng-template #content>
+  <ng-content />
+</ng-template>
+
+<app-mobile-menu *ngIf="isMobile">
+  <ng-container *ngTemplateOutlet="content" />
+</app-mobile-menu>
+
+<app-desktop-menu *ngIf="!isMobile">
+  <ng-container *ngTemplateOutlet="content" />
+</app-desktop-menu>

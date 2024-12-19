@@ -1,0 +1,17 @@
+<mat-toolbar class="flex justify-between h-full">
+  <img alt="logo" class="cursor-pointer" height="50" ngSrc="/assets/logo_p6.png" priority routerLink="/" width="86">
+  <div class="flex items-center">
+    @for (navigationItem of navigation; track navigationItem) {
+      <a mat-button [routerLink]="navigationItem.url">
+        <mat-icon>{{ navigationItem.icon }}</mat-icon>
+        {{ navigationItem.label }}
+      </a>
+    }
+    <a mat-icon-button routerLink="/me">
+      <mat-icon>
+        face
+      </mat-icon>
+    </a>
+  </div>
+</mat-toolbar>
+<ng-content />
