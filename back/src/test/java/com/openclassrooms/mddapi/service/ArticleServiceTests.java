@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.openclassrooms.mddapi.dto.ArticleDto;
 import com.openclassrooms.mddapi.dto.CommentDto;
+import com.openclassrooms.mddapi.dto.ThemeDto;
 import com.openclassrooms.mddapi.exception.ApiBadPostRequestException;
 import com.openclassrooms.mddapi.exception.ApiResourceNotFoundException;
 import com.openclassrooms.mddapi.mapper.ArticleMapper;
@@ -63,12 +64,14 @@ public class ArticleServiceTests {
   void getAllArticlesOfUser() {
     User user = makeUser(1, false);
     Theme theme = makeTheme(1);
+    ThemeDto themeDto = makeThemeDto(1);
+
     List<Article> articleList = new ArrayList<>();
     List<ArticleDto> articleDtoList = new ArrayList<>();
 
     for (int i = 0; i < 10; i++) {
       Article article = makeArticle(i, theme, user);
-      ArticleDto articleDto = makeArticleDto(i, theme, user);
+      ArticleDto articleDto = makeArticleDto(i, themeDto, user);
       articleList.add(article);
       articleDtoList.add(articleDto);
     }
@@ -133,13 +136,14 @@ public class ArticleServiceTests {
   public void testCreateArticle() {
     User user = makeUser(1, true);
     Theme theme = makeTheme(1);
+    ThemeDto themeDto = makeThemeDto(1);
 
     when(userRepository.existsById(user.getId())).thenReturn(true);
     when(themeRepository.existsById(theme.getId())).thenReturn(true);
 
     ArticleDto articleDto = new ArticleDto();
     articleDto.setAuthorId(user.getId());
-    articleDto.setThemeId(theme.getId());
+    articleDto.setTheme(themeDto);
 
     Article article = new Article();
     article.setAuthor(user);

@@ -97,7 +97,7 @@ public class ArticleService {
         throw new ApiResourceNotFoundException("Cannot find author of article");
       }
 
-      if (!themeRepository.existsById(articleDto.getThemeId())) {
+      if (!themeRepository.existsById(articleDto.getTheme().getId())) {
         throw new ApiResourceNotFoundException("Cannot find associated theme of article");
       }
 

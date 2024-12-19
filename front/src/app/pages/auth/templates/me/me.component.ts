@@ -16,9 +16,9 @@ import { SnackService } from '../../../../services/snack.service';
 export class MeComponent implements OnInit {
   public user!: User;
   form!: FormGroup;
-  private router = inject(Router);
   private sessionService = inject(SessionService);
   private userService = inject(UserService);
+  private router = inject(Router);
   private snack = inject(SnackService);
 
   public ngOnInit(): void {
@@ -31,6 +31,11 @@ export class MeComponent implements OnInit {
       .$getById(this.sessionService.sessionInformation!.id)
       .subscribe({
         next: (user: User) => {
+          if (user === null) {
+            this.snack.error('Session Expired');
+            this.router.navigate(['/login']);
+          }
+
           this.user = user;
           this.form.controls['email'].setValue(this.user.email);
           this.form.controls['username'].setValue(this.user.username);
