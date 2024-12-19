@@ -3,5 +3,6 @@ export interface SessionInformation {
   token: string;
   type: string;
   email: string;
+  subscriptionThemes: number[];
   username: string;
 }

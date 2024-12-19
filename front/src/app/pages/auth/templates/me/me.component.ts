@@ -35,6 +35,11 @@ export class MeComponent implements OnInit {
           this.form.controls['email'].setValue(this.user.email);
           this.form.controls['username'].setValue(this.user.username);
         },
+        error: (error) => {
+          console.log(error);
+          this.snack.error('Session Expired');
+          this.router.navigate(['/login']);
+        },
       });
   }
 

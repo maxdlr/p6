@@ -4,6 +4,7 @@ import { MobileMenuComponent } from './components/mobile-menu/mobile-menu.compon
 import { MatIcon } from '@angular/material/icon';
 import {
   MatAnchor,
+  MatButton,
   MatFabAnchor,
   MatIconAnchor,
   MatIconButton,
@@ -39,6 +40,7 @@ const mats = [
     MatIconAnchor,
     MatFabAnchor,
     MatListOption,
+    MatButton,
   ],
   exports: [MobileMenuComponent, BaseComponent, DesktopMenuComponent],
 })

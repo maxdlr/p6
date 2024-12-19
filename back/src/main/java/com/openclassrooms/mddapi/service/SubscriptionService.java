@@ -10,8 +10,10 @@ import com.openclassrooms.mddapi.payload.request.SubscriptionRequest;
 import com.openclassrooms.mddapi.repository.SubscriptionRepository;
 import com.openclassrooms.mddapi.repository.ThemeRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +23,17 @@ public class SubscriptionService {
   private final UserRepository userRepository;
   private final ThemeRepository themeRepository;
   private final SubscriptionRepository subscriptionRepository;
+  private final EntityManager entityManager;
 
   public SubscriptionService(
       UserRepository userRepository,
       ThemeRepository themeRepository,
-      SubscriptionRepository subscriptionRepository) {
+      SubscriptionRepository subscriptionRepository,
+      EntityManager entityManager) {
     this.userRepository = userRepository;
     this.themeRepository = themeRepository;
     this.subscriptionRepository = subscriptionRepository;
+    this.entityManager = entityManager;
   }
 
   public void subscribeUserToTheme(SubscriptionRequest subscriptionRequest) {
@@ -83,5 +88,11 @@ public class SubscriptionService {
     result.put("theme", theme.get());
 
     return result;
+  }
+
+  public List<Long> findAllSubscriptionThemeIdByUser(User user) {
+    List<Subscription> subscriptionList = subscriptionRepository.findAllByUser(user);
+
+    return subscriptionList.stream().map(subscription -> subscription.getTheme().getId()).toList();
   }
 }

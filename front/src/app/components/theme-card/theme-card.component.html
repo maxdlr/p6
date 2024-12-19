@@ -1,0 +1,28 @@
+<mat-card appearance="outlined" class="p-3 h-full w-full">
+
+  <mat-card-header>
+    <mat-card-title>{{ theme.name }}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <p>{{ _.truncate(theme.description, { length: 100 }) }}</p>
+  </mat-card-content>
+
+  <mat-card-footer class="text-center py-5">
+    @if (!sessionInformation.subscriptionThemes.includes(theme.id)) {
+      <button (click)="subscribeToTheme()"
+              color="primary" mat-flat-button>
+        S'abonner
+      </button>
+    } @else {
+      <button (click)="unsubscribeToTheme()"
+              color="secondary" mat-flat-button>
+        Se désabonner
+      </button>
+    }
+
+
+  </mat-card-footer>
+
+</mat-card>
+

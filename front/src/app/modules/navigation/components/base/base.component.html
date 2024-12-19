@@ -1,5 +1,11 @@
 <ng-template #content>
-  <ng-content />
+  <div class="mb-10">
+    <button (click)="loadFixtures()" mat-button>Fix</button>
+    <button (click)="removeFixtures()" mat-button>Del</button>
+  </div>
+  <section class="mx-4">
+    <ng-content />
+  </section>
 </ng-template>
 
 <app-mobile-menu *ngIf="isMobile">
