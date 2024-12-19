@@ -2,6 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SessionInformation } from '../interfaces/session-information';
 import { CookieService } from 'ngx-cookie-service';
+import { TokenValidationRequest } from '../interfaces/token-validation-request';
+import { AuthService } from '../pages/auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +13,7 @@ export class SessionService {
   public sessionInformation: SessionInformation | undefined;
   private isLoggedSubject = new BehaviorSubject<boolean>(this.isLogged);
   private cookieService = inject(CookieService);
+  private authService = inject(AuthService);
 
   constructor() {
     const cookie: string = this.cookieService.get('current-session');
@@ -42,6 +45,27 @@ export class SessionService {
     this.sessionInformation = undefined;
     this.isLogged = false;
     this.next();
+  }
+
+  public validateToken(token: string) {
+    const tokenValidationRequest: TokenValidationRequest = {
+      token: token,
+    };
+
+    this.authService.me(tokenValidationRequest).subscribe({
+      next: (user) => {
+        console.log(user);
+        (this.sessionInformation as SessionInformation).subscriptionThemes =
+          user.subscriptionThemes;
+      },
+    });
+  }
+
+  public updateSessionCookie(): void {
+    this.cookieService.set(
+      'current-session',
+      JSON.stringify(this.sessionInformation),
+    );
   }
 
   private next(): void {

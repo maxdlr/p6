@@ -43,8 +43,11 @@ export class ThemeCardComponent implements OnInit {
     };
 
     this.subscriptionService.subscribeToTheme(subscriptionRequest).subscribe({
-      next: () => {
-        console.log('subscribed from ' + this.theme.id);
+      next: (userThemeIds) => {
+        this.sessionInformation.subscriptionThemes = userThemeIds;
+        this.sessionService.updateSessionCookie();
+
+        console.log('subscribed to ' + this.theme.id);
       },
     });
   }
@@ -56,7 +59,9 @@ export class ThemeCardComponent implements OnInit {
     };
 
     this.subscriptionService.unsubscribeToTheme(subscriptionRequest).subscribe({
-      next: () => {
+      next: (userThemeIds) => {
+        this.sessionInformation.subscriptionThemes = userThemeIds;
+        this.sessionService.updateSessionCookie();
         console.log('unsubscribed from ' + this.theme.id);
       },
     });

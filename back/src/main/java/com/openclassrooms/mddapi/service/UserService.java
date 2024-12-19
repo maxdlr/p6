@@ -57,6 +57,20 @@ public class UserService {
     return user.get();
   }
 
+  public User findUser(Long id) {
+    try {
+      Optional<User> user = userRepository.findById(id);
+
+      if (user.isEmpty()) {
+        throw new ApiResourceNotFoundException("Cannot find user with id: " + id);
+      }
+
+      return user.get();
+    } catch (ValidationFailureException e) {
+      throw new ApiBadPostRequestException(e.getMessage());
+    }
+  }
+
   public User findUser(String id) {
     try {
       Optional<User> user = userRepository.findById(Long.valueOf(id));

@@ -13,8 +13,8 @@ export class SubscriptionService {
 
   public subscribeToTheme(
     subscriptionRequest: SubscriptionRequest,
-  ): Observable<void> {
-    return this.httpClient.post<void>(
+  ): Observable<number[]> {
+    return this.httpClient.post<number[]>(
       `${this.pathService}/subscribe`,
       subscriptionRequest,
     );
@@ -22,8 +22,8 @@ export class SubscriptionService {
 
   public unsubscribeToTheme(
     subscriptionRequest: SubscriptionRequest,
-  ): Observable<void> {
-    return this.httpClient.post<void>(
+  ): Observable<number[]> {
+    return this.httpClient.post<number[]>(
       `${this.pathService}/unsubscribe`,
       subscriptionRequest,
     );
