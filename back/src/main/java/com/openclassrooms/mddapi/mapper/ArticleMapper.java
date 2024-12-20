@@ -18,19 +18,24 @@ public abstract class ArticleMapper implements EntityMapper<ArticleDto, Article>
 
   @Autowired UserRepository userRepository;
 
+  @Autowired ThemeMapper themeMapper;
+  @Autowired UserMapper userMapper;
+
   @Mappings({
     @Mapping(
         target = "author",
-        expression = "java(this.userRepository.findById(articleDto.getAuthorId()).orElse(null))"),
+        expression =
+            "java(this.userRepository.findById(articleDto.getAuthor().getId()).orElse(null))"),
     @Mapping(
         target = "theme",
-        expression = "java(this.themeRepository.findById(articleDto.getThemeId()).orElse(null))"),
+        expression =
+            "java(this.themeRepository.findById(articleDto.getTheme().getId()).orElse(null))"),
   })
   public abstract Article toEntity(ArticleDto articleDto);
 
   @Mappings({
-    @Mapping(target = "authorId", expression = "java(article.getAuthor().getId())"),
-    @Mapping(target = "themeId", expression = "java(article.getTheme().getId())")
+    @Mapping(target = "author", expression = "java(userMapper.toDto(article.getAuthor()))"),
+    @Mapping(target = "theme", expression = "java(themeMapper.toDto(article.getTheme()))")
   })
   public abstract ArticleDto toDto(Article article);
 }

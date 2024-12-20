@@ -24,6 +24,14 @@ import { AuthBaseComponent } from './components/auth-base/auth-base.component';
 import { MeComponent } from './templates/me/me.component';
 import { RouterLink } from '@angular/router';
 import { NavigationModule } from '../../modules/navigation/navigation.module';
+import {
+  MatCard,
+  MatCardContent,
+  MatCardHeader,
+  MatCardSubtitle,
+  MatCardTitle,
+  MatCardTitleGroup,
+} from '@angular/material/card';
 
 const mats = [
   MatButton,
@@ -56,6 +64,12 @@ const mats = [
     ...mats,
     RouterLink,
     NavigationModule,
+    MatCard,
+    MatCardHeader,
+    MatCardTitleGroup,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCardContent,
   ],
   exports: [LoginComponent, RegisterComponent, MeComponent],
   providers: [

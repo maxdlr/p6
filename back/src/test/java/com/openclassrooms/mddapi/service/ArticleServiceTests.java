@@ -8,6 +8,8 @@ import static org.mockito.Mockito.when;
 
 import com.openclassrooms.mddapi.dto.ArticleDto;
 import com.openclassrooms.mddapi.dto.CommentDto;
+import com.openclassrooms.mddapi.dto.ThemeDto;
+import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.exception.ApiBadPostRequestException;
 import com.openclassrooms.mddapi.exception.ApiResourceNotFoundException;
 import com.openclassrooms.mddapi.mapper.ArticleMapper;
@@ -62,13 +64,16 @@ public class ArticleServiceTests {
   @Test
   void getAllArticlesOfUser() {
     User user = makeUser(1, false);
+    UserDto userDto = makeUserDto(1);
     Theme theme = makeTheme(1);
+    ThemeDto themeDto = makeThemeDto(1);
+
     List<Article> articleList = new ArrayList<>();
     List<ArticleDto> articleDtoList = new ArrayList<>();
 
     for (int i = 0; i < 10; i++) {
       Article article = makeArticle(i, theme, user);
-      ArticleDto articleDto = makeArticleDto(i, theme, user);
+      ArticleDto articleDto = makeArticleDto(i, themeDto, userDto);
       articleList.add(article);
       articleDtoList.add(articleDto);
     }
@@ -132,14 +137,16 @@ public class ArticleServiceTests {
   @Test
   public void testCreateArticle() {
     User user = makeUser(1, true);
+    UserDto userDto = makeUserDto(1);
     Theme theme = makeTheme(1);
+    ThemeDto themeDto = makeThemeDto(1);
 
     when(userRepository.existsById(user.getId())).thenReturn(true);
     when(themeRepository.existsById(theme.getId())).thenReturn(true);
 
     ArticleDto articleDto = new ArticleDto();
-    articleDto.setAuthorId(user.getId());
-    articleDto.setThemeId(theme.getId());
+    articleDto.setAuthor(userDto);
+    articleDto.setTheme(themeDto);
 
     Article article = new Article();
     article.setAuthor(user);
@@ -150,7 +157,7 @@ public class ArticleServiceTests {
 
     verify(articleRepository).save(any(Article.class));
 
-    assertThrows(ApiResourceNotFoundException.class, () -> articleService.save(new ArticleDto()));
+    assertThrows(ApiBadPostRequestException.class, () -> articleService.save(new ArticleDto()));
   }
 
   @Test

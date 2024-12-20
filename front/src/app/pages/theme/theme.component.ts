@@ -17,10 +17,7 @@ export class ThemeComponent implements OnInit {
 
   ngOnInit(): void {
     this.themeService.getAll().subscribe({
-      next: (themes: Theme[]) => {
-        console.log(themes);
-        this.themes = themes;
-      },
+      next: (themes: Theme[]) => (this.themes = themes),
     });
   }
 }

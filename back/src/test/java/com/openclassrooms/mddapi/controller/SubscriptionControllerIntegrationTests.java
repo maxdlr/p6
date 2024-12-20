@@ -107,18 +107,18 @@ public class SubscriptionControllerIntegrationTests {
 
     assertEquals(HttpStatus.valueOf(404), themeNotFoundResponse.getStatusCode());
 
-    SubscriptionRequest badRequestSubscriptionRequest = new SubscriptionRequest();
+    SubscriptionRequest unauthorizedSubscriptionRequest = new SubscriptionRequest();
 
-    HttpEntity<SubscriptionRequest> badRequesttHttpEntity =
+    HttpEntity<SubscriptionRequest> unauthorizedtHttpEntity =
         new HttpEntity<>(
-            badRequestSubscriptionRequest,
+            unauthorizedSubscriptionRequest,
             createHeadersWithToken(port, authenticatedUser, restTemplate));
 
-    ResponseEntity<String> badRequestResponse =
+    ResponseEntity<String> unauthorizedResponse =
         restTemplate.exchange(
-            baseUrl + "/subscribe", HttpMethod.POST, badRequesttHttpEntity, String.class);
+            baseUrl + "/subscribe", HttpMethod.POST, unauthorizedtHttpEntity, String.class);
 
-    assertEquals(HttpStatus.valueOf(400), badRequestResponse.getStatusCode());
+    assertEquals(HttpStatus.valueOf(401), unauthorizedResponse.getStatusCode());
   }
 
   @Test
@@ -174,17 +174,17 @@ public class SubscriptionControllerIntegrationTests {
 
     assertEquals(HttpStatus.valueOf(404), themeNotFoundResponse.getStatusCode());
 
-    SubscriptionRequest badRequestSubscriptionRequest = new SubscriptionRequest();
+    SubscriptionRequest unauthorizedSubscriptionRequest = new SubscriptionRequest();
 
-    HttpEntity<SubscriptionRequest> badRequesttHttpEntity =
+    HttpEntity<SubscriptionRequest> unauthorizedtHttpEntity =
         new HttpEntity<>(
-            badRequestSubscriptionRequest,
+            unauthorizedSubscriptionRequest,
             createHeadersWithToken(port, authenticatedUser, restTemplate));
 
-    ResponseEntity<String> badRequestResponse =
+    ResponseEntity<String> unauthorizedResponse =
         restTemplate.exchange(
-            baseUrl + "/unsubscribe", HttpMethod.POST, badRequesttHttpEntity, String.class);
+            baseUrl + "/unsubscribe", HttpMethod.POST, unauthorizedtHttpEntity, String.class);
 
-    assertEquals(HttpStatus.valueOf(400), badRequestResponse.getStatusCode());
+    assertEquals(HttpStatus.valueOf(401), unauthorizedResponse.getStatusCode());
   }
 }

@@ -11,6 +11,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AuthModule } from './pages/auth/auth.module';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { jwtInterceptor } from './interceptors/jwt.interceptor';
+import { authInterceptor } from './interceptors/auth.interceptor';
 
 const mats = [MatButtonModule, MatButtonToggle];
 
@@ -25,7 +26,7 @@ const mats = [MatButtonModule, MatButtonToggle];
     AuthModule,
   ],
   providers: [
-    provideHttpClient(withInterceptors([jwtInterceptor])),
+    provideHttpClient(withInterceptors([jwtInterceptor, authInterceptor])),
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: { floatLabel: 'auto', appearance: 'outline' },

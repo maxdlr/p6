@@ -11,15 +11,15 @@ export class SnackService {
     this._snack = new MatSnackBar();
   }
 
-  public inform(message: string) {
+  public inform(message: string, duration = 3000) {
     this._snack.open(message, undefined, {
-      duration: 3000,
+      duration: duration,
       verticalPosition: 'top',
     });
   }
 
-  public error(message: string) {
-    this._snack.open(message, 'OK', {
+  public error(message: string, action = false) {
+    this._snack.open(message, action ? 'OK' : '', {
       duration: 10000,
       verticalPosition: 'top',
     });

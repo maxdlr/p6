@@ -2,7 +2,6 @@ package com.openclassrooms.mddapi.dto;
 
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
-
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -18,8 +17,8 @@ public class ArticleDto {
   @Size(max = 50)
   private String title;
 
-  @NonNull private Long themeId;
-  @NonNull private Long authorId;
+  @NonNull private ThemeDto theme;
+  @NonNull private UserDto author;
   @NonNull private String content;
 
   private LocalDateTime createdAt;

@@ -93,17 +93,17 @@ public class ArticleService {
 
   public void save(ArticleDto articleDto) {
     try {
-      if (!userRepository.existsById(articleDto.getAuthorId())) {
+      if (!userRepository.existsById(articleDto.getAuthor().getId())) {
         throw new ApiResourceNotFoundException("Cannot find author of article");
       }
 
-      if (!themeRepository.existsById(articleDto.getThemeId())) {
+      if (!themeRepository.existsById(articleDto.getTheme().getId())) {
         throw new ApiResourceNotFoundException("Cannot find associated theme of article");
       }
 
       Article article = articleMapper.toEntity(articleDto);
       articleRepository.save(article);
-    } catch (ValidationFailureException | NumberFormatException e) {
+    } catch (ValidationFailureException | NumberFormatException | NullPointerException e) {
       throw new ApiBadPostRequestException(e.getMessage());
     }
   }

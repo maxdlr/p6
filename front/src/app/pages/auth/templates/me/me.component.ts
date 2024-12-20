@@ -6,6 +6,7 @@ import { User } from '../../../../interfaces/user';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserEditRequest } from '../../interfaces/user-edit-request';
 import { SnackService } from '../../../../services/snack.service';
+import _ from 'lodash';
 
 @Component({
   selector: 'app-me',
@@ -16,9 +17,10 @@ import { SnackService } from '../../../../services/snack.service';
 export class MeComponent implements OnInit {
   public user!: User;
   form!: FormGroup;
-  private router = inject(Router);
+  protected readonly _ = _;
   private sessionService = inject(SessionService);
   private userService = inject(UserService);
+  private router = inject(Router);
   private snack = inject(SnackService);
 
   public ngOnInit(): void {
@@ -37,8 +39,6 @@ export class MeComponent implements OnInit {
         },
         error: (error) => {
           console.log(error);
-          this.snack.error('Session Expired');
-          this.router.navigate(['/login']);
         },
       });
   }

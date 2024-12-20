@@ -7,6 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.mddapi.dto.ArticleDto;
+import com.openclassrooms.mddapi.dto.ThemeDto;
+import com.openclassrooms.mddapi.dto.UserDto;
+import com.openclassrooms.mddapi.mapper.ThemeMapper;
+import com.openclassrooms.mddapi.mapper.UserMapper;
 import com.openclassrooms.mddapi.models.*;
 import com.openclassrooms.mddapi.repository.ArticleRepository;
 import com.openclassrooms.mddapi.repository.SubscriptionRepository;
@@ -30,20 +34,16 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 public class ArticleControllerIntegrationTests {
   @LocalServerPort private int port;
-
   @Autowired private TestRestTemplate restTemplate;
-
   @Autowired private UserRepository userRepository;
-
   @Autowired private SubscriptionRepository subscriptionRepository;
-
   @Autowired private PasswordEncoder passwordEncoder;
-
-  private String baseUrl;
-
-  private User authenticatedUser;
+  @Autowired private UserMapper userMapper;
   @Autowired private ThemeRepository themeRepository;
   @Autowired private ArticleRepository articleRepository;
+  @Autowired private ThemeMapper themeMapper;
+  private User authenticatedUser;
+  private String baseUrl;
 
   @BeforeEach()
   public void setUp() throws JsonProcessingException {
@@ -62,23 +62,26 @@ public class ArticleControllerIntegrationTests {
   @Test
   public void testCreateArticle() throws JsonProcessingException {
     Theme theme = new Theme();
-    theme.setName("name").setCreatedAt(LocalDateTime.now());
+    theme.setName("name").setDescription("description").setCreatedAt(LocalDateTime.now());
     themeRepository.save(theme);
+    ThemeDto themeDto = themeMapper.toDto(theme);
     ArticleDto articleDto = new ArticleDto();
 
     articleDto
         .setTitle("title")
-        .setThemeId(theme.getId())
+        .setTheme(themeDto)
         .setContent("content")
-        .setAuthorId(authenticatedUser.getId());
+        .setAuthor(userMapper.toDto(authenticatedUser));
 
-    HttpEntity<ArticleDto> httpEntity = new HttpEntity<>(articleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
+    HttpEntity<ArticleDto> httpEntity =
+        new HttpEntity<>(articleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     ResponseEntity<?> response = restTemplate.postForEntity(baseUrl, httpEntity, String.class);
 
     assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
-    articleDto.setThemeId(96325L);
+    articleDto.setTheme(
+        new ThemeDto().setId(321654987L).setName("name").setDescription("description"));
     HttpEntity<ArticleDto> themeNotFoundHttpEntity =
         new HttpEntity<>(articleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
 
@@ -87,7 +90,8 @@ public class ArticleControllerIntegrationTests {
 
     assertEquals(HttpStatusCode.valueOf(404), themeNotFoundResponse.getStatusCode());
 
-    articleDto.setAuthorId(96325L);
+    articleDto.setAuthor(
+        new UserDto().setEmail("email@email.com").setUsername("username").setId(96325L));
     HttpEntity<ArticleDto> authorNotFoundHttpEntity =
         new HttpEntity<>(articleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
 
@@ -96,23 +100,25 @@ public class ArticleControllerIntegrationTests {
 
     assertEquals(HttpStatusCode.valueOf(404), authorNotFoundResponse.getStatusCode());
 
-    ArticleDto badRequestArticleDto = new ArticleDto();
-    articleDto.setAuthorId(authenticatedUser.getId());
-    articleDto.setThemeId(theme.getId());
-    HttpEntity<ArticleDto> badRequestHttpEntity =
-        new HttpEntity<>(badRequestArticleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
-    ResponseEntity<?> badRequestResponse =
-        restTemplate.postForEntity(baseUrl, badRequestHttpEntity, String.class);
+    ArticleDto unauthorizedArticleDto = new ArticleDto();
+    articleDto.setAuthor(userMapper.toDto(authenticatedUser));
+    articleDto.setTheme(themeDto);
+    HttpEntity<ArticleDto> unauthorizedHttpEntity =
+        new HttpEntity<>(
+            unauthorizedArticleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
+    ResponseEntity<?> unauthorizedResponse =
+        restTemplate.postForEntity(baseUrl, unauthorizedHttpEntity, String.class);
 
-    assertEquals(HttpStatusCode.valueOf(400), badRequestResponse.getStatusCode());
+    assertEquals(HttpStatusCode.valueOf(401), unauthorizedResponse.getStatusCode());
   }
 
   @Test
   public void testGetArticleById() throws JsonProcessingException {
-    HttpEntity<?> httpEntity = new HttpEntity<>(createHeadersWithToken(port, authenticatedUser, restTemplate));
+    HttpEntity<?> httpEntity =
+        new HttpEntity<>(createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     Theme theme = new Theme();
-    theme.setName("name").setCreatedAt(LocalDateTime.now());
+    theme.setName("name").setDescription("description").setCreatedAt(LocalDateTime.now());
     themeRepository.save(theme);
 
     Article article = new Article();
@@ -145,10 +151,11 @@ public class ArticleControllerIntegrationTests {
 
   @Test
   public void testFindArticlesOfUser() throws IOException {
-    HttpEntity<List<ArticleDto>> httpEntity = new HttpEntity<>(createHeadersWithToken(port, authenticatedUser, restTemplate));
+    HttpEntity<List<ArticleDto>> httpEntity =
+        new HttpEntity<>(createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     Theme theme = new Theme();
-    theme.setName("name").setCreatedAt(LocalDateTime.now());
+    theme.setName("name").setDescription("description").setCreatedAt(LocalDateTime.now());
     themeRepository.save(theme);
 
     Subscription subscription = new Subscription();
