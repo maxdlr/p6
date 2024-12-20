@@ -32,6 +32,9 @@ import {
   MatCardTitle,
   MatCardTitleGroup,
 } from '@angular/material/card';
+import { MatDivider } from '@angular/material/divider';
+import { ThemeCardComponent } from '../../components/theme-card/theme-card.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 const mats = [
   MatButton,
@@ -70,6 +73,9 @@ const mats = [
     MatCardTitle,
     MatCardSubtitle,
     MatCardContent,
+    MatDivider,
+    ThemeCardComponent,
+    MatProgressSpinner,
   ],
   exports: [LoginComponent, RegisterComponent, MeComponent],
   providers: [

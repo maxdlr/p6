@@ -12,6 +12,7 @@ import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.models.Article;
 import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
+import com.openclassrooms.mddapi.repository.CommentRepository;
 import com.openclassrooms.mddapi.repository.ThemeRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import java.util.ArrayList;
@@ -28,8 +29,10 @@ class ArticleMapperTests {
 
   @Mock private UserRepository userRepository;
   @Mock private ThemeRepository themeRepository;
+  @Mock private CommentRepository commentRepository;
   @Mock private ThemeMapper themeMapper;
   @Mock private UserMapper userMapper;
+  @Mock private CommentMapper commentMapper;
 
   private ArticleMapper articleMapper;
 
@@ -38,8 +41,10 @@ class ArticleMapperTests {
     articleMapper = new ArticleMapperImpl();
     articleMapper.userRepository = userRepository;
     articleMapper.themeRepository = themeRepository;
-    articleMapper.themeMapper = this.themeMapper;
-    articleMapper.userMapper = this.userMapper;
+    articleMapper.themeMapper = themeMapper;
+    articleMapper.userMapper = userMapper;
+    articleMapper.commentMapper = commentMapper;
+    articleMapper.commentRepository = commentRepository;
   }
 
   @Test
@@ -74,6 +79,8 @@ class ArticleMapperTests {
     when(userMapper.toDto(user)).thenReturn(userDto);
 
     Article article = makeArticle(1, theme, user);
+
+    when(commentRepository.findAllByArticle(article)).thenReturn(new ArrayList<>());
 
     ArticleDto articleDto = articleMapper.toDto(article);
 
@@ -112,7 +119,7 @@ class ArticleMapperTests {
 
   @Test
   void testToDtoList() {
-    List<Article> entityList = new ArrayList<>();
+    List<Article> articleList = new ArrayList<>();
     User user = makeUser(1, false);
     UserDto userDto = makeUserDto(1);
     Theme theme = makeTheme(1);
@@ -120,18 +127,18 @@ class ArticleMapperTests {
 
     for (int i = 0; i < 10; i++) {
       Article article = makeArticle(i, theme, user);
-      entityList.add(article);
+      articleList.add(article);
     }
 
     when(themeMapper.toDto(theme)).thenReturn(themeDto);
     when(userMapper.toDto(user)).thenReturn(userDto);
 
-    List<ArticleDto> dtoList = articleMapper.toDto(entityList);
+    List<ArticleDto> dtoList = articleMapper.toDto(articleList);
 
     assertNotNull(dtoList);
     assertEquals(10, dtoList.size());
-    assertEquals(entityList.getFirst().getId(), dtoList.getFirst().getId());
-    assertEquals(entityList.getLast().getId(), dtoList.getLast().getId());
-    assertEquals(dtoList.size(), entityList.size());
+    assertEquals(articleList.getFirst().getId(), dtoList.getFirst().getId());
+    assertEquals(articleList.getLast().getId(), dtoList.getLast().getId());
+    assertEquals(dtoList.size(), articleList.size());
   }
 }

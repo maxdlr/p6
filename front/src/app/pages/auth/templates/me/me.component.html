@@ -1,37 +1,54 @@
 <app-auth-base title="profil utilisateur">
+  @if (user) {
+    <div class="pb-5 text-center italic">
+      <p>Membre depuis le {{ user.createdAt | date }}</p>
+      <p>Abonné à {{ user.subscriptionThemes.length }} thèmes.</p>
+    </div>
 
-  <div class="pb-5 text-center italic">
-    <p>Membre depuis le {{ user.createdAt | date }}</p>
-    <p>Abonné à {{ user.subscriptionThemes.length }} thèmes.</p>
+    <form (ngSubmit)="submit()" [formGroup]="form" class="flex flex-col justify-center items-center">
+
+      <mat-form-field>
+        <mat-label>Username</mat-label>
+
+        <input
+          formControlName="username"
+          matInput
+          type="text">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input
+          formControlName="email"
+          matInput
+          placeholder="Ex. pat@example.com"
+          type="email">
+        <mat-error *ngIf="form.controls['email'].hasError('email')">
+          L'adresse email doit être valide
+        </mat-error>
+      </mat-form-field>
+
+      <button (click)="submit()" color="primary" mat-flat-button type="button">Enregistrer</button>
+      <button (click)="logOut()" color="warn" mat-button type="button">Se deconnecter</button>
+    </form>
+  } @else {
+    <mat-spinner />
+  }
+
+  <div class="my-3">
+    <mat-divider />
   </div>
 
-  <form (ngSubmit)="submit()" [formGroup]="form" class="flex flex-col justify-center items-center">
-
-    <mat-form-field>
-      <mat-label>Username</mat-label>
-
-      <input
-        formControlName="username"
-        matInput
-        type="text">
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Email</mat-label>
-      <input
-        formControlName="email"
-        matInput
-        placeholder="Ex. pat@example.com"
-        type="email">
-      <mat-error *ngIf="form.controls['email'].hasError('email')">
-        L'adresse email doit être valide
-      </mat-error>
-    </mat-form-field>
-
-    <button (click)="submit()" color="primary" mat-flat-button type="button">Enregistrer</button>
-
-    <button (click)="logOut()" color="warn" mat-button type="button">Se deconnecter</button>
-  </form>
+  @if (themes) {
+    <div
+      class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 grid-flow-row gap-5">
+      @for (theme of themes; track theme.id) {
+        <app-theme-card [theme]="theme" (subscriptionUpdate)="getThemes()" />
+      }
+    </div>
+  } @else {
+    <mat-spinner />
+  }
 
 
 </app-auth-base>

@@ -18,10 +18,13 @@ public abstract class CommentMapper implements EntityMapper<CommentDto, Comment>
 
   @Autowired UserRepository userRepository;
 
+  @Autowired UserMapper userMapper;
+
   @Mappings({
     @Mapping(
         target = "author",
-        expression = "java(this.userRepository.findById(commentDto.getAuthorId()).orElse(null))"),
+        expression =
+            "java(this.userRepository.findById(commentDto.getAuthor().getId()).orElse(null))"),
     @Mapping(
         target = "article",
         expression =
@@ -30,7 +33,7 @@ public abstract class CommentMapper implements EntityMapper<CommentDto, Comment>
   public abstract Comment toEntity(CommentDto commentDto);
 
   @Mappings({
-    @Mapping(target = "authorId", expression = "java(comment.getAuthor().getId())"),
+    @Mapping(target = "author", expression = "java(userMapper.toDto(comment.getAuthor()))"),
     @Mapping(target = "articleId", expression = "java(comment.getArticle().getId())")
   })
   public abstract CommentDto toDto(Comment comment);

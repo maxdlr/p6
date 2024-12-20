@@ -7,6 +7,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserEditRequest } from '../../interfaces/user-edit-request';
 import { SnackService } from '../../../../services/snack.service';
 import _ from 'lodash';
+import { ThemeService } from '../../../../services/theme.service';
+import { Theme } from '../../../../interfaces/theme';
 
 @Component({
   selector: 'app-me',
@@ -16,10 +18,13 @@ import _ from 'lodash';
 })
 export class MeComponent implements OnInit {
   public user!: User;
+  public themes!: Theme[];
   form!: FormGroup;
   protected readonly _ = _;
+  protected readonly ThemeService = ThemeService;
   private sessionService = inject(SessionService);
   private userService = inject(UserService);
+  private themeService = inject(ThemeService);
   private router = inject(Router);
   private snack = inject(SnackService);
 
@@ -28,7 +33,10 @@ export class MeComponent implements OnInit {
       email: new FormControl('', [Validators.email]),
       username: new FormControl(''),
     });
+    this.getUser();
+  }
 
+  public getUser() {
     this.userService
       .$getById(this.sessionService.sessionInformation!.id)
       .subscribe({
@@ -36,6 +44,7 @@ export class MeComponent implements OnInit {
           this.user = user;
           this.form.controls['email'].setValue(this.user.email);
           this.form.controls['username'].setValue(this.user.username);
+          this.getThemes();
         },
         error: (error) => {
           console.log(error);
@@ -43,10 +52,16 @@ export class MeComponent implements OnInit {
       });
   }
 
+  public getThemes() {
+    this.themeService.getAll().subscribe((themes) => {
+      this.themes = themes.filter((theme: Theme) =>
+        this.user.subscriptionThemes.includes(theme.id),
+      );
+    });
+  }
+
   public submit(): void {
     const userEditRequest = this.form.value as UserEditRequest;
-
-    //todo: authenticate to authorize email change, so backend can regenerate new token.
 
     this.userService
       .$edit(this.sessionService.sessionInformation!.id, userEditRequest)

@@ -39,6 +39,7 @@ export class LoginComponent implements OnInit {
     const loginRequest = this.form.value as LoginRequest;
     this.authService.login(loginRequest).subscribe({
       next: (response: SessionInformation) => {
+        console.log('login response', response);
         this.sessionService.logIn(response);
         this.snackService.inform(
           `Bonjour ${_.upperFirst(response.username)} !`,

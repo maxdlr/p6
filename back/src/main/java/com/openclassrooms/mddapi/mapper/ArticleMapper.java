@@ -2,6 +2,7 @@ package com.openclassrooms.mddapi.mapper;
 
 import com.openclassrooms.mddapi.dto.ArticleDto;
 import com.openclassrooms.mddapi.models.Article;
+import com.openclassrooms.mddapi.repository.CommentRepository;
 import com.openclassrooms.mddapi.repository.ThemeRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import org.mapstruct.Mapper;
@@ -18,8 +19,12 @@ public abstract class ArticleMapper implements EntityMapper<ArticleDto, Article>
 
   @Autowired UserRepository userRepository;
 
+  @Autowired
+  CommentRepository commentRepository;
+
   @Autowired ThemeMapper themeMapper;
   @Autowired UserMapper userMapper;
+  @Autowired CommentMapper commentMapper;
 
   @Mappings({
     @Mapping(
@@ -35,7 +40,8 @@ public abstract class ArticleMapper implements EntityMapper<ArticleDto, Article>
 
   @Mappings({
     @Mapping(target = "author", expression = "java(userMapper.toDto(article.getAuthor()))"),
-    @Mapping(target = "theme", expression = "java(themeMapper.toDto(article.getTheme()))")
+    @Mapping(target = "theme", expression = "java(themeMapper.toDto(article.getTheme()))"),
+    @Mapping(target = "comments", expression = "java(commentMapper.toDto(commentRepository.findAllByArticle(article)))")
   })
   public abstract ArticleDto toDto(Article article);
 }

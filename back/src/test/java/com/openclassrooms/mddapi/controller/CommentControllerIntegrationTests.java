@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.openclassrooms.mddapi.dto.CommentDto;
+import com.openclassrooms.mddapi.mapper.UserMapper;
 import com.openclassrooms.mddapi.models.Article;
 import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
@@ -31,18 +32,17 @@ import org.springframework.test.context.ActiveProfiles;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class CommentControllerIntegrationTests {
   @LocalServerPort private int port;
-
   @Autowired private TestRestTemplate restTemplate;
-
   @Autowired private PasswordEncoder passwordEncoder;
-
-  private String baseUrl;
-
-  private User authenticatedUser;
   @Autowired private UserRepository userRepository;
   @Autowired private ArticleRepository articleRepository;
   @Autowired private ThemeRepository themeRepository;
   @Autowired private CommentRepository commentRepository;
+  @Autowired private UserMapper userMapper;
+
+  private String baseUrl;
+
+  private User authenticatedUser;
 
   @BeforeEach()
   public void setUp() throws JsonProcessingException {
@@ -75,7 +75,7 @@ public class CommentControllerIntegrationTests {
 
     CommentDto commentDto = new CommentDto();
     commentDto.setContent("This is a comment");
-    commentDto.setAuthorId(authenticatedUser.getId());
+    commentDto.setAuthor(userMapper.toDto(authenticatedUser));
     commentDto.setArticleId(article.getId());
     commentDto.setCreatedAt(LocalDateTime.now());
 

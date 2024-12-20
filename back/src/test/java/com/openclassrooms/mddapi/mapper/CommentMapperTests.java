@@ -3,8 +3,10 @@ package com.openclassrooms.mddapi.mapper;
 import static com.openclassrooms.mddapi.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 import com.openclassrooms.mddapi.dto.CommentDto;
+import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.models.Article;
 import com.openclassrooms.mddapi.models.Comment;
 import com.openclassrooms.mddapi.models.Theme;
@@ -24,21 +26,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class CommentMapperTests {
 
   private CommentMapper commentMapper;
-
   @Mock private ArticleRepository articleRepository;
-
   @Mock private UserRepository userRepository;
+  @Mock private UserMapper userMapper;
 
   @BeforeEach
   public void setUp() {
     commentMapper = new CommentMapperImpl();
     commentMapper.articleRepository = articleRepository;
     commentMapper.userRepository = userRepository;
+    commentMapper.userMapper = userMapper;
   }
 
   @Test
   public void testToDto() {
     User user = makeUser(1, true);
+    UserDto userDto = makeUserDto(1);
     Theme theme = makeTheme(1);
     Article article = makeArticle(1, theme, user);
 
@@ -50,6 +53,8 @@ public class CommentMapperTests {
         .setContent("content")
         .setCreatedAt(LocalDateTime.now());
 
+    when(userMapper.toDto(user)).thenReturn(userDto);
+
     CommentDto commentDto = commentMapper.toDto(comment);
 
     assertNotNull(commentDto);
@@ -59,13 +64,14 @@ public class CommentMapperTests {
   @Test
   public void testToEntity() {
     User user = makeUser(1, true);
+    UserDto userDto = makeUserDto(1);
     Theme theme = makeTheme(1);
     Article article = makeArticle(1, theme, user);
 
     CommentDto commentDto = new CommentDto();
     commentDto
         .setArticleId(article.getId())
-        .setAuthorId(user.getId())
+        .setAuthor(userDto)
         .setId(1L)
         .setContent("content")
         .setCreatedAt(LocalDateTime.now());
@@ -80,6 +86,7 @@ public class CommentMapperTests {
   public void testToDtoList() {
     User user = makeUser(1, true);
     Theme theme = makeTheme(1);
+    UserDto userDto = makeUserDto(1);
     Article article = makeArticle(1, theme, user);
 
     List<Comment> commentList = new ArrayList<>();
@@ -96,6 +103,8 @@ public class CommentMapperTests {
       commentList.add(comment);
     }
 
+    when(userMapper.toDto(user)).thenReturn(userDto);
+
     List<CommentDto> commentDtoList = commentMapper.toDto(commentList);
 
     assertNotNull(commentDtoList);
@@ -105,6 +114,7 @@ public class CommentMapperTests {
   @Test
   public void testToEntityList() {
     User user = makeUser(1, true);
+    UserDto userDto = makeUserDto(1);
     Theme theme = makeTheme(1);
     Article article = makeArticle(1, theme, user);
 
@@ -114,7 +124,7 @@ public class CommentMapperTests {
       CommentDto commentDto = new CommentDto();
       commentDto
           .setArticleId(article.getId())
-          .setAuthorId(user.getId())
+          .setAuthor(userDto)
           .setId((long) i)
           .setContent("content")
           .setCreatedAt(LocalDateTime.now());
