@@ -27,9 +27,18 @@
 
   <mat-card-footer class="text-center py-5">
     <mat-card-actions>
-      <a [routerLink]="['/articles', article.id]" color="primary" mat-flat-button>
-        Lire
-      </a>
+      <div class="flex items-center gap-3">
+        <a [routerLink]="['/articles/read', article.id]" color="primary" mat-flat-button>
+          Lire
+        </a>
+        @if (isAuthor) {
+          <a [routerLink]="['/articles/edit', article.id]" color="secondary" mat-stroked-button>
+            Modifier
+          </a>
+          <button (click)="delete(article.id)" class="me-5" color="warn" mat-flat-button type="button">Supprimer
+          </button>
+        }
+      </div>
     </mat-card-actions>
 
   </mat-card-footer>

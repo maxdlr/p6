@@ -6,5 +6,16 @@ export const isLogged: CanActivateFn = (route, state) => {
   const sessionService = inject(SessionService);
   const router = inject(Router);
 
-  return sessionService.isLogged ? true : router.navigate(['/login']);
+  const isLogged = sessionService.isLogged;
+
+  switch (isLogged) {
+    case true: {
+      if (state.url === '/') {
+        return router.navigate(['/articles']);
+      }
+      return true;
+    }
+    case false:
+      return router.navigate(['/login']);
+  }
 };

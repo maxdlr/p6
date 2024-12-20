@@ -1,30 +1,31 @@
 package com.openclassrooms.mddapi.dto;
 
 import jakarta.validation.constraints.Size;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
 public class ThemeDto {
-    private Long id;
+  private Long id;
 
-    @NonNull
-    @Size(max = 200)
-    private String name;
+  @NonNull
+  @Size(max = 200)
+  private String name;
 
-    @NonNull
-    @Size(max = 200)
-    private String description;
+  @NonNull
+  @Size(max = 200)
+  private String description;
 
-    private LocalDateTime createdAt;
+  private Long articleCount;
 
-    private LocalDateTime updatedAt;
+  private Date createdAt;
+
+  private Date updatedAt;
 }

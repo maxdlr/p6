@@ -10,8 +10,7 @@ import com.openclassrooms.mddapi.payload.request.SubscriptionRequest;
 import com.openclassrooms.mddapi.repository.SubscriptionRepository;
 import com.openclassrooms.mddapi.repository.ThemeRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
-import jakarta.persistence.EntityManager;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -23,17 +22,14 @@ public class SubscriptionService {
   private final UserRepository userRepository;
   private final ThemeRepository themeRepository;
   private final SubscriptionRepository subscriptionRepository;
-  private final EntityManager entityManager;
 
   public SubscriptionService(
       UserRepository userRepository,
       ThemeRepository themeRepository,
-      SubscriptionRepository subscriptionRepository,
-      EntityManager entityManager) {
+      SubscriptionRepository subscriptionRepository) {
     this.userRepository = userRepository;
     this.themeRepository = themeRepository;
     this.subscriptionRepository = subscriptionRepository;
-    this.entityManager = entityManager;
   }
 
   public void subscribeUserToTheme(SubscriptionRequest subscriptionRequest) {
@@ -50,11 +46,11 @@ public class SubscriptionService {
       Subscription subscription = new Subscription();
       subscription.setTheme(theme);
       subscription.setUser(user);
-      subscription.setCreatedAt(LocalDateTime.now());
+      subscription.setCreatedAt(new Date());
       subscriptionRepository.save(subscription);
     } catch (ValidationFailureException e) {
       throw new ApiBadPostRequestException(e.getMessage());
-    } 
+    }
   }
 
   public void unsubscribeUserFromTheme(SubscriptionRequest subscriptionRequest) {

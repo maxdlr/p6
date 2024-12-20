@@ -3,6 +3,7 @@ package com.openclassrooms.mddapi.security;
 import com.openclassrooms.mddapi.security.jwt.AuthEntryPointJwt;
 import com.openclassrooms.mddapi.security.jwt.AuthTokenFilter;
 import com.openclassrooms.mddapi.security.services.UserDetailsServiceImpl;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,8 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.util.List;
 
 @Configuration
 @EnableMethodSecurity()
@@ -54,7 +53,7 @@ public class WebSecurityConfig {
                         request -> {
                             var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
                             corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
-                            corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+                            corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
                             corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
                             return corsConfiguration;
                         }

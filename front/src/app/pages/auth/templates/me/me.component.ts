@@ -29,14 +29,11 @@ export class MeComponent implements OnInit {
   private snack = inject(SnackService);
 
   public ngOnInit(): void {
-    this.form = new FormGroup({
-      email: new FormControl('', [Validators.email]),
-      username: new FormControl(''),
-    });
-    this.getUser();
+    this.initForm();
+    this.refresh();
   }
 
-  public getUser() {
+  public refresh() {
     this.userService
       .$getById(this.sessionService.sessionInformation!.id)
       .subscribe({
@@ -55,8 +52,15 @@ export class MeComponent implements OnInit {
   public getThemes() {
     this.themeService.getAll().subscribe((themes) => {
       this.themes = themes.filter((theme: Theme) =>
-        this.user.subscriptionThemes.includes(theme.id),
+        this.user.subscriptionThemes?.includes(theme.id),
       );
+    });
+  }
+
+  public initForm(): void {
+    this.form = new FormGroup({
+      email: new FormControl('', [Validators.email]),
+      username: new FormControl(''),
     });
   }
 

@@ -15,8 +15,6 @@ import com.openclassrooms.mddapi.payload.request.SubscriptionRequest;
 import com.openclassrooms.mddapi.repository.SubscriptionRepository;
 import com.openclassrooms.mddapi.repository.ThemeRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,8 +28,6 @@ public class SubscriptionServiceTests {
   @Mock private UserRepository userRepository;
   @Mock private ThemeRepository themeRepository;
   @Mock private SubscriptionRepository subscriptionRepository;
-  @Mock private EntityManager entityManager;
-  @Mock private Query query;
 
   private SubscriptionService subscriptionService;
 
@@ -39,7 +35,7 @@ public class SubscriptionServiceTests {
   public void setUp() {
     subscriptionService =
         new SubscriptionService(
-            userRepository, themeRepository, subscriptionRepository, entityManager);
+            userRepository, themeRepository, subscriptionRepository);
   }
 
   @Test

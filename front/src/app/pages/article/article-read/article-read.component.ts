@@ -1,14 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ArticleService } from '../../../services/article.service';
 import { Article } from '../../../interfaces/article';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NavigationModule } from '../../../modules/navigation/navigation.module';
 import { DatePipe } from '@angular/common';
 import { MatChip } from '@angular/material/chips';
 import { MatDivider } from '@angular/material/divider';
 import _ from 'lodash';
-import { MatAnchor } from '@angular/material/button';
+import { MatAnchor, MatButton } from '@angular/material/button';
 import { SessionService } from '../../../services/session.service';
 import {
   MatCard,
@@ -18,6 +18,7 @@ import {
   MatCardTitle,
   MatCardTitleGroup,
 } from '@angular/material/card';
+import { SnackService } from '../../../services/snack.service';
 
 @Component({
   selector: 'app-article-read',
@@ -35,6 +36,7 @@ import {
     MatCardTitle,
     MatCardSubtitle,
     MatCardContent,
+    MatButton,
   ],
   templateUrl: './article-read.component.html',
   styleUrl: './article-read.component.scss',
@@ -47,6 +49,8 @@ export class ArticleReadComponent implements OnInit {
   private articleService = inject(ArticleService);
   private route = inject(ActivatedRoute);
   private sessionService = inject(SessionService);
+  private snackService = inject(SnackService);
+  private router = inject(Router);
 
   ngOnInit(): void {
     this.articleId = this.route.snapshot.paramMap.get('id') as string;
@@ -58,6 +62,13 @@ export class ArticleReadComponent implements OnInit {
       this.article = article;
       this.isAuthor =
         this.sessionService.sessionInformation?.id === article.author.id;
+    });
+  }
+
+  delete() {
+    this.articleService.delete(Number(this.articleId)).subscribe(() => {
+      this.snackService.inform('Article supprimé');
+      this.router.navigate(['/articles']);
     });
   }
 }

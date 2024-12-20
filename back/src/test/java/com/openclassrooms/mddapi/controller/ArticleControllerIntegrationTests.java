@@ -17,7 +17,7 @@ import com.openclassrooms.mddapi.repository.SubscriptionRepository;
 import com.openclassrooms.mddapi.repository.ThemeRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,7 +62,7 @@ public class ArticleControllerIntegrationTests {
   @Test
   public void testCreateArticle() throws JsonProcessingException {
     Theme theme = new Theme();
-    theme.setName("name").setDescription("description").setCreatedAt(LocalDateTime.now());
+    theme.setName("name").setDescription("description").setCreatedAt(new Date());
     themeRepository.save(theme);
     ThemeDto themeDto = themeMapper.toDto(theme);
     ArticleDto articleDto = new ArticleDto();
@@ -118,7 +118,7 @@ public class ArticleControllerIntegrationTests {
         new HttpEntity<>(createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     Theme theme = new Theme();
-    theme.setName("name").setDescription("description").setCreatedAt(LocalDateTime.now());
+    theme.setName("name").setDescription("description").setCreatedAt(new Date());
     themeRepository.save(theme);
 
     Article article = new Article();
@@ -127,7 +127,7 @@ public class ArticleControllerIntegrationTests {
         .setTitle("title")
         .setContent("content")
         .setAuthor(authenticatedUser)
-        .setCreatedAt(LocalDateTime.now());
+        .setCreatedAt(new Date());
     articleRepository.save(article);
 
     ResponseEntity<ArticleDto> response =
@@ -155,13 +155,13 @@ public class ArticleControllerIntegrationTests {
         new HttpEntity<>(createHeadersWithToken(port, authenticatedUser, restTemplate));
 
     Theme theme = new Theme();
-    theme.setName("name").setDescription("description").setCreatedAt(LocalDateTime.now());
+    theme.setName("name").setDescription("description").setCreatedAt(new Date());
     themeRepository.save(theme);
 
     Subscription subscription = new Subscription();
     subscription.setUser(authenticatedUser);
     subscription.setTheme(theme);
-    subscription.setCreatedAt(LocalDateTime.now());
+    subscription.setCreatedAt(new Date());
     subscriptionRepository.save(subscription);
 
     for (int i = 0; i < 10; i++) {
@@ -171,7 +171,7 @@ public class ArticleControllerIntegrationTests {
           .setTitle("title")
           .setContent("content")
           .setAuthor(authenticatedUser)
-          .setCreatedAt(LocalDateTime.now());
+          .setCreatedAt(new Date());
       articleRepository.save(article);
     }
 

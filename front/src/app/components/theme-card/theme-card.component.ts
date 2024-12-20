@@ -56,10 +56,9 @@ export class ThemeCardComponent implements OnInit {
       next: (userThemeIds) => {
         this.sessionInformation.subscriptionThemes = userThemeIds;
         this.sessionService.updateSessionCookie();
+        this.subscriptionUpdate.emit();
       },
     });
-
-    this.subscriptionUpdate.emit();
   }
 
   unsubscribeToTheme() {
@@ -72,8 +71,8 @@ export class ThemeCardComponent implements OnInit {
       next: (userThemeIds) => {
         this.sessionInformation.subscriptionThemes = userThemeIds;
         this.sessionService.updateSessionCookie();
+        this.subscriptionUpdate.emit();
       },
     });
-    this.subscriptionUpdate.emit();
   }
 }

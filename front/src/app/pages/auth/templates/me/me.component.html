@@ -2,7 +2,7 @@
   @if (user) {
     <div class="pb-5 text-center italic">
       <p>Membre depuis le {{ user.createdAt | date }}</p>
-      <p>Abonné à {{ user.subscriptionThemes.length }} thèmes.</p>
+      <p>Abonné à {{ user.subscriptionThemes?.length ?? 0 }} thèmes.</p>
     </div>
 
     <form (ngSubmit)="submit()" [formGroup]="form" class="flex flex-col justify-center items-center">
@@ -32,7 +32,9 @@
       <button (click)="logOut()" color="warn" mat-button type="button">Se deconnecter</button>
     </form>
   } @else {
-    <mat-spinner />
+    <div class="w-full flex justify-center items-center h-[30vh]">
+      <mat-spinner />
+    </div>
   }
 
   <div class="my-3">
@@ -43,11 +45,13 @@
     <div
       class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 grid-flow-row gap-5">
       @for (theme of themes; track theme.id) {
-        <app-theme-card [theme]="theme" (subscriptionUpdate)="getThemes()" />
+        <app-theme-card [theme]="theme" (subscriptionUpdate)="refresh()" />
       }
     </div>
   } @else {
-    <mat-spinner />
+    <div class="w-full flex justify-center items-center h-[30vh]">
+      <mat-spinner />
+    </div>
   }
 
 

@@ -12,7 +12,7 @@ export class NavigationService {
       icon: 'description',
     },
     {
-      label: 'themes',
+      label: 'Themes',
       url: '/themes',
       icon: 'label',
     },

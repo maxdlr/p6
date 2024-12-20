@@ -14,7 +14,7 @@ import com.openclassrooms.mddapi.repository.ArticleRepository;
 import com.openclassrooms.mddapi.repository.CommentRepository;
 import com.openclassrooms.mddapi.repository.ThemeRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
-import java.time.LocalDateTime;
+import java.util.Date;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +61,7 @@ public class CommentControllerIntegrationTests {
   @Test
   public void testAddComment() throws JsonProcessingException {
     Theme theme = new Theme();
-    theme.setName("theme168541").setCreatedAt(LocalDateTime.now());
+    theme.setName("theme168541").setCreatedAt(new Date());
     themeRepository.save(theme);
 
     Article article = new Article();
@@ -69,7 +69,7 @@ public class CommentControllerIntegrationTests {
         .setAuthor(authenticatedUser)
         .setTitle("title")
         .setContent("content")
-        .setCreatedAt(LocalDateTime.now())
+        .setCreatedAt(new Date())
         .setTheme(theme);
     articleRepository.save(article);
 
@@ -77,7 +77,7 @@ public class CommentControllerIntegrationTests {
     commentDto.setContent("This is a comment");
     commentDto.setAuthor(userMapper.toDto(authenticatedUser));
     commentDto.setArticleId(article.getId());
-    commentDto.setCreatedAt(LocalDateTime.now());
+    commentDto.setCreatedAt(new Date());
 
     HttpEntity<CommentDto> httpEntity =
         new HttpEntity<>(commentDto, createHeadersWithToken(port, authenticatedUser, restTemplate));

@@ -1,9 +1,10 @@
 <ng-template #content>
-  <div class="mb-10">
+  <div>
     <button (click)="loadFixtures()" mat-button>Fix</button>
     <button (click)="removeFixtures()" mat-button>Del</button>
   </div>
-  <section class="mx-4">
+
+  <section class="container mx-auto max-sm:px-3">
     <ng-content />
   </section>
 </ng-template>

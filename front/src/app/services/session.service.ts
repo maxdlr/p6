@@ -55,7 +55,7 @@ export class SessionService {
     this.authService.me(tokenValidationRequest).subscribe({
       next: (user) => {
         (this.sessionInformation as SessionInformation).subscriptionThemes =
-          user.subscriptionThemes;
+          user.subscriptionThemes as number[];
       },
     });
   }

@@ -1,13 +1,12 @@
 package com.openclassrooms.mddapi.models;
 
 import jakarta.persistence.*;
+import java.util.Date;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "SUBSCRIPTIONS")
@@ -31,9 +30,9 @@ public class Subscription {
 
   @CreatedDate
   @Column(name = "created_at", updatable = false)
-  private LocalDateTime createdAt;
+  private Date createdAt;
 
   @UpdateTimestamp
   @Column(name = "updated_at")
-  private LocalDateTime updatedAt;
+  private Date updatedAt;
 }
