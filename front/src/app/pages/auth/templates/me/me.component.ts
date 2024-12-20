@@ -6,6 +6,7 @@ import { User } from '../../../../interfaces/user';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserEditRequest } from '../../interfaces/user-edit-request';
 import { SnackService } from '../../../../services/snack.service';
+import _ from 'lodash';
 
 @Component({
   selector: 'app-me',
@@ -16,6 +17,7 @@ import { SnackService } from '../../../../services/snack.service';
 export class MeComponent implements OnInit {
   public user!: User;
   form!: FormGroup;
+  protected readonly _ = _;
   private sessionService = inject(SessionService);
   private userService = inject(UserService);
   private router = inject(Router);
@@ -31,19 +33,12 @@ export class MeComponent implements OnInit {
       .$getById(this.sessionService.sessionInformation!.id)
       .subscribe({
         next: (user: User) => {
-          if (user === null) {
-            this.snack.error('Session Expired');
-            this.router.navigate(['/login']);
-          }
-
           this.user = user;
           this.form.controls['email'].setValue(this.user.email);
           this.form.controls['username'].setValue(this.user.username);
         },
         error: (error) => {
           console.log(error);
-          this.snack.error('Session Expired');
-          this.router.navigate(['/login']);
         },
       });
   }

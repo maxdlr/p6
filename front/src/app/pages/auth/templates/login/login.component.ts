@@ -42,12 +42,15 @@ export class LoginComponent implements OnInit {
         this.sessionService.logIn(response);
         this.snackService.inform(
           `Bonjour ${_.upperFirst(response.username)} !`,
+          1000,
         );
-        this.router.navigate(['/me']);
+        return this.router.navigate(['/articles']);
       },
       error: (error) => {
         this.onError = true;
-        console.error(error);
+        if (error.status === 404) {
+          this.sessionService.logOut();
+        }
         this.snackService.error(error.error.message);
       },
     });

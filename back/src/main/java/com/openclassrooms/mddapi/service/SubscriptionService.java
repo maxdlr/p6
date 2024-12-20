@@ -54,7 +54,7 @@ public class SubscriptionService {
       subscriptionRepository.save(subscription);
     } catch (ValidationFailureException e) {
       throw new ApiBadPostRequestException(e.getMessage());
-    }
+    } 
   }
 
   public void unsubscribeUserFromTheme(SubscriptionRequest subscriptionRequest) {

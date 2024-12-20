@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.openclassrooms.mddapi.dto.ArticleDto;
 import com.openclassrooms.mddapi.dto.ThemeDto;
+import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.models.Article;
 import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
@@ -28,6 +29,7 @@ class ArticleMapperTests {
   @Mock private UserRepository userRepository;
   @Mock private ThemeRepository themeRepository;
   @Mock private ThemeMapper themeMapper;
+  @Mock private UserMapper userMapper;
 
   private ArticleMapper articleMapper;
 
@@ -37,14 +39,16 @@ class ArticleMapperTests {
     articleMapper.userRepository = userRepository;
     articleMapper.themeRepository = themeRepository;
     articleMapper.themeMapper = this.themeMapper;
+    articleMapper.userMapper = this.userMapper;
   }
 
   @Test
   void testToEntity() {
     User user = makeUser(1, false);
+    UserDto userDto = makeUserDto(1);
     Theme theme = makeTheme(1);
     ThemeDto themeDto = makeThemeDto(1);
-    ArticleDto articleDto = makeArticleDto(1, themeDto, user);
+    ArticleDto articleDto = makeArticleDto(1, themeDto, userDto);
 
     when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(user));
     when(themeRepository.findById(any(Long.class))).thenReturn(Optional.of(theme));
@@ -62,10 +66,12 @@ class ArticleMapperTests {
   @Test
   void testToDto() {
     User user = makeUser(1, false);
+    UserDto userDto = makeUserDto(1);
     Theme theme = makeTheme(1);
     ThemeDto themeDto = makeThemeDto(1);
 
     when(themeMapper.toDto(theme)).thenReturn(themeDto);
+    when(userMapper.toDto(user)).thenReturn(userDto);
 
     Article article = makeArticle(1, theme, user);
 
@@ -75,7 +81,7 @@ class ArticleMapperTests {
     assertEquals(article.getId(), articleDto.getId());
     assertEquals(article.getTitle(), articleDto.getTitle());
     assertEquals(article.getContent(), articleDto.getContent());
-    assertEquals(user.getId(), articleDto.getAuthorId());
+    assertEquals(user.getId(), articleDto.getAuthor().getId());
     assertEquals(theme.getId(), articleDto.getTheme().getId());
   }
 
@@ -83,6 +89,7 @@ class ArticleMapperTests {
   void testToEntityList() {
     List<ArticleDto> dtoList = new ArrayList<>();
     User user = makeUser(22, false);
+    UserDto userDto = makeUserDto(22);
     Theme theme = makeTheme(23);
     ThemeDto themeDto = makeThemeDto(23);
 
@@ -90,7 +97,7 @@ class ArticleMapperTests {
     when(themeRepository.findById(theme.getId())).thenReturn(Optional.of(theme));
 
     for (int i = 1; i <= 10; i++) {
-      ArticleDto articleDto = makeArticleDto(i, themeDto, user);
+      ArticleDto articleDto = makeArticleDto(i, themeDto, userDto);
       dtoList.add(articleDto);
     }
 
@@ -107,6 +114,7 @@ class ArticleMapperTests {
   void testToDtoList() {
     List<Article> entityList = new ArrayList<>();
     User user = makeUser(1, false);
+    UserDto userDto = makeUserDto(1);
     Theme theme = makeTheme(1);
     ThemeDto themeDto = makeThemeDto(1);
 
@@ -116,6 +124,7 @@ class ArticleMapperTests {
     }
 
     when(themeMapper.toDto(theme)).thenReturn(themeDto);
+    when(userMapper.toDto(user)).thenReturn(userDto);
 
     List<ArticleDto> dtoList = articleMapper.toDto(entityList);
 

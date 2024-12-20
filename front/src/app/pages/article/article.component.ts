@@ -3,37 +3,25 @@ import { ArticleService } from '../../services/article.service';
 import { Article } from '../../interfaces/article';
 import { NavigationModule } from '../../modules/navigation/navigation.module';
 import { ArticleCardComponent } from '../../components/article-card/article-card.component';
-import { Router } from '@angular/router';
-import { SnackService } from '../../services/snack.service';
+import { SessionService } from '../../services/session.service';
 
 @Component({
   selector: 'app-article',
+  standalone: true,
   imports: [NavigationModule, ArticleCardComponent],
   templateUrl: './article.component.html',
   styleUrl: './article.component.scss',
 })
 export class ArticleComponent implements OnInit {
-  articleService = inject(ArticleService);
   articles!: Article[];
-  private router = inject(Router);
-  private snack = inject(SnackService);
+  private articleService = inject(ArticleService);
+  private sessionService = inject(SessionService);
 
   ngOnInit(): void {
-    this.articleService.getAllOfUser().subscribe({
-      next: (articles: Article[]) => {
-        if (articles === null) {
-          this.snack.error('Session Expired');
-          this.router.navigate(['/login']);
-        }
-
-        this.articles = articles;
-        console.log(articles);
-      },
-      error: (error) => {
-        console.log(error);
-        this.snack.error('Session Expired');
-        this.router.navigate(['/login']);
-      },
-    });
+    this.articleService
+      .getAllOfUser(this.sessionService.sessionInformation!.id)
+      .subscribe({
+        next: (articles: Article[]) => (this.articles = articles),
+      });
   }
 }

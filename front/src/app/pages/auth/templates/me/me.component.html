@@ -1,4 +1,10 @@
 <app-auth-base title="profil utilisateur">
+
+  <div class="pb-5 text-center italic">
+    <p>Membre depuis le {{ user.createdAt | date }}</p>
+    <p>Abonné à {{ user.subscriptionThemes.length }} thèmes.</p>
+  </div>
+
   <form (ngSubmit)="submit()" [formGroup]="form" class="flex flex-col justify-center items-center">
 
     <mat-form-field>

@@ -1,9 +1,11 @@
-import { ArticleTheme } from './theme';
+import { ArticleAuthor, ArticleTheme } from './theme';
 
 export interface Article {
   id: number;
   title: string;
   content: string;
-  authorId: number;
+  author: ArticleAuthor;
   theme: ArticleTheme;
+  createdAt: Date;
+  updatedAt: Date;
 }

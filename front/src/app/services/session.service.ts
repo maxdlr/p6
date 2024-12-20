@@ -54,7 +54,6 @@ export class SessionService {
 
     this.authService.me(tokenValidationRequest).subscribe({
       next: (user) => {
-        console.log(user);
         (this.sessionInformation as SessionInformation).subscriptionThemes =
           user.subscriptionThemes;
       },

@@ -13,6 +13,7 @@ import _ from 'lodash';
 import { MatButton } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { MatChip } from '@angular/material/chips';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-article-card',
@@ -26,6 +27,7 @@ import { MatChip } from '@angular/material/chips';
     MatButton,
     MatCardSubtitle,
     MatChip,
+    DatePipe,
   ],
   templateUrl: './article-card.component.html',
   styleUrl: './article-card.component.scss',

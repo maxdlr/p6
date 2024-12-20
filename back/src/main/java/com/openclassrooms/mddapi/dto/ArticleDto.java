@@ -18,7 +18,7 @@ public class ArticleDto {
   private String title;
 
   @NonNull private ThemeDto theme;
-  @NonNull private Long authorId;
+  @NonNull private UserDto author;
   @NonNull private String content;
 
   private LocalDateTime createdAt;
