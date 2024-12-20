@@ -1,7 +1,7 @@
 package com.openclassrooms.mddapi.dto;
 
 import jakarta.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -23,7 +23,7 @@ public class ArticleDto {
   @NonNull private String content;
   private List<CommentDto> comments;
 
-  private LocalDateTime createdAt;
+  private Date createdAt;
 
-  private LocalDateTime updatedAt;
+  private Date updatedAt;
 }

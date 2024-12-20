@@ -10,7 +10,13 @@
 
 <mat-sidenav-container>
   <mat-sidenav #snav mode="side" position="end">
-    <mat-nav-list>
+    <mat-nav-list class="text-center">
+
+      <a mat-icon-button routerLink="/me">
+        <mat-icon>
+          face
+        </mat-icon>
+      </a>
       @for (navigationItem of navigation; track navigationItem) {
         <a mat-list-item [routerLink]="navigationItem.url">
           {{ navigationItem.label }}

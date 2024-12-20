@@ -92,7 +92,7 @@ public class ArticleService {
     }
   }
 
-  public void save(ArticleDto articleDto) {
+  public Article save(ArticleDto articleDto) {
     try {
       if (!userRepository.existsById(articleDto.getAuthor().getId())) {
         throw new ApiResourceNotFoundException("Cannot find author of article");
@@ -104,6 +104,7 @@ public class ArticleService {
 
       Article article = articleMapper.toEntity(articleDto);
       articleRepository.save(article);
+      return article;
     } catch (ValidationFailureException | NumberFormatException | NullPointerException e) {
       throw new ApiBadPostRequestException(e.getMessage());
     }
@@ -148,5 +149,28 @@ public class ArticleService {
 
     Comment comment = commentMapper.toEntity(commentDto);
     commentRepository.save(comment);
+  }
+
+  public Article update(String id, ArticleDto articleDto) {
+    Optional<Article> article = articleRepository.findById(Long.valueOf(id));
+
+    if (article.isEmpty()) {
+      throw new ApiResourceNotFoundException("Article not found");
+    }
+
+    return this.save(articleDto);
+  }
+
+  public void delete(String id) {
+    Optional<Article> article = articleRepository.findById(Long.valueOf(id));
+
+    if (article.isEmpty()) {
+      throw new ApiResourceNotFoundException("Article not found");
+    }
+
+    List<Comment> comments = commentRepository.findAllByArticle(article.get());
+
+    commentRepository.deleteAll(comments);
+    articleRepository.delete(article.get());
   }
 }

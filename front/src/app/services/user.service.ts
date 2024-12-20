@@ -25,8 +25,8 @@ export class UserService {
   }
 
   private transformUser(user: User): User {
-    user.createdAt = new Date(user.createdAt);
-    user.updatedAt = new Date(user.updatedAt);
+    user.createdAt = new Date(user.createdAt as string);
+    user.updatedAt = new Date(user.updatedAt as string);
     return user;
   }
 }

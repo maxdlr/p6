@@ -1,6 +1,6 @@
 package com.openclassrooms.mddapi.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -17,7 +17,7 @@ public class CommentDto {
   @NonNull private UserDto author;
   @NonNull private Long articleId;
 
-  private LocalDateTime createdAt;
+  private Date createdAt;
 
-  private LocalDateTime updatedAt;
+  private Date updatedAt;
 }

@@ -1,11 +1,9 @@
 package com.openclassrooms.mddapi.models;
 
 import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
+import java.util.Date;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -46,9 +44,9 @@ public class User {
 
   @CreatedDate
   @Column(name = "created_at", updatable = false)
-  private LocalDateTime createdAt;
+  private Date createdAt;
 
   @UpdateTimestamp
   @Column(name = "updated_at")
-  private LocalDateTime updatedAt;
+  private Date updatedAt;
 }

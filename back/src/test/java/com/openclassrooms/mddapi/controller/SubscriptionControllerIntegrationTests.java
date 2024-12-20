@@ -13,7 +13,7 @@ import com.openclassrooms.mddapi.repository.ArticleRepository;
 import com.openclassrooms.mddapi.repository.SubscriptionRepository;
 import com.openclassrooms.mddapi.repository.ThemeRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
-import java.time.LocalDateTime;
+import java.util.Date;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +61,7 @@ public class SubscriptionControllerIntegrationTests {
   @Test
   public void testSubscribe() throws JsonProcessingException {
     Theme theme = new Theme();
-    theme.setName("name").setCreatedAt(LocalDateTime.now());
+    theme.setName("name").setCreatedAt(new Date());
     themeRepository.save(theme);
 
     SubscriptionRequest subscriptionRequest = new SubscriptionRequest();
@@ -124,11 +124,11 @@ public class SubscriptionControllerIntegrationTests {
   @Test
   public void testUnsubscribe() throws JsonProcessingException {
     Theme theme = new Theme();
-    theme.setName("name").setCreatedAt(LocalDateTime.now());
+    theme.setName("name").setCreatedAt(new Date());
     themeRepository.save(theme);
 
     Subscription subscription = new Subscription();
-    subscription.setUser(authenticatedUser).setTheme(theme).setCreatedAt(LocalDateTime.now());
+    subscription.setUser(authenticatedUser).setTheme(theme).setCreatedAt(new Date());
     subscriptionRepository.save(subscription);
 
     SubscriptionRequest subscriptionRequest = new SubscriptionRequest();

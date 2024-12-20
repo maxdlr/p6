@@ -1,7 +1,13 @@
 <app-base>
-  <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 grid-flow-row gap-5">
-    @for (theme of themes; track theme.id) {
-      <app-theme-card [theme]="theme" />
-    }
-  </div>
+  @if (themes) {
+    <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 grid-flow-row gap-5">
+      @for (theme of themes; track theme.id) {
+        <app-theme-card [theme]="theme" />
+      }
+    </div>
+  } @else {
+    <div class="w-full flex justify-center items-center h-[30vh]">
+      <mat-spinner />
+    </div>
+  }
 </app-base>

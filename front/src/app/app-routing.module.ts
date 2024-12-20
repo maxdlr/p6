@@ -8,9 +8,10 @@ import { isLogged } from './pages/auth/services/auth.guard';
 import { ThemeComponent } from './pages/theme/theme.component';
 import { ArticleReadComponent } from './pages/article/article-read/article-read.component';
 import { ArticleListComponent } from './pages/article/article-list/article-list.component';
+import { ArticleFormComponent } from './pages/article/article-form/article-form.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeComponent, canActivate: [isLogged] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'me', component: MeComponent, canActivate: [isLogged] },
@@ -21,8 +22,18 @@ const routes: Routes = [
     canActivate: [isLogged],
   },
   {
-    path: 'articles/:id',
+    path: 'articles/read/:id',
     component: ArticleReadComponent,
+    canActivate: [isLogged],
+  },
+  {
+    path: 'articles/edit/:id',
+    component: ArticleFormComponent,
+    canActivate: [isLogged],
+  },
+  {
+    path: 'articles/add',
+    component: ArticleFormComponent,
     canActivate: [isLogged],
   },
 ];

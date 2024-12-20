@@ -3,7 +3,6 @@ package com.openclassrooms.mddapi.service;
 import com.github.javafaker.Faker;
 import com.openclassrooms.mddapi.models.*;
 import com.openclassrooms.mddapi.repository.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -47,12 +46,7 @@ public class FixturesService {
           .setName(this.faker.food().spice())
           .setDescription(this.faker.chuckNorris().fact() + " " + this.faker.lorem().paragraph())
           .setCreatedAt(
-              LocalDateTime.of(
-                  this.faker.number().numberBetween(2000, 2024),
-                  this.faker.number().numberBetween(1, 12),
-                  this.faker.number().numberBetween(1, 31),
-                  this.faker.number().numberBetween(1, 23),
-                  this.faker.number().numberBetween(1, 59)));
+              this.faker.date().birthday());
       themes.add(theme);
     }
     themeRepository.saveAll(themes);
@@ -71,12 +65,7 @@ public class FixturesService {
           .setTitle(this.faker.food().ingredient())
           .setContent(this.faker.lorem().paragraph(50))
           .setCreatedAt(
-              LocalDateTime.of(
-                  this.faker.number().numberBetween(2000, 2024),
-                  this.faker.number().numberBetween(1, 12),
-                  this.faker.number().numberBetween(1, 31),
-                  this.faker.number().numberBetween(1, 23),
-                  this.faker.number().numberBetween(1, 59)));
+              this.faker.date().birthday());
       articles.add(article);
     }
     articleRepository.saveAll(articles);
@@ -93,12 +82,7 @@ public class FixturesService {
           .setUsername(this.faker.name().username())
           .setPassword(password)
           .setCreatedAt(
-              LocalDateTime.of(
-                  this.faker.number().numberBetween(2000, 2024),
-                  this.faker.number().numberBetween(1, 12),
-                  this.faker.number().numberBetween(1, 31),
-                  this.faker.number().numberBetween(1, 23),
-                  this.faker.number().numberBetween(1, 59)));
+              this.faker.date().birthday());
       users.add(user);
     }
 
@@ -108,13 +92,7 @@ public class FixturesService {
           .setEmail("test@test.com")
           .setUsername("test")
           .setPassword(password)
-          .setCreatedAt(
-              LocalDateTime.of(
-                  this.faker.number().numberBetween(2000, 2024),
-                  this.faker.number().numberBetween(1, 12),
-                  this.faker.number().numberBetween(1, 31),
-                  this.faker.number().numberBetween(1, 23),
-                  this.faker.number().numberBetween(1, 59)));
+          .setCreatedAt(this.faker.date().birthday());
       users.add(dummy);
     }
 
@@ -129,12 +107,7 @@ public class FixturesService {
           .setUser(users.get(new Random().nextInt(users.size())))
           .setTheme(themes.get(new Random().nextInt(themes.size())))
           .setCreatedAt(
-              LocalDateTime.of(
-                  this.faker.number().numberBetween(2000, 2024),
-                  this.faker.number().numberBetween(1, 12),
-                  this.faker.number().numberBetween(1, 31),
-                  this.faker.number().numberBetween(1, 23),
-                  this.faker.number().numberBetween(1, 59)));
+              this.faker.date().birthday());
 
       if (!subscriptionRepository.existsByUserIdAndThemeId(
           subscription.getUser().getId(), subscription.getTheme().getId())) {
@@ -151,12 +124,7 @@ public class FixturesService {
           .setAuthor(authors.get(new Random().nextInt(authors.size())))
           .setContent(this.faker.chuckNorris().fact())
           .setCreatedAt(
-              LocalDateTime.of(
-                  this.faker.number().numberBetween(2000, 2024),
-                  this.faker.number().numberBetween(1, 12),
-                  this.faker.number().numberBetween(1, 31),
-                  this.faker.number().numberBetween(1, 23),
-                  this.faker.number().numberBetween(1, 59)));
+              this.faker.date().birthday());
       commentRepository.save(comment);
     }
   }

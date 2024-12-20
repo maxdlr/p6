@@ -13,7 +13,7 @@ import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.payload.request.LoginRequest;
 import com.openclassrooms.mddapi.repository.UserRepository;
-import java.time.LocalDateTime;
+import java.util.Date;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -32,8 +32,8 @@ public class TestUtils {
         .setUsername("username" + id)
         .setPassword(encoded ? passwordEncoder.encode("password" + id) : "password" + id)
         .setEmail("email@email.com" + id)
-        .setCreatedAt(LocalDateTime.now())
-        .setUpdatedAt(LocalDateTime.now());
+        .setCreatedAt(new Date())
+        .setUpdatedAt(new Date());
     return user;
   }
 
@@ -44,8 +44,8 @@ public class TestUtils {
         .setUsername("username" + id)
         .setPassword("password" + id)
         .setEmail("email@email.com" + id)
-        .setCreatedAt(LocalDateTime.now())
-        .setUpdatedAt(LocalDateTime.now());
+        .setCreatedAt(new Date())
+        .setUpdatedAt(new Date());
     return userDto;
   }
 
@@ -55,8 +55,8 @@ public class TestUtils {
         .setId((long) id)
         .setName("theme" + id)
         .setDescription("description" + id)
-        .setCreatedAt(LocalDateTime.now())
-        .setUpdatedAt(LocalDateTime.now());
+        .setCreatedAt(new Date())
+        .setUpdatedAt(new Date());
 
     return theme;
   }
@@ -67,8 +67,8 @@ public class TestUtils {
         .setId((long) id)
         .setName("theme" + id)
         .setDescription("description" + id)
-        .setCreatedAt(LocalDateTime.now())
-        .setUpdatedAt(LocalDateTime.now());
+        .setCreatedAt(new Date())
+        .setUpdatedAt(new Date());
 
     return themeDto;
   }
@@ -81,8 +81,8 @@ public class TestUtils {
         .setTheme(theme)
         .setContent("content" + id)
         .setAuthor(user)
-        .setCreatedAt(LocalDateTime.now())
-        .setUpdatedAt(LocalDateTime.now());
+        .setCreatedAt(new Date())
+        .setUpdatedAt(new Date());
     return article;
   }
 
@@ -94,8 +94,8 @@ public class TestUtils {
         .setTheme(themeDto)
         .setContent("content" + id)
         .setAuthor(userDto)
-        .setCreatedAt(LocalDateTime.now())
-        .setUpdatedAt(LocalDateTime.now());
+        .setCreatedAt(new Date())
+        .setUpdatedAt(new Date());
     return articleDto;
   }
 
@@ -105,8 +105,8 @@ public class TestUtils {
         .setId((long) id)
         .setUser(user)
         .setTheme(theme)
-        .setCreatedAt(LocalDateTime.now())
-        .setUpdatedAt(LocalDateTime.now());
+        .setCreatedAt(new Date())
+        .setUpdatedAt(new Date());
     return subscription;
   }
 
@@ -125,7 +125,7 @@ public class TestUtils {
         .setUsername("username1")
         .setPassword(passwordEncoder.encode("password1"))
         .setEmail("email@email.com1")
-        .setCreatedAt(LocalDateTime.now());
+        .setCreatedAt(new Date());
 
     userRepository.save(authenticatedUser);
     return authenticatedUser;

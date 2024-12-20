@@ -4,6 +4,7 @@ import com.openclassrooms.mddapi.dto.CommentDto;
 import com.openclassrooms.mddapi.models.Comment;
 import com.openclassrooms.mddapi.repository.ArticleRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import java.util.Date;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -20,6 +21,8 @@ public abstract class CommentMapper implements EntityMapper<CommentDto, Comment>
 
   @Autowired UserMapper userMapper;
 
+  Date newDate = new Date();
+
   @Mappings({
     @Mapping(
         target = "author",
@@ -29,6 +32,7 @@ public abstract class CommentMapper implements EntityMapper<CommentDto, Comment>
         target = "article",
         expression =
             "java(this.articleRepository.findById(commentDto.getArticleId()).orElse(null))"),
+    @Mapping(target = "updatedAt", expression = "java(newDate)")
   })
   public abstract Comment toEntity(CommentDto commentDto);
 

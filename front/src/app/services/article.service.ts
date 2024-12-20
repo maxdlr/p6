@@ -3,6 +3,7 @@ import { map, Observable } from 'rxjs';
 import { Article } from '../interfaces/article';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { ArticleRequest } from '../interfaces/article-request';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,21 @@ export class ArticleService {
     return this.httpClient
       .get<Article>(`${this.pathService}/${id}`)
       .pipe(map((article: Article) => this.transformArticle(article)));
+  }
+
+  public create(articleRequest: ArticleRequest) {
+    return this.httpClient.post<Article>(`${this.pathService}`, articleRequest);
+  }
+
+  public update(id: number, articleRequest: ArticleRequest) {
+    return this.httpClient.patch<Article>(
+      `${this.pathService}/${id}`,
+      articleRequest,
+    );
+  }
+
+  public delete(id: number) {
+    return this.httpClient.delete<void>(`${this.pathService}/${id}`);
   }
 
   private transformArticles(articles: Article[]): Article[] {

@@ -5,6 +5,7 @@ import com.openclassrooms.mddapi.models.Article;
 import com.openclassrooms.mddapi.repository.CommentRepository;
 import com.openclassrooms.mddapi.repository.ThemeRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import java.util.Date;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -19,12 +20,13 @@ public abstract class ArticleMapper implements EntityMapper<ArticleDto, Article>
 
   @Autowired UserRepository userRepository;
 
-  @Autowired
-  CommentRepository commentRepository;
+  @Autowired CommentRepository commentRepository;
 
   @Autowired ThemeMapper themeMapper;
   @Autowired UserMapper userMapper;
   @Autowired CommentMapper commentMapper;
+
+  Date newDate = new Date();
 
   @Mappings({
     @Mapping(
@@ -35,13 +37,16 @@ public abstract class ArticleMapper implements EntityMapper<ArticleDto, Article>
         target = "theme",
         expression =
             "java(this.themeRepository.findById(articleDto.getTheme().getId()).orElse(null))"),
+    @Mapping(target = "updatedAt", expression = "java(newDate)")
   })
   public abstract Article toEntity(ArticleDto articleDto);
 
   @Mappings({
     @Mapping(target = "author", expression = "java(userMapper.toDto(article.getAuthor()))"),
     @Mapping(target = "theme", expression = "java(themeMapper.toDto(article.getTheme()))"),
-    @Mapping(target = "comments", expression = "java(commentMapper.toDto(commentRepository.findAllByArticle(article)))")
+    @Mapping(
+        target = "comments",
+        expression = "java(commentMapper.toDto(commentRepository.findAllByArticle(article)))")
   })
   public abstract ArticleDto toDto(Article article);
 }

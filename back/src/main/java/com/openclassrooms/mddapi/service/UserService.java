@@ -8,7 +8,7 @@ import com.openclassrooms.mddapi.payload.request.SignUpRequest;
 import com.openclassrooms.mddapi.payload.request.TokenValidationRequest;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.security.jwt.JwtUtils;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -114,7 +114,7 @@ public class UserService {
       user.setUsername(signUpRequest.getUsername())
           .setEmail(signUpRequest.getEmail())
           .setPassword(password)
-          .setCreatedAt(LocalDateTime.now());
+          .setCreatedAt(new Date());
 
       userRepository.save(user);
     } catch (ValidationFailureException | IllegalArgumentException e) {
@@ -142,7 +142,7 @@ public class UserService {
       if (userDto.getEmail() != null) updatedUser.setEmail(userDto.getEmail());
       if (userDto.getPassword() != null) updatedUser.setPassword(userDto.getPassword());
       if (userDto.getUsername() != null) updatedUser.setUsername(userDto.getUsername());
-      updatedUser.setUpdatedAt(LocalDateTime.now());
+      updatedUser.setUpdatedAt(new Date());
 
       userRepository.save(updatedUser);
       return updatedUser;

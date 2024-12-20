@@ -13,8 +13,8 @@ import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.repository.ArticleRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,7 +51,7 @@ public class CommentMapperTests {
         .setAuthor(user)
         .setId(1L)
         .setContent("content")
-        .setCreatedAt(LocalDateTime.now());
+        .setCreatedAt(new Date());
 
     when(userMapper.toDto(user)).thenReturn(userDto);
 
@@ -74,7 +74,7 @@ public class CommentMapperTests {
         .setAuthor(userDto)
         .setId(1L)
         .setContent("content")
-        .setCreatedAt(LocalDateTime.now());
+        .setCreatedAt(new Date());
 
     Comment comment = commentMapper.toEntity(commentDto);
 
@@ -98,7 +98,7 @@ public class CommentMapperTests {
           .setAuthor(user)
           .setId((long) i)
           .setContent("content")
-          .setCreatedAt(LocalDateTime.now());
+          .setCreatedAt(new Date());
 
       commentList.add(comment);
     }
@@ -127,7 +127,7 @@ public class CommentMapperTests {
           .setAuthor(userDto)
           .setId((long) i)
           .setContent("content")
-          .setCreatedAt(LocalDateTime.now());
+          .setCreatedAt(new Date());
       commentDtoList.add(commentDto);
     }
 

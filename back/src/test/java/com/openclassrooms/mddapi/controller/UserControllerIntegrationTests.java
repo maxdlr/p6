@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.repository.UserRepository;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +57,7 @@ public class UserControllerIntegrationTests {
     user.setUsername("username")
         .setPassword(passwordEncoder.encode("password"))
         .setEmail("email@email.com")
-        .setCreatedAt(LocalDateTime.now());
+        .setCreatedAt(new Date());
 
     userRepository.save(user);
 

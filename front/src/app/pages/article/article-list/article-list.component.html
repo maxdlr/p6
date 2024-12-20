@@ -1,12 +1,19 @@
 <app-base>
+
+  <div class="my-5 text-right">
+    <a [routerLink]="['/articles/add']" color="primary" mat-flat-button>Ecrire un article</a>
+  </div>
+
   @if (articles) {
     <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 grid-flow-row gap-5">
       @for (article of articles; track article.id) {
-        <app-article-list-card [article]="article" />
+        <app-article-list-card [article]="article" (deleted)="refresh()" />
       }
     </div>
   } @else {
-    <mat-spinner />
+    <div class="w-full flex justify-center items-center h-[30vh]">
+      <mat-spinner />
+    </div>
   }
 
 

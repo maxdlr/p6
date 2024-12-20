@@ -1,7 +1,7 @@
 package com.openclassrooms.mddapi.models;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,7 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-  @Table(name = "COMMENTS")
+@Table(name = "COMMENTS")
 @Data
 @Accessors(chain = true)
 @EntityListeners(AuditingEntityListener.class)
@@ -32,9 +32,9 @@ public class Comment {
 
   @CreatedDate
   @Column(name = "created_at", updatable = false)
-  private LocalDateTime createdAt;
+  private Date createdAt;
 
   @UpdateTimestamp
   @Column(name = "updated_at")
-  private LocalDateTime updatedAt;
+  private Date updatedAt;
 }
