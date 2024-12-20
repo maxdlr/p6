@@ -18,6 +18,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -71,7 +72,7 @@ public class ArticleService {
     Optional<User> user = userRepository.findById(id);
 
     if (user.isEmpty()) {
-      throw new ApiResourceNotFoundException("Cannot find user");
+      throw new UsernameNotFoundException("Cannot find user");
     }
 
     return executeFindArticlesByUserQuery(user.get());
@@ -82,7 +83,7 @@ public class ArticleService {
       Optional<User> user = userRepository.findById(Long.valueOf(id));
 
       if (user.isEmpty()) {
-        throw new ApiResourceNotFoundException("Cannot find user");
+        throw new UsernameNotFoundException("Cannot find user");
       }
 
       return executeFindArticlesByUserQuery(user.get());
@@ -133,10 +134,10 @@ public class ArticleService {
   }
 
   public void addCommentToArticle(CommentDto commentDto) {
-    Optional<User> user = userRepository.findById(commentDto.getAuthorId());
+    Optional<User> user = userRepository.findById(commentDto.getAuthor().getId());
 
     if (user.isEmpty()) {
-      throw new ApiResourceNotFoundException("Cannot find user");
+      throw new UsernameNotFoundException("Cannot find user");
     }
 
     Optional<Article> article = articleRepository.findById(commentDto.getArticleId());

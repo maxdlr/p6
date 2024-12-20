@@ -1,4 +1,5 @@
 import { ArticleAuthor, ArticleTheme } from './theme';
+import { Comment } from './comment';
 
 export interface Article {
   id: number;
@@ -8,4 +9,5 @@ export interface Article {
   theme: ArticleTheme;
   createdAt: Date;
   updatedAt: Date;
+  comments: Comment[];
 }

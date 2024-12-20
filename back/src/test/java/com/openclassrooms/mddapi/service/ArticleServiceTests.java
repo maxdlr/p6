@@ -163,6 +163,7 @@ public class ArticleServiceTests {
   @Test
   public void testAddCommentToArticle() {
     User user = makeUser(1, true);
+    UserDto userDto = makeUserDto(1);
     Theme theme = makeTheme(1);
     Article article = new Article();
     article.setId(1L).setAuthor(user).setTheme(theme).setContent("content").setTitle("title");
@@ -171,7 +172,7 @@ public class ArticleServiceTests {
     comment.setArticle(article).setAuthor(user).setContent("comment");
 
     CommentDto commentDto = new CommentDto();
-    commentDto.setArticleId(article.getId()).setAuthorId(user.getId()).setContent("comment");
+    commentDto.setArticleId(article.getId()).setAuthor(userDto).setContent("comment");
 
     when(commentMapper.toEntity(commentDto)).thenReturn(comment);
     when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
@@ -181,11 +182,11 @@ public class ArticleServiceTests {
 
     verify(commentRepository).save(any(Comment.class));
 
-    commentDto.setAuthorId(anyLong());
+    commentDto.setAuthor(new UserDto());
     assertThrows(
         ApiResourceNotFoundException.class, () -> articleService.addCommentToArticle(commentDto));
 
-    commentDto.setAuthorId(user.getId());
+    commentDto.setAuthor(new UserDto());
     commentDto.setArticleId(anyLong());
     assertThrows(
         ApiResourceNotFoundException.class, () -> articleService.addCommentToArticle(commentDto));

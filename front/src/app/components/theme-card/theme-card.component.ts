@@ -1,4 +1,11 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { NavigationModule } from '../../modules/navigation/navigation.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -26,6 +33,9 @@ import { CommonModule } from '@angular/common';
 })
 export class ThemeCardComponent implements OnInit {
   @Input() public theme!: Theme;
+  @Output() subscriptionUpdate: EventEmitter<string> =
+    new EventEmitter<string>();
+
   protected readonly _ = _;
   protected sessionService = inject(SessionService);
   protected sessionInformation!: SessionInformation;
@@ -46,10 +56,10 @@ export class ThemeCardComponent implements OnInit {
       next: (userThemeIds) => {
         this.sessionInformation.subscriptionThemes = userThemeIds;
         this.sessionService.updateSessionCookie();
-
-        console.log('subscribed to ' + this.theme.id);
       },
     });
+
+    this.subscriptionUpdate.emit();
   }
 
   unsubscribeToTheme() {
@@ -62,8 +72,8 @@ export class ThemeCardComponent implements OnInit {
       next: (userThemeIds) => {
         this.sessionInformation.subscriptionThemes = userThemeIds;
         this.sessionService.updateSessionCookie();
-        console.log('unsubscribed from ' + this.theme.id);
       },
     });
+    this.subscriptionUpdate.emit();
   }
 }

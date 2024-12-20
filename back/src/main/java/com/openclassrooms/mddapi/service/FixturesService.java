@@ -1,14 +1,9 @@
 package com.openclassrooms.mddapi.service;
 
 import com.github.javafaker.Faker;
-import com.openclassrooms.mddapi.models.Article;
-import com.openclassrooms.mddapi.models.Subscription;
-import com.openclassrooms.mddapi.models.Theme;
-import com.openclassrooms.mddapi.models.User;
-import com.openclassrooms.mddapi.repository.ArticleRepository;
-import com.openclassrooms.mddapi.repository.SubscriptionRepository;
-import com.openclassrooms.mddapi.repository.ThemeRepository;
-import com.openclassrooms.mddapi.repository.UserRepository;
+import com.openclassrooms.mddapi.models.*;
+import com.openclassrooms.mddapi.repository.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -23,13 +18,15 @@ public class FixturesService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final SubscriptionRepository subscriptionRepository;
+  private final CommentRepository commentRepository;
 
   public FixturesService(
       ThemeRepository themeRepository,
       ArticleRepository articleRepository,
       UserRepository userRepository,
       PasswordEncoder passwordEncoder,
-      SubscriptionRepository subscriptionRepository) {
+      SubscriptionRepository subscriptionRepository,
+      CommentRepository commentRepository) {
     this.themeRepository = themeRepository;
     this.articleRepository = articleRepository;
     this.userRepository = userRepository;
@@ -37,6 +34,7 @@ public class FixturesService {
     this.faker = new Faker();
     this.passwordEncoder = passwordEncoder;
     this.subscriptionRepository = subscriptionRepository;
+    this.commentRepository = commentRepository;
   }
 
   public List<Theme> createThemes(int number) {
@@ -47,7 +45,14 @@ public class FixturesService {
       Theme theme = new Theme();
       theme
           .setName(this.faker.food().spice())
-          .setDescription(this.faker.chuckNorris().fact() + " " + this.faker.lorem().paragraph());
+          .setDescription(this.faker.chuckNorris().fact() + " " + this.faker.lorem().paragraph())
+          .setCreatedAt(
+              LocalDateTime.of(
+                  this.faker.number().numberBetween(2000, 2024),
+                  this.faker.number().numberBetween(1, 12),
+                  this.faker.number().numberBetween(1, 31),
+                  this.faker.number().numberBetween(1, 23),
+                  this.faker.number().numberBetween(1, 59)));
       themes.add(theme);
     }
     themeRepository.saveAll(themes);
@@ -64,7 +69,14 @@ public class FixturesService {
           .setTheme(themes.get(new Random().nextInt(themes.size())))
           .setAuthor(authors.get(new Random().nextInt(authors.size())))
           .setTitle(this.faker.food().ingredient())
-          .setContent(this.faker.lorem().paragraph(50));
+          .setContent(this.faker.lorem().paragraph(50))
+          .setCreatedAt(
+              LocalDateTime.of(
+                  this.faker.number().numberBetween(2000, 2024),
+                  this.faker.number().numberBetween(1, 12),
+                  this.faker.number().numberBetween(1, 31),
+                  this.faker.number().numberBetween(1, 23),
+                  this.faker.number().numberBetween(1, 59)));
       articles.add(article);
     }
     articleRepository.saveAll(articles);
@@ -79,13 +91,30 @@ public class FixturesService {
       User user = new User();
       user.setEmail(this.faker.internet().emailAddress())
           .setUsername(this.faker.name().username())
-          .setPassword(password);
+          .setPassword(password)
+          .setCreatedAt(
+              LocalDateTime.of(
+                  this.faker.number().numberBetween(2000, 2024),
+                  this.faker.number().numberBetween(1, 12),
+                  this.faker.number().numberBetween(1, 31),
+                  this.faker.number().numberBetween(1, 23),
+                  this.faker.number().numberBetween(1, 59)));
       users.add(user);
     }
 
     if (!userRepository.existsByEmail("test@test.com")) {
       User dummy = new User();
-      dummy.setEmail("test@test.com").setUsername("test").setPassword(password);
+      dummy
+          .setEmail("test@test.com")
+          .setUsername("test")
+          .setPassword(password)
+          .setCreatedAt(
+              LocalDateTime.of(
+                  this.faker.number().numberBetween(2000, 2024),
+                  this.faker.number().numberBetween(1, 12),
+                  this.faker.number().numberBetween(1, 31),
+                  this.faker.number().numberBetween(1, 23),
+                  this.faker.number().numberBetween(1, 59)));
       users.add(dummy);
     }
 
@@ -98,8 +127,37 @@ public class FixturesService {
       Subscription subscription = new Subscription();
       subscription
           .setUser(users.get(new Random().nextInt(users.size())))
-          .setTheme(themes.get(new Random().nextInt(themes.size())));
-      subscriptionRepository.save(subscription);
+          .setTheme(themes.get(new Random().nextInt(themes.size())))
+          .setCreatedAt(
+              LocalDateTime.of(
+                  this.faker.number().numberBetween(2000, 2024),
+                  this.faker.number().numberBetween(1, 12),
+                  this.faker.number().numberBetween(1, 31),
+                  this.faker.number().numberBetween(1, 23),
+                  this.faker.number().numberBetween(1, 59)));
+
+      if (!subscriptionRepository.existsByUserIdAndThemeId(
+          subscription.getUser().getId(), subscription.getTheme().getId())) {
+        subscriptionRepository.save(subscription);
+      }
+    }
+  }
+
+  public void createComments(Integer number, List<User> authors, List<Article> articles) {
+    for (int i = 0; i < number; i++) {
+      Comment comment = new Comment();
+      comment
+          .setArticle(articles.get(new Random().nextInt(articles.size())))
+          .setAuthor(authors.get(new Random().nextInt(authors.size())))
+          .setContent(this.faker.chuckNorris().fact())
+          .setCreatedAt(
+              LocalDateTime.of(
+                  this.faker.number().numberBetween(2000, 2024),
+                  this.faker.number().numberBetween(1, 12),
+                  this.faker.number().numberBetween(1, 31),
+                  this.faker.number().numberBetween(1, 23),
+                  this.faker.number().numberBetween(1, 59)));
+      commentRepository.save(comment);
     }
   }
 }

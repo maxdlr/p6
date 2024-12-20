@@ -1,0 +1,59 @@
+<app-base>
+  @if (article) {
+
+    <article class="w-[60%] mx-auto">
+
+      <div class="flex justify-between items-center">
+        <h1>{{ article.title }}</h1>
+        @if (isAuthor) {
+          <a mat-flat-button [routerLink]="['/articles', article.id]" color="primary">
+            Edit
+          </a>
+        }
+      </div>
+
+      <div class="flex justify-center items-center gap-5">
+        <span class="italic">Le {{ article.createdAt | date }}</span>
+        <span class="text-lg">par {{ _.upperFirst(article.author.username) }}</span>
+        <mat-chip>{{ article.theme.name }}</mat-chip>
+      </div>
+
+      <div class="my-20">
+        <p class="text-lg">{{ article.content }}</p>
+      </div>
+
+      <div class="my-10">
+        <mat-divider />
+      </div>
+
+      <div>
+        @for (comment of article.comments; track comment.id) {
+          <div class="py-3">
+            <mat-card appearance="outlined" class="p-3 h-full w-full">
+              <mat-card-header>
+                <mat-card-title-group>
+                  <mat-card-title>
+                    {{ _.upperFirst(comment.author.username) }}
+                  </mat-card-title>
+                  <mat-card-subtitle>
+                    <p class="italic">
+                      {{ comment.createdAt | date }}
+                    </p>
+                  </mat-card-subtitle>
+                </mat-card-title-group>
+              </mat-card-header>
+              <mat-card-content>
+                <p>{{ comment.content }}</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        }
+      </div>
+    </article>
+  } @else {
+    <div class="w-[100vw] flex justify-center items-center">
+      <mat-spinner />
+    </div>
+  }
+
+</app-base>

@@ -1,12 +1,10 @@
 package com.openclassrooms.mddapi.controller;
 
+import com.openclassrooms.mddapi.models.Article;
 import com.openclassrooms.mddapi.models.Theme;
 import com.openclassrooms.mddapi.models.User;
 import com.openclassrooms.mddapi.payload.response.MessageResponse;
-import com.openclassrooms.mddapi.repository.ArticleRepository;
-import com.openclassrooms.mddapi.repository.SubscriptionRepository;
-import com.openclassrooms.mddapi.repository.ThemeRepository;
-import com.openclassrooms.mddapi.repository.UserRepository;
+import com.openclassrooms.mddapi.repository.*;
 import com.openclassrooms.mddapi.service.FixturesService;
 import java.util.List;
 import java.util.Random;
@@ -23,32 +21,38 @@ public class FixturesController {
   private final ThemeRepository themeRepository;
   private final ArticleRepository articleRepository;
   private final SubscriptionRepository subscriptionRepository;
+  private final CommentRepository commentRepository;
 
   public FixturesController(
       FixturesService fixturesService,
       UserRepository userRepository,
       ThemeRepository themeRepository,
       ArticleRepository articleRepository,
-      SubscriptionRepository subscriptionRepository) {
+      SubscriptionRepository subscriptionRepository,
+      CommentRepository commentRepository) {
     this.fixturesService = fixturesService;
     this.userRepository = userRepository;
     this.themeRepository = themeRepository;
     this.articleRepository = articleRepository;
     this.subscriptionRepository = subscriptionRepository;
+    this.commentRepository = commentRepository;
   }
 
   @GetMapping("/load")
   public ResponseEntity<MessageResponse> load() {
     try {
       int userCount = 10;
-      int themeCount = 5;
+      int themeCount = 20;
       int articleCount = 50;
       int subscriptionCount = 100;
+      int commentCount = 300;
 
       List<User> users = fixturesService.createUsers(userCount);
       List<Theme> themes = fixturesService.createThemes(themeCount);
-      fixturesService.createArticles(new Random().nextInt(articleCount), themes, users);
+      List<Article> articles =
+          fixturesService.createArticles(new Random().nextInt(articleCount), themes, users);
       fixturesService.createSubscriptions(new Random().nextInt(subscriptionCount), users, themes);
+      fixturesService.createComments(new Random().nextInt(commentCount), users, articles);
 
       return ResponseEntity.ok().body(new MessageResponse("Success Fixtures"));
     } catch (Exception e) {
@@ -59,6 +63,7 @@ public class FixturesController {
   @GetMapping("/prune")
   public ResponseEntity<MessageResponse> prune() {
     try {
+      commentRepository.deleteAll();
       subscriptionRepository.deleteAll();
       articleRepository.deleteAll();
       themeRepository.deleteAll();

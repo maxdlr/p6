@@ -5,12 +5,20 @@
       <p>{{ article.title }}</p>
     </mat-card-title>
     <mat-card-subtitle>
-      <p class="text-gray-500 italic">Par {{ _.upperFirst(article.author.username) }},
-        le {{ article.createdAt | date }}</p>
+      <div class="py-3">
+      <span class="text-gray-500 italic block">Par {{ _.upperFirst(article.author.username) }},
+        le {{ article.createdAt | date }}</span>
+        @if (article.comments.length > 0) {
+          <span class="italic text-gray-500 block">
+          {{ article.comments.length }} commentaires
+        </span>
+        }
+      </div>
       <mat-chip>
         {{ article.theme.name }}
       </mat-chip>
     </mat-card-subtitle>
+
   </mat-card-header>
 
   <mat-card-content>
@@ -19,10 +27,11 @@
 
   <mat-card-footer class="text-center py-5">
     <mat-card-actions>
-      <button (click)="read(article.id)" color="primary" mat-flat-button>
+      <a [routerLink]="['/articles', article.id]" color="primary" mat-flat-button>
         Lire
-      </button>
+      </a>
     </mat-card-actions>
+
   </mat-card-footer>
 </mat-card>
 

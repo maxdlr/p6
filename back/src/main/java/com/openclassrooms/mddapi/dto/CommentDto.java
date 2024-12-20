@@ -1,6 +1,5 @@
 package com.openclassrooms.mddapi.dto;
 
-import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -15,7 +14,7 @@ public class CommentDto {
 
   @NonNull private String content;
 
-  @NonNull private Long authorId;
+  @NonNull private UserDto author;
   @NonNull private Long articleId;
 
   private LocalDateTime createdAt;

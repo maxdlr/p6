@@ -13,22 +13,20 @@ export class UserService {
   private httpClient = inject(HttpClient);
 
   public $getById(id: number): Observable<User> {
-    return this.httpClient.get<User>(`${this.pathService}/${id}`).pipe(
-      map((user) => {
-        user.createdAt = new Date(user.createdAt);
-        user.updatedAt = new Date(user.updatedAt);
-        return user;
-      }),
-    );
+    return this.httpClient
+      .get<User>(`${this.pathService}/${id}`)
+      .pipe(map((user) => this.transformUser(user)));
   }
 
   public $edit(id: number, payload: UserEditRequest): Observable<User> {
-    return this.httpClient.put<User>(`${this.pathService}/${id}`, payload).pipe(
-      map((user) => {
-        user.createdAt = new Date(user.createdAt);
-        user.updatedAt = new Date(user.updatedAt);
-        return user;
-      }),
-    );
+    return this.httpClient
+      .put<User>(`${this.pathService}/${id}`, payload)
+      .pipe(map((user) => this.transformUser(user)));
+  }
+
+  private transformUser(user: User): User {
+    user.createdAt = new Date(user.createdAt);
+    user.updatedAt = new Date(user.updatedAt);
+    return user;
   }
 }
