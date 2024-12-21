@@ -51,12 +51,13 @@ public class ArticleService {
   private List<Article> executeFindArticlesByUserQuery(User user) {
     String nativeSql =
         """
-                            SELECT a.*
-                            FROM ARTICLES a
-                            JOIN THEMES t ON a.theme_id = t.id
-                            JOIN SUBSCRIPTIONS s ON s.theme_id = t.id
-                            WHERE s.user_id = :userId
-                        """;
+                                SELECT a.*
+                                FROM ARTICLES a
+                                JOIN THEMES t ON a.theme_id = t.id
+                                JOIN SUBSCRIPTIONS s ON s.theme_id = t.id
+                                WHERE s.user_id = :userId
+                                ORDER BY a.created_at DESC
+                            """;
 
     Query query = entityManager.createNativeQuery(nativeSql, Article.class);
     query.setParameter("userId", user.getId());
@@ -168,7 +169,7 @@ public class ArticleService {
       throw new ApiResourceNotFoundException("Article not found");
     }
 
-    List<Comment> comments = commentRepository.findAllByArticle(article.get());
+    List<Comment> comments = commentRepository.findAllByArticleOrderByCreatedAtDesc(article.get());
 
     commentRepository.deleteAll(comments);
     articleRepository.delete(article.get());

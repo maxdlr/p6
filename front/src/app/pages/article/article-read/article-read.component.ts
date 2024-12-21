@@ -19,6 +19,7 @@ import {
   MatCardTitleGroup,
 } from '@angular/material/card';
 import { SnackService } from '../../../services/snack.service';
+import { CommentFormComponent } from '../../../components/comment-form/comment-form.component';
 
 @Component({
   selector: 'app-article-read',
@@ -37,6 +38,7 @@ import { SnackService } from '../../../services/snack.service';
     MatCardSubtitle,
     MatCardContent,
     MatButton,
+    CommentFormComponent,
   ],
   templateUrl: './article-read.component.html',
   styleUrl: './article-read.component.scss',
@@ -44,8 +46,9 @@ import { SnackService } from '../../../services/snack.service';
 export class ArticleReadComponent implements OnInit {
   public article!: Article;
   public isAuthor = false;
+  public articleId!: string;
   protected readonly _ = _;
-  private articleId!: string;
+  protected readonly Number = Number;
   private articleService = inject(ArticleService);
   private route = inject(ActivatedRoute);
   private sessionService = inject(SessionService);
@@ -54,10 +57,10 @@ export class ArticleReadComponent implements OnInit {
 
   ngOnInit(): void {
     this.articleId = this.route.snapshot.paramMap.get('id') as string;
-    this.getArticle();
+    this.refresh();
   }
 
-  getArticle() {
+  refresh() {
     this.articleService.getById(Number(this.articleId)).subscribe((article) => {
       this.article = article;
       this.isAuthor =
