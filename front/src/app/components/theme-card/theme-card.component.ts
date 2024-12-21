@@ -17,6 +17,7 @@ import { SubscriptionRequest } from '../../interfaces/subscription-request';
 import { SessionService } from '../../services/session.service';
 import { SessionInformation } from '../../interfaces/session-information';
 import { CommonModule } from '@angular/common';
+import { SnackService } from '../../services/snack.service';
 
 @Component({
   selector: 'app-theme-card',
@@ -40,6 +41,7 @@ export class ThemeCardComponent implements OnInit {
   protected sessionService = inject(SessionService);
   protected sessionInformation!: SessionInformation;
   private subscriptionService = inject(SubscriptionService);
+  private snackService = inject(SnackService);
 
   ngOnInit(): void {
     this.sessionInformation = this.sessionService
@@ -57,6 +59,7 @@ export class ThemeCardComponent implements OnInit {
         this.sessionInformation.subscriptionThemes = userThemeIds;
         this.sessionService.updateSessionCookie();
         this.subscriptionUpdate.emit();
+        this.snackService.inform('Abonné à ' + this.theme.name);
       },
     });
   }
@@ -72,6 +75,7 @@ export class ThemeCardComponent implements OnInit {
         this.sessionInformation.subscriptionThemes = userThemeIds;
         this.sessionService.updateSessionCookie();
         this.subscriptionUpdate.emit();
+        this.snackService.inform('Désabonné de ' + this.theme.name);
       },
     });
   }

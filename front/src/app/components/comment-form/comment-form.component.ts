@@ -72,6 +72,7 @@ export class CommentFormComponent implements OnInit {
       next: () => {
         this.snackService.inform('Comment added !');
         this.commentAdded.emit();
+        this.commentForm.reset();
       },
     });
   }

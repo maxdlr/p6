@@ -189,12 +189,45 @@ public class ArticleControllerIntegrationTests {
         restTemplate.exchange(
             baseUrl + "/user/987987987", HttpMethod.GET, httpEntity, String.class);
 
-    assertEquals(HttpStatusCode.valueOf(404), notFoundResponse.getStatusCode());
+    assertEquals(HttpStatusCode.valueOf(401), notFoundResponse.getStatusCode());
 
     ResponseEntity<String> badRequestResponse =
         restTemplate.exchange(
             baseUrl + "/user/bad-request", HttpMethod.GET, httpEntity, String.class);
 
     assertEquals(HttpStatusCode.valueOf(400), badRequestResponse.getStatusCode());
+  }
+
+  @Test
+  public void testUpdateArticle() throws IOException {
+    Theme theme = new Theme();
+    theme.setName("name").setDescription("description").setCreatedAt(new Date());
+    themeRepository.save(theme);
+    ThemeDto themeDto = themeMapper.toDto(theme);
+    ArticleDto editedArticleDto = new ArticleDto();
+    Article article = new Article();
+    article.setTitle("title").setTheme(theme).setContent("content").setAuthor(authenticatedUser);
+    articleRepository.save(article);
+
+    editedArticleDto
+        .setTitle("title")
+        .setTheme(themeDto)
+        .setContent("edited content")
+        .setAuthor(userMapper.toDto(authenticatedUser));
+
+    HttpEntity<ArticleDto> httpEntity =
+        new HttpEntity<>(
+            editedArticleDto, createHeadersWithToken(port, authenticatedUser, restTemplate));
+
+    ResponseEntity<ArticleDto> response =
+        restTemplate.exchange(
+            baseUrl + "/" + article.getId(), HttpMethod.PUT, httpEntity, ArticleDto.class);
+
+    assert response.getBody() != null;
+
+    ArticleDto responseBody = response.getBody();
+
+    assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+    assertEquals(editedArticleDto.getContent(), responseBody.getContent());
   }
 }

@@ -131,6 +131,7 @@
                     <excludes>
                         <exclude>/com/openclassrooms/mddapi/dto/*Dto.*</exclude>
                         <exclude>/com/openclassrooms/mddapi/*MddApiApplication.*</exclude>
+                        <exclude>/com/openclassrooms/mddapi/**/Fixtures*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

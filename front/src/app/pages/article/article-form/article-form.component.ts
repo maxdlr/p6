@@ -59,9 +59,6 @@ export class ArticleFormComponent implements OnInit {
   ngOnInit(): void {
     this.articleId = this.route.snapshot.paramMap.get('id');
 
-    console.log(this.articleId);
-    console.log(this.route.snapshot.paramMap.get('id'));
-
     this.mode = this.articleId ? 'edit' : 'create';
     this.sessionInformation = this.sessionService
       .sessionInformation as SessionInformation;
@@ -137,6 +134,7 @@ export class ArticleFormComponent implements OnInit {
   }
 
   update(articleRequest: ArticleRequest): void {
+    articleRequest.updatedAt = new Date();
     this.articleService
       .update(Number(this.articleId), articleRequest)
       .subscribe((article) => {

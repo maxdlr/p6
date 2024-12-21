@@ -3,7 +3,7 @@
     <mat-label>
       Contenu
     </mat-label>
-    <textarea [formControl]="commentForm" class="min-h-[50vh]" matInput></textarea>
+    <textarea [formControl]="commentForm" class="min-h-[10vh]" matInput></textarea>
   </mat-form-field>
-  <button color="primary" mat-flat-button type="submit">Commenter</button>
+  <button [disabled]="!this.commentForm.valid" color="primary" mat-flat-button type="submit">Commenter</button>
 </form>

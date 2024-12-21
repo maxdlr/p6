@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 public class ArticleServiceTests {
@@ -91,7 +92,7 @@ public class ArticleServiceTests {
     assertEquals(articleDtoList.size(), articleCollectionByUser.size());
     assertEquals(articleDtoList.size(), articleCollectionByUserId.size());
 
-    assertThrows(ApiResourceNotFoundException.class, () -> articleService.findArticlesOfUser(654L));
+    assertThrows(UsernameNotFoundException.class, () -> articleService.findArticlesOfUser(654L));
 
     assertThrows(
         ApiBadPostRequestException.class, () -> articleService.findArticlesOfUser("bad-request"));
@@ -184,11 +185,11 @@ public class ArticleServiceTests {
 
     commentDto.setAuthor(new UserDto());
     assertThrows(
-        ApiResourceNotFoundException.class, () -> articleService.addCommentToArticle(commentDto));
+        UsernameNotFoundException.class, () -> articleService.addCommentToArticle(commentDto));
 
     commentDto.setAuthor(new UserDto());
     commentDto.setArticleId(anyLong());
     assertThrows(
-        ApiResourceNotFoundException.class, () -> articleService.addCommentToArticle(commentDto));
+        UsernameNotFoundException.class, () -> articleService.addCommentToArticle(commentDto));
   }
 }

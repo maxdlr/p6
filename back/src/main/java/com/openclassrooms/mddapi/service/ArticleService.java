@@ -158,7 +158,7 @@ public class ArticleService {
     if (article.isEmpty()) {
       throw new ApiResourceNotFoundException("Article not found");
     }
-
+    articleDto.setId(Long.valueOf(id));
     return this.save(articleDto);
   }
 
@@ -173,5 +173,13 @@ public class ArticleService {
 
     commentRepository.deleteAll(comments);
     articleRepository.delete(article.get());
+  }
+
+  public void deleteCommentFromArticle(String id) {
+    try {
+      commentRepository.deleteById(Long.valueOf(id));
+    } catch (NumberFormatException e) {
+      throw new ApiBadPostRequestException("Cannot find article");
+    }
   }
 }

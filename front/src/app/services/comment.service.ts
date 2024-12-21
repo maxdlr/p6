@@ -13,4 +13,8 @@ export class CommentService {
   public add(commentRequest: CommentRequest) {
     return this.httpClient.post<void>(this.pathService, commentRequest);
   }
+
+  public delete(id: number) {
+    return this.httpClient.delete<void>(`${this.pathService}/${id}`);
+  }
 }

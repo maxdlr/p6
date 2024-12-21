@@ -6,20 +6,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.openclassrooms.mddapi.dto.ThemeDto;
 import com.openclassrooms.mddapi.models.Theme;
+import com.openclassrooms.mddapi.repository.ArticleRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class ThemeMapperTests {
+  @Mock
+  ArticleRepository articleRepository;
   private ThemeMapper themeMapper;
 
   @BeforeEach
   public void setUp() {
     themeMapper = new ThemeMapperImpl();
+    themeMapper.articleRepository = articleRepository;
   }
 
   @Test

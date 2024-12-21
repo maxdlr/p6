@@ -10,10 +10,11 @@
           } {{ pageTitle }}
         </h1>
         <div>
-          <button *ngIf="mode ==='edit'" (click)="delete()" class="me-5" color="warn" mat-flat-button type="button">
+          <button *ngIf="mode ==='edit'" (click)="delete()" class="me-5" color="warn" mat-flat-button type="button"
+          >
             Supprimer
           </button>
-          <button color="primary" mat-flat-button type="submit">Publier</button>
+          <button color="primary" mat-flat-button type="submit" [disabled]="!this.form.valid">Publier</button>
         </div>
       </div>
 

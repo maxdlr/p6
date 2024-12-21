@@ -44,7 +44,7 @@ export class MeComponent implements OnInit {
           this.getThemes();
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
         },
       });
   }

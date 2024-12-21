@@ -13,7 +13,7 @@
         }
       </div>
 
-      <div class="flex max-sm:flex-col justify-center items-center sm:gap-5">
+      <div class="flex max-sm:flex-col justify-center items-center sm:gap-5 sm:py-10">
         <span class="italic">Le {{ article.createdAt | date }}</span>
         <span class="text-lg">par {{ _.upperFirst(article.author.username) }}</span>
         <mat-chip>{{ article.theme.name }}</mat-chip>
@@ -40,7 +40,15 @@
               <mat-card-header>
                 <mat-card-title-group>
                   <mat-card-title>
-                    {{ _.upperFirst(comment.author.username) }}
+                    <div>
+                      <span>{{ _.upperFirst(comment.author.username) }}</span>
+                      <button (click)="deleteComment(comment.id)" mat-flat-button color="warn"
+                              *ngIf="comment.author.id === sessionInformation.id"
+                              class="ms-5">
+                        Supprimer
+                      </button>
+
+                    </div>
                   </mat-card-title>
                   <mat-card-subtitle>
                     <p class="italic">

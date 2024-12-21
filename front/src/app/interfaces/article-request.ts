@@ -7,4 +7,5 @@ export interface ArticleRequest {
   theme: Theme;
   author: User;
   createdAt: Date;
+  updatedAt: Date;
 }
