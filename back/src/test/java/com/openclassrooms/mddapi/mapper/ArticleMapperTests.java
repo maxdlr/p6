@@ -80,7 +80,8 @@ class ArticleMapperTests {
 
     Article article = makeArticle(1, theme, user);
 
-    when(commentRepository.findAllByArticle(article)).thenReturn(new ArrayList<>());
+    when(commentRepository.findAllByArticleOrderByCreatedAtDesc(article))
+        .thenReturn(new ArrayList<>());
 
     ArticleDto articleDto = articleMapper.toDto(article);
 

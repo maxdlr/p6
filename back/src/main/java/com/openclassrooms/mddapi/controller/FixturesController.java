@@ -43,7 +43,7 @@ public class FixturesController {
     try {
       int userCount = 10;
       int themeCount = 20;
-      int articleCount = 50;
+      int articleCount = 200;
       int subscriptionCount = 100;
       int commentCount = 300;
 

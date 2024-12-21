@@ -46,7 +46,8 @@ public abstract class ArticleMapper implements EntityMapper<ArticleDto, Article>
     @Mapping(target = "theme", expression = "java(themeMapper.toDto(article.getTheme()))"),
     @Mapping(
         target = "comments",
-        expression = "java(commentMapper.toDto(commentRepository.findAllByArticle(article)))")
+        expression =
+            "java(commentMapper.toDto(commentRepository.findAllByArticleOrderByCreatedAtDesc(article)))")
   })
   public abstract ArticleDto toDto(Article article);
 }

@@ -20,7 +20,8 @@ public abstract class ThemeMapper implements EntityMapper<ThemeDto, Theme> {
   @Mappings({
     @Mapping(
         target = "articleCount",
-        expression = "java((long) articleRepository.findByTheme(entity).size())"),
+        expression =
+            "java((long) articleRepository.findByThemeOrderByCreatedAtDesc(entity).size())"),
   })
   public abstract ThemeDto toDto(Theme entity);
 }
