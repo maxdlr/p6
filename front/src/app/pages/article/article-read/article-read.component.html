@@ -5,7 +5,10 @@
         <h1 class="max-sm:pt-5">{{ article.title }}</h1>
         @if (isAuthor) {
           <div class="flex flex-wrap justify-end items-center gap-3">
-            <button mat-flat-button (click)="delete()" color="warn">Supprimer</button>
+            <button mat-flat-button
+                    (click)="delete()"
+                    color="warn">Supprimer
+            </button>
             <a mat-flat-button [routerLink]="['/articles/edit', article.id]" color="primary">
               Modifier
             </a>

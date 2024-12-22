@@ -4,11 +4,16 @@ import { Article } from '../interfaces/article';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { ArticleRequest } from '../interfaces/article-request';
+import { DialogComponent } from '../components/dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { SnackService } from './snack.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ArticleService {
+  readonly dialog = inject(MatDialog);
+  private snackService = inject(SnackService);
   private httpClient = inject(HttpClient);
   private pathService = environment.apiUrl + 'articles';
 
@@ -37,6 +42,31 @@ export class ArticleService {
 
   public delete(id: number) {
     return this.httpClient.delete<void>(`${this.pathService}/${id}`);
+  }
+
+  public confirmDelete(article: Article, onDeleted: () => void) {
+    let commentNotice = '';
+
+    if (article.comments.length > 0) {
+      commentNotice = `Il sera supprimé avec ses ${article.comments.length} commentaires`;
+    }
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: {
+        title: `Suppression de ${article.title}`,
+        content: `Êtes-vous sûr de vouloir supprimer cet article ? ${commentNotice}`,
+        cancel: 'Annuler',
+        confirm: 'Supprimer',
+      },
+    });
+
+    dialogRef.componentInstance.confirmed.subscribe({
+      next: () => {
+        this.delete(article.id).subscribe(() => {
+          this.snackService.inform('Article supprimé');
+          onDeleted();
+        });
+      },
+    });
   }
 
   private transformArticles(articles: Article[]): Article[] {

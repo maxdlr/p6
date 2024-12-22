@@ -36,7 +36,9 @@
             <a [routerLink]="['/articles/edit', article.id]" color="secondary" mat-stroked-button class="me-2">
               Modifier
             </a>
-            <button (click)="delete(article.id)" class="me-5" color="warn" mat-flat-button type="button">Supprimer
+            <button mat-flat-button
+                    (click)="delete()"
+                    color="warn">Supprimer
             </button>
           </div>
         }

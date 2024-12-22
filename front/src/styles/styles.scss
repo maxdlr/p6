@@ -44,6 +44,9 @@ html {
   ));
   @include mat.card-overrides((
     outlined-container-shape: 10px
+  ));
+  @include mat.dialog-overrides((
+    container-shape: 25px
   ))
 }
 

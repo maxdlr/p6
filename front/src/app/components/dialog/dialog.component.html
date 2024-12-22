@@ -1,0 +1,11 @@
+<div class="p-5">
+  <h2 mat-dialog-title>{{ data.title }}</h2>
+  <mat-dialog-content class="mat-typography">
+    {{ data.content }}
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button color="secondary" mat-dialog-close mat-stroked-button>{{ data.cancel }}</button>
+    <button (click)="confirm()" cdkFocusInitial color="warn" mat-dialog-close mat-flat-button>{{ data.confirm }}
+    </button>
+  </mat-dialog-actions>
+</div>

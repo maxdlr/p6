@@ -22,7 +22,6 @@ import { MatChip } from '@angular/material/chips';
 import { DatePipe } from '@angular/common';
 import { MatAnchor, MatButton } from '@angular/material/button';
 import { SessionService } from '../../services/session.service';
-import { SnackService } from 'src/app/services/snack.service';
 import { ArticleService } from '../../services/article.service';
 
 @Component({
@@ -50,7 +49,6 @@ export class ArticleCardComponent implements OnInit {
   @Output() deleted = new EventEmitter<number>();
   protected readonly _ = _;
   private sessionService = inject(SessionService);
-  private snackService = inject(SnackService);
   private articleService = inject(ArticleService);
 
   ngOnInit(): void {
@@ -58,10 +56,9 @@ export class ArticleCardComponent implements OnInit {
       this.sessionService.sessionInformation?.id === this.article.author.id;
   }
 
-  delete(id: number) {
-    this.articleService.delete(id).subscribe(() => {
-      this.snackService.inform('Article supprimé');
-      this.deleted.emit(id);
-    });
+  delete(): void {
+    this.articleService.confirmDelete(this.article, () =>
+      this.deleted.emit(this.article.id),
+    );
   }
 }

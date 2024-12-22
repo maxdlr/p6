@@ -53,6 +53,8 @@ export class ArticleReadComponent implements OnInit {
   public sessionInformation!: SessionInformation;
   protected readonly _ = _;
   protected readonly Number = Number;
+  protected readonly cancelAnimationFrame = cancelAnimationFrame;
+  protected readonly confirm = confirm;
   private articleService = inject(ArticleService);
   private route = inject(ActivatedRoute);
   private sessionService = inject(SessionService);
@@ -74,19 +76,13 @@ export class ArticleReadComponent implements OnInit {
     });
   }
 
-  delete() {
-    this.articleService.delete(Number(this.articleId)).subscribe(() => {
-      this.snackService.inform('Article supprimé');
-      this.router.navigate(['/articles']);
-    });
+  deleteComment(id: number) {
+    this.commentService.confirmDelete(id, () => this.refresh());
   }
 
-  deleteComment(id: number) {
-    this.commentService.delete(id).subscribe({
-      next: () => {
-        this.snackService.inform('Commentaire supprimé !');
-        this.refresh();
-      },
-    });
+  delete(): void {
+    this.articleService.confirmDelete(this.article, () =>
+      this.router.navigate(['/articles']),
+    );
   }
 }
