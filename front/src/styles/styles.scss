@@ -47,6 +47,9 @@ html {
   ));
   @include mat.dialog-overrides((
     container-shape: 25px
+  ));
+  @include mat.expansion-overrides((
+    container-shape: 10px
   ))
 }
 
