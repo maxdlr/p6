@@ -4,7 +4,13 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { SessionService } from '../../../../services/session.service';
@@ -29,11 +35,21 @@ export class RegisterComponent implements OnInit {
   private snack = inject(SnackService);
 
   ngOnInit(): void {
-    this.form = new FormGroup({
-      username: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.min(3)]),
-    });
+    this.form = new FormGroup(
+      {
+        username: new FormControl('', [Validators.required]),
+        email: new FormControl('', [Validators.required, Validators.email]),
+        password: new FormControl('', [Validators.required, Validators.min(3)]),
+        verifyPassword: new FormControl('', [Validators.required]),
+      },
+      { validators: this.passwordMatchValidator },
+    );
+  }
+
+  passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const password = group.get('password')?.value;
+    const verifyPassword = group.get('verifyPassword')?.value;
+    return password === verifyPassword ? null : { passwordsMismatch: true };
   }
 
   public submit(): void {

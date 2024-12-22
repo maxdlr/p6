@@ -11,6 +11,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FixturesService } from '../../../../services/fixtures.service';
+import { SnackService } from '../../../../services/snack.service';
 
 @Component({
   selector: 'app-base',
@@ -27,6 +28,7 @@ export class BaseComponent implements OnDestroy {
   private cdr = inject(ChangeDetectorRef);
   private destroy$ = new Subject<void>();
   private fixturesService = inject(FixturesService);
+  private snackService = inject(SnackService);
 
   constructor() {
     this.navigation = this.navigationService.navigationItems;
@@ -50,16 +52,16 @@ export class BaseComponent implements OnDestroy {
 
   public loadFixtures() {
     this.fixturesService.loadFixtures().subscribe({
-      next: (value) => {
-        console.log(value);
+      next: () => {
+        this.snackService.inform('Fixtures créés');
       },
     });
   }
 
   public removeFixtures() {
     this.fixturesService.removeFixtures().subscribe({
-      next: (value) => {
-        console.log(value);
+      next: () => {
+        this.snackService.inform('Fixtures supprimées');
       },
     });
   }

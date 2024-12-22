@@ -9,6 +9,8 @@ import { SnackService } from '../../../../services/snack.service';
 import _ from 'lodash';
 import { ThemeService } from '../../../../services/theme.service';
 import { Theme } from '../../../../interfaces/theme';
+import { DialogComponent } from '../../../../components/dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-me',
@@ -20,6 +22,7 @@ export class MeComponent implements OnInit {
   public user!: User;
   public themes!: Theme[];
   form!: FormGroup;
+  readonly dialog = inject(MatDialog);
   protected readonly _ = _;
   protected readonly ThemeService = ThemeService;
   private sessionService = inject(SessionService);
@@ -84,8 +87,21 @@ export class MeComponent implements OnInit {
   }
 
   public logOut(): void {
-    this.sessionService.logOut();
-    this.snack.inform('A bientôt!');
-    this.router.navigate(['/']);
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: {
+        title: 'Déconnexion',
+        content: `Êtes-vous sûr de vouloir vous déconnecter ?`,
+        cancel: 'Annuler',
+        confirm: 'Me déconnecter',
+      },
+    });
+
+    dialogRef.componentInstance.confirmed.subscribe({
+      next: () => {
+        this.sessionService.logOut();
+        this.snack.inform('A bientôt!');
+        this.router.navigate(['/']);
+      },
+    });
   }
 }

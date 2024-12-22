@@ -57,23 +57,23 @@ export class ArticleFormComponent implements OnInit {
   private sessionInformation!: SessionInformation;
 
   ngOnInit(): void {
+    this.initForm();
     this.articleId = this.route.snapshot.paramMap.get('id');
-
     this.mode = this.articleId ? 'edit' : 'create';
     this.sessionInformation = this.sessionService
       .sessionInformation as SessionInformation;
-
-    this.getThemes();
-    this.initForm();
-
-    if (this.mode === 'edit') {
-      this.getArticle();
-    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    this.mode === 'edit' ? this.getArticle() : this.getThemes();
   }
 
-  getThemes(): void {
+  getThemes(
+    onFetched: ((themes: Theme[]) => void) | undefined = undefined,
+  ): void {
     this.themeService.getAll().subscribe((themes) => {
       this.themes = themes;
+      if (onFetched) {
+        onFetched(themes);
+      }
     });
   }
 
@@ -82,7 +82,7 @@ export class ArticleFormComponent implements OnInit {
       next: (article) => {
         this.article = article;
         this.fillForm();
-        this.pageTitle = article.title ?? 'Modifier Article';
+        this.pageTitle = article.title ?? 'Article';
       },
     });
   }
@@ -98,7 +98,13 @@ export class ArticleFormComponent implements OnInit {
   fillForm() {
     this.form.controls['title'].setValue(this.article.title);
     this.form.controls['content'].setValue(this.article.content);
-    this.form.controls['theme'].setValue(this.article.theme);
+
+    this.getThemes((themes) => {
+      this.form.controls['theme'].setValue(
+        themes.filter((themes) => themes.id === this.article.theme.id)[0],
+      );
+      this.themes = themes;
+    });
   }
 
   submit(): void {
@@ -144,9 +150,8 @@ export class ArticleFormComponent implements OnInit {
   }
 
   delete(): void {
-    this.articleService.delete(Number(this.articleId)).subscribe(() => {
-      this.snackService.inform('Article supprimé !');
-      this.router.navigate(['articles']);
-    });
+    this.articleService.confirmDelete(this.article, () =>
+      this.router.navigate(['articles']),
+    );
   }
 }
