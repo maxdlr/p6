@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CommentRequest } from '../interfaces/comment-request';
+import { CommentRequest } from '../interfaces/payload/comment-request';
 import { environment } from '../../environments/environment';
 import { DialogComponent } from '../components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';

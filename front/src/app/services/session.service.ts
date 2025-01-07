@@ -2,8 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SessionInformation } from '../interfaces/session-information';
 import { CookieService } from 'ngx-cookie-service';
-import { TokenValidationRequest } from '../interfaces/token-validation-request';
-import { AuthService } from '../pages/auth/services/auth.service';
+import { TokenValidationRequest } from '../interfaces/payload/token-validation-request';
+import { AuthService } from '../modules/auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root',

@@ -1,4 +1,4 @@
-import { User } from './user';
+import { User } from '../model/user';
 
 export interface CommentRequest {
   author: User;

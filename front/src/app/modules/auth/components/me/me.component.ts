@@ -2,13 +2,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionService } from '../../../../services/session.service';
 import { UserService } from '../../../../services/user.service';
-import { User } from '../../../../interfaces/user';
+import { User } from '../../../../interfaces/model/user';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserEditRequest } from '../../interfaces/user-edit-request';
 import { SnackService } from '../../../../services/snack.service';
 import _ from 'lodash';
 import { ThemeService } from '../../../../services/theme.service';
-import { Theme } from '../../../../interfaces/theme';
+import { Theme } from '../../../../interfaces/model/theme';
 import { DialogComponent } from '../../../../components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 

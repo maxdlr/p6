@@ -6,29 +6,17 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { NavigationModule } from '../../modules/navigation/navigation.module';
-import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatButton } from '@angular/material/button';
-import { Theme } from '../../interfaces/theme';
+import { Theme } from '../../../../interfaces/model/theme';
 import _ from 'lodash';
-import { SubscriptionService } from '../../services/subscription.service';
-import { SubscriptionRequest } from '../../interfaces/subscription-request';
-import { SessionService } from '../../services/session.service';
-import { SessionInformation } from '../../interfaces/session-information';
-import { CommonModule } from '@angular/common';
-import { SnackService } from '../../services/snack.service';
+import { SubscriptionService } from '../../../../services/subscription.service';
+import { SubscriptionRequest } from '../../../../interfaces/payload/subscription-request';
+import { SessionService } from '../../../../services/session.service';
+import { SessionInformation } from '../../../../interfaces/session-information';
+import { SnackService } from '../../../../services/snack.service';
 
 @Component({
   selector: 'app-theme-card',
-  standalone: true,
-  imports: [
-    NavigationModule,
-    MatCardModule,
-    MatChipsModule,
-    MatButton,
-    CommonModule,
-  ],
+  standalone: false,
   templateUrl: './theme-card.component.html',
   styleUrl: './theme-card.component.scss',
 })

@@ -6,31 +6,16 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import {
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { SnackService } from '../../services/snack.service';
-import { CommentRequest } from '../../interfaces/comment-request';
-import { User } from '../../interfaces/user';
+import { FormControl, Validators } from '@angular/forms';
+import { SnackService } from '../../../../services/snack.service';
+import { CommentRequest } from '../../../../interfaces/payload/comment-request';
+import { User } from '../../../../interfaces/model/user';
 import { SessionService } from 'src/app/services/session.service';
-import { CommentService } from '../../services/comment.service';
-import { MatButton } from '@angular/material/button';
+import { CommentService } from '../../../../services/comment.service';
 
 @Component({
   selector: 'app-comment-form',
-  imports: [
-    FormsModule,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    ReactiveFormsModule,
-    MatButton,
-  ],
+  standalone: false,
   templateUrl: './comment-form.component.html',
   styleUrl: './comment-form.component.scss',
 })

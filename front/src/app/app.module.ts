@@ -8,7 +8,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggle } from '@angular/material/button-toggle';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { AuthModule } from './pages/auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { jwtInterceptor } from './interceptors/jwt.interceptor';
 import { authInterceptor } from './interceptors/auth.interceptor';
@@ -20,10 +20,10 @@ const mats = [MatButtonModule, MatButtonToggle];
   imports: [
     BrowserModule,
     AppRoutingModule,
+    AuthModule,
     BrowserAnimationsModule,
     NgOptimizedImage,
     ...mats,
-    AuthModule,
   ],
   providers: [
     provideHttpClient(withInterceptors([jwtInterceptor, authInterceptor])),

@@ -1,39 +1,19 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { ArticleService } from '../../../services/article.service';
-import { Article } from '../../../interfaces/article';
-import { NavigationModule } from '../../../modules/navigation/navigation.module';
-import { SessionService } from '../../../services/session.service';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { ArticleCardComponent } from '../../../components/article-card/article-card.component';
-import { MatAnchor, MatButton } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
+import { ArticleService } from '../../../../services/article.service';
+import { Article } from '../../../../interfaces/model/article';
+import { SessionService } from '../../../../services/session.service';
 import { ThemeService } from 'src/app/services/theme.service';
-import { Theme } from 'src/app/interfaces/theme';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { NgTemplateOutlet } from '@angular/common';
+import { Theme } from 'src/app/interfaces/model/theme';
 import { takeUntil } from 'rxjs/operators';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Subject } from 'rxjs';
 import _ from 'lodash';
-import { MatDivider } from '@angular/material/divider';
 
 @Component({
   selector: 'app-article-list',
-  standalone: true,
-  imports: [
-    NavigationModule,
-    MatProgressSpinner,
-    ArticleCardComponent,
-    RouterLink,
-    MatAnchor,
-    MatButton,
-    MatExpansionModule,
-    NgTemplateOutlet,
-    MatDivider,
-  ],
+  standalone: false,
   templateUrl: './article-list.component.html',
   styleUrl: './article-list.component.scss',
-  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArticleListComponent implements OnInit {
   userArticles!: Article[];

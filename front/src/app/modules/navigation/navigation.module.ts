@@ -27,21 +27,16 @@ const mats = [
   MatSidenavContainer,
   MatNavList,
   MatSidenavModule,
+  MatAnchor,
+  MatIconAnchor,
+  MatFabAnchor,
+  MatListOption,
+  MatButton,
 ];
 
 @NgModule({
   declarations: [MobileMenuComponent, BaseComponent, DesktopMenuComponent],
-  imports: [
-    CommonModule,
-    NgOptimizedImage,
-    RouterLink,
-    ...mats,
-    MatAnchor,
-    MatIconAnchor,
-    MatFabAnchor,
-    MatListOption,
-    MatButton,
-  ],
+  imports: [CommonModule, NgOptimizedImage, RouterLink, ...mats],
   exports: [MobileMenuComponent, BaseComponent, DesktopMenuComponent],
 })
 export class NavigationModule {}

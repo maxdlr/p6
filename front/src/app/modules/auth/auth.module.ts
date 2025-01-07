@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginComponent } from './templates/login/login.component';
+import { LoginComponent } from './components/login/login.component';
 import {
   MatButton,
   MatButtonModule,
@@ -19,11 +19,11 @@ import {
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipInput } from '@angular/material/chips';
-import { RegisterComponent } from './templates/register/register.component';
+import { RegisterComponent } from './components/register/register.component';
 import { AuthBaseComponent } from './components/auth-base/auth-base.component';
-import { MeComponent } from './templates/me/me.component';
+import { MeComponent } from './components/me/me.component';
 import { RouterLink } from '@angular/router';
-import { NavigationModule } from '../../modules/navigation/navigation.module';
+import { NavigationModule } from '../navigation/navigation.module';
 import {
   MatCard,
   MatCardContent,
@@ -33,7 +33,7 @@ import {
   MatCardTitleGroup,
 } from '@angular/material/card';
 import { MatDivider } from '@angular/material/divider';
-import { ThemeCardComponent } from '../../components/theme-card/theme-card.component';
+import { ThemeCardComponent } from '../theme/components/theme-card/theme-card.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 const mats = [

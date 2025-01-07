@@ -5,8 +5,8 @@ import { LoginRequest } from '../interfaces/login-request';
 import { SessionInformation } from '../../../interfaces/session-information';
 import { RegisterRequest } from '../interfaces/register-request';
 import { environment } from '../../../../environments/environment';
-import { User } from '../../../interfaces/user';
-import { TokenValidationRequest } from '../../../interfaces/token-validation-request';
+import { User } from '../../../interfaces/model/user';
+import { TokenValidationRequest } from '../../../interfaces/payload/token-validation-request';
 
 @Injectable({
   providedIn: 'root',

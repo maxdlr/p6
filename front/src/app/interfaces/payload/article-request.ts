@@ -1,5 +1,5 @@
-import { Theme } from './theme';
-import { User } from './user';
+import { Theme } from '../model/theme';
+import { User } from '../model/user';
 
 export interface ArticleRequest {
   title: string;

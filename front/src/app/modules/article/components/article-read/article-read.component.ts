@@ -1,48 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ArticleService } from '../../../services/article.service';
-import { Article } from '../../../interfaces/article';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { NavigationModule } from '../../../modules/navigation/navigation.module';
-import { DatePipe, NgIf } from '@angular/common';
-import { MatChip } from '@angular/material/chips';
-import { MatDivider } from '@angular/material/divider';
+import { ArticleService } from '../../../../services/article.service';
+import { Article } from '../../../../interfaces/model/article';
+import { ActivatedRoute, Router } from '@angular/router';
 import _ from 'lodash';
-import { MatAnchor, MatButton } from '@angular/material/button';
-import { SessionService } from '../../../services/session.service';
-import {
-  MatCard,
-  MatCardContent,
-  MatCardHeader,
-  MatCardSubtitle,
-  MatCardTitle,
-  MatCardTitleGroup,
-} from '@angular/material/card';
-import { SnackService } from '../../../services/snack.service';
-import { CommentFormComponent } from '../../../components/comment-form/comment-form.component';
-import { SessionInformation } from '../../../interfaces/session-information';
-import { CommentService } from '../../../services/comment.service';
+import { SessionService } from '../../../../services/session.service';
+import { SnackService } from '../../../../services/snack.service';
+import { SessionInformation } from '../../../../interfaces/session-information';
+import { CommentService } from '../../../../services/comment.service';
 
 @Component({
   selector: 'app-article-read',
-  imports: [
-    MatProgressSpinner,
-    NavigationModule,
-    DatePipe,
-    MatChip,
-    MatDivider,
-    MatAnchor,
-    RouterLink,
-    MatCard,
-    MatCardHeader,
-    MatCardTitleGroup,
-    MatCardTitle,
-    MatCardSubtitle,
-    MatCardContent,
-    MatButton,
-    CommentFormComponent,
-    NgIf,
-  ],
+  standalone: false,
   templateUrl: './article-read.component.html',
   styleUrl: './article-read.component.scss',
 })
