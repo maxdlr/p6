@@ -12,6 +12,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { jwtInterceptor } from './interceptors/jwt.interceptor';
 import { authInterceptor } from './interceptors/auth.interceptor';
+import { ArticleModule } from './modules/article/article.module';
+import { ThemeModule } from './modules/theme/theme.module';
+import { NavigationModule } from './modules/navigation/navigation.module';
 
 const mats = [MatButtonModule, MatButtonToggle];
 
@@ -21,6 +24,9 @@ const mats = [MatButtonModule, MatButtonToggle];
     BrowserModule,
     AppRoutingModule,
     AuthModule,
+    ArticleModule,
+    ThemeModule,
+    NavigationModule,
     BrowserAnimationsModule,
     NgOptimizedImage,
     ...mats,
@@ -33,5 +39,6 @@ const mats = [MatButtonModule, MatButtonToggle];
     },
   ],
   bootstrap: [AppComponent],
+  // schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}

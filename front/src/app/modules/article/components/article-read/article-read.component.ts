@@ -4,7 +4,6 @@ import { Article } from '../../../../interfaces/model/article';
 import { ActivatedRoute, Router } from '@angular/router';
 import _ from 'lodash';
 import { SessionService } from '../../../../services/session.service';
-import { SnackService } from '../../../../services/snack.service';
 import { SessionInformation } from '../../../../interfaces/session-information';
 import { CommentService } from '../../../../services/comment.service';
 
@@ -21,12 +20,11 @@ export class ArticleReadComponent implements OnInit {
   public sessionInformation!: SessionInformation;
   protected readonly _ = _;
   protected readonly Number = Number;
-  protected readonly cancelAnimationFrame = cancelAnimationFrame;
+
   protected readonly confirm = confirm;
   private articleService = inject(ArticleService);
   private route = inject(ActivatedRoute);
   private sessionService = inject(SessionService);
-  private snackService = inject(SnackService);
   private commentService = inject(CommentService);
   private router = inject(Router);
 

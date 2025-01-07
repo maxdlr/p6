@@ -26,7 +26,6 @@ import { SnackService } from '../../../../services/snack.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterComponent implements OnInit {
-  public hide = true;
   public onError = false;
   form!: FormGroup;
   private authService = inject(AuthService);

@@ -33,8 +33,8 @@ import {
   MatCardTitleGroup,
 } from '@angular/material/card';
 import { MatDivider } from '@angular/material/divider';
-import { ThemeCardComponent } from '../theme/components/theme-card/theme-card.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ThemeModule } from '../theme/theme.module';
 
 const mats = [
   MatButton,
@@ -51,6 +51,14 @@ const mats = [
   MatFormFieldModule,
   MatButtonModule,
   MatButton,
+  MatCard,
+  MatCardHeader,
+  MatCardTitleGroup,
+  MatCardTitle,
+  MatCardSubtitle,
+  MatCardContent,
+  MatDivider,
+  MatProgressSpinner,
 ];
 
 @NgModule({
@@ -62,22 +70,14 @@ const mats = [
   ],
   imports: [
     CommonModule,
-    ReactiveFormsModule,
+    ThemeModule,
     FormsModule,
-    ...mats,
-    RouterLink,
     NavigationModule,
-    MatCard,
-    MatCardHeader,
-    MatCardTitleGroup,
-    MatCardTitle,
-    MatCardSubtitle,
-    MatCardContent,
-    MatDivider,
-    ThemeCardComponent,
-    MatProgressSpinner,
+    ReactiveFormsModule,
+    RouterLink,
+    ...mats,
   ],
-  exports: [LoginComponent, RegisterComponent, MeComponent],
+  // exports: [LoginComponent, RegisterComponent, MeComponent],
   providers: [
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,

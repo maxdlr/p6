@@ -37,6 +37,6 @@ const mats = [
 @NgModule({
   declarations: [MobileMenuComponent, BaseComponent, DesktopMenuComponent],
   imports: [CommonModule, NgOptimizedImage, RouterLink, ...mats],
-  exports: [MobileMenuComponent, BaseComponent, DesktopMenuComponent],
+  exports: [BaseComponent],
 })
 export class NavigationModule {}

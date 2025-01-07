@@ -12,17 +12,22 @@ import { SessionService } from '../../../../services/session.service';
 import { ArticleService } from '../../../../services/article.service';
 
 @Component({
-  selector: 'app-article-list-card',
+  selector: 'app-article-card',
   standalone: false,
   templateUrl: './article-card.component.html',
   styleUrl: './article-card.component.scss',
 })
 export class ArticleCardComponent implements OnInit {
   @Input() article!: Article;
+
   public isAuthor!: boolean;
+
   @Output() deleted = new EventEmitter<number>();
+
   protected readonly _ = _;
+
   private sessionService = inject(SessionService);
+
   private articleService = inject(ArticleService);
 
   ngOnInit(): void {

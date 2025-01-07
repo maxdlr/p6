@@ -3,7 +3,7 @@ import { ThemeService } from '../../../../services/theme.service';
 import { Theme } from '../../../../interfaces/model/theme';
 
 @Component({
-  selector: 'app-theme',
+  selector: 'app-theme-list',
   standalone: false,
   templateUrl: './theme-list.component.html',
   styleUrl: './theme-list.component.scss',

@@ -80,7 +80,6 @@ export class ArticleListComponent implements OnInit {
 
   selectTheme(id: number): void {
     if (this.shownThemes.find((theme) => theme.id === id)) {
-      console.log('theme already selected');
       return;
     }
 
@@ -99,7 +98,6 @@ export class ArticleListComponent implements OnInit {
 
   deselectTheme(id: number): void {
     if (!this.shownThemes.find((theme) => theme.id === id)) {
-      console.log('theme not selected');
       return;
     }
 
@@ -116,8 +114,8 @@ export class ArticleListComponent implements OnInit {
   }
 
   selectAllThemes(): void {
-    this.shownThemes = this.userThemes;
-    this.shownArticles = this.userArticles;
+    this.shownThemes = [...this.userThemes];
+    this.shownArticles = [...this.userArticles];
   }
 
   deselectAllThemes(): void {

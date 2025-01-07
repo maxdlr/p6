@@ -4,7 +4,6 @@ import {
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
-  MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
@@ -22,7 +21,7 @@ import { MatButton } from '@angular/material/button';
   styleUrl: './dialog.component.scss',
 })
 export class DialogComponent {
-  readonly dialogRef = inject(MatDialogRef<DialogComponent>);
+  // readonly dialogRef = inject(MatDialogRef<DialogComponent>);
   readonly data = inject<{
     title: string;
     content: string;
