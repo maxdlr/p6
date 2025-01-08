@@ -1,6 +1,6 @@
 <app-auth-base title="S'inscrire">
-  <form (ngSubmit)="submit()" [formGroup]="form" class="flex flex-col justify-center items-center">
-    <mat-form-field>
+  <form (ngSubmit)="submit()" [formGroup]="form" class="flex flex-col justify-center items-center w-full gap-2">
+    <mat-form-field class="w-2/4">
       <mat-label>Email</mat-label>
       <input
         autocomplete="email"
@@ -16,7 +16,7 @@
         Email is <strong>required</strong>
       </mat-error>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="w-2/4">
       <mat-label>Username</mat-label>
       <input
         autocomplete="username"
@@ -28,21 +28,27 @@
       <mat-error *ngIf="form.controls['username'].hasError('username')">
         Please enter a valid username address
       </mat-error>
-      <mat-error *ngIf="form.hasError('required')">
+      <mat-error *ngIf="form.controls['username'].hasError('required')">
         Username is <strong>required</strong>
       </mat-error>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="w-2/4">
       <mat-label>Password</mat-label>
       <input autocomplete="current-password" formControlName="password" matInput placeholder="Ex. 12345678"
              required
              type="password">
-      <mat-error *ngIf="form.controls['password'].hasError('min')">
-        Please enter a valid password
+      <mat-error *ngIf="form.controls['password'].hasError('required')">
+        Obligatoire
+      </mat-error>
+      <mat-error *ngIf="form.controls['password'].hasError('minLength')">
+        8 character minimum
+      </mat-error>
+      <mat-error *ngIf="form.controls['password'].hasError('pattern')">
+        1 min, 1 maj, 1 num, 1 spécial
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field class="w-2/4">
       <mat-label>Verify password</mat-label>
       <input autocomplete="current-password" formControlName="verifyPassword" matInput placeholder="Ex. 12345678"
              required
@@ -51,7 +57,8 @@
         Passwords do not match.
       </mat-error>
     </mat-form-field>
-    <button (click)="submit()" [disabled]="!this.form.valid" color="primary" mat-flat-button type="button">S'inscrire
+    <button (click)="submit()" [disabled]="!this.form.valid" class="mb-2" color="primary" mat-flat-button type="button">
+      S'inscrire
     </button>
     <a color="secondary" mat-button routerLink="/login">Vous avez déjà un compte ?</a>
   </form>

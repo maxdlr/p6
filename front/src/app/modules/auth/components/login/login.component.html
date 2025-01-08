@@ -1,6 +1,6 @@
 <app-auth-base title="se connecter">
-  <form (ngSubmit)="submit()" [formGroup]="form" class="flex flex-col justify-center items-center">
-    <mat-form-field>
+  <form (ngSubmit)="submit()" [formGroup]="form" class="flex flex-col justify-center items-center gap-2">
+    <mat-form-field class="w-2/4">
       <mat-label>Email</mat-label>
       <input
         autocomplete
@@ -16,7 +16,7 @@
         Email is <strong>required</strong>
       </mat-error>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="w-2/4">
       <mat-label>Password</mat-label>
       <input autocomplete="current-password" formControlName="password" matInput placeholder="Ex. 12345678"
              type="password">
@@ -24,7 +24,7 @@
         Please enter a valid password
       </mat-error>
     </mat-form-field>
-    <button (click)="submit()" color="primary" mat-flat-button type="button">Se connecter</button>
+    <button (click)="submit()" class="mb-2" color="primary" mat-flat-button type="button">Se connecter</button>
     <a color="secondary" mat-button routerLink="/register">Vous n'avez pas de compte ?</a>
   </form>
 </app-auth-base>
