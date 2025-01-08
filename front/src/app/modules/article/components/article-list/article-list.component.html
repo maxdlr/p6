@@ -1,0 +1,88 @@
+<ng-template #themeList>
+  <div class="py-3 px-5 flex flex-wrap sm:justify-start justify-center items-center gap-3">
+
+    <div class="flex flex-wrap sm:justify-start justify-center items-center gap-3">
+      <button
+        (click)="selectAllThemes()"
+        [disabled]="shownThemes.length === userThemes.length"
+        color="primary"
+        mat-flat-button
+      >
+        Tous les thèmes
+      </button>
+      <button
+        (click)="deselectAllThemes()"
+        [disabled]="shownThemes.length === 0"
+        color="primary"
+        mat-stroked-button
+      >
+        Aucun thème
+      </button>
+    </div>
+    <span>•</span>
+    @for (theme of userThemes; track theme.id) {
+      @if (shownThemes.includes(theme)) {
+        <button
+          mat-flat-button
+          (click)="deselectTheme(theme.id)"
+          color="accent"
+        >
+          {{ _.truncate(theme.name, { length: 15 }) }}
+        </button>
+      } @else {
+        <button
+          mat-stroked-button
+          (click)="selectTheme(theme.id)"
+          color="primary"
+        >
+          {{ _.truncate(theme.name, { length: 15 }) }}
+        </button>
+      }
+    }
+  </div>
+</ng-template>
+
+<app-base>
+
+  <div class="my-5 text-right">
+    <a [routerLink]="['/articles/add']" color="primary" mat-flat-button>Ecrire un article</a>
+  </div>
+  @if (!isLoading) {
+
+    @if (isMobile) {
+      <div class="mt-3">
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Filtrer les thèmes</mat-panel-title>
+            </mat-expansion-panel-header>
+            <ng-container *ngTemplateOutlet="themeList" />
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    } @else {
+      <ng-container *ngTemplateOutlet="themeList" />
+    }
+
+    <div class="my-5">
+      <mat-divider />
+    </div>
+
+    @if (userArticles.length !== 0) {
+      <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 grid-flow-row gap-5">
+        @for (article of shownArticles; track article.id) {
+          <app-article-card [article]="article" (deleted)="refresh()" />
+        }
+      </div>
+    } @else {
+      Aucun article a montrer
+    }
+
+  } @else {
+    <div class="w-full flex justify-center items-center h-[30vh]">
+      <mat-spinner />
+    </div>
+  }
+
+
+</app-base>

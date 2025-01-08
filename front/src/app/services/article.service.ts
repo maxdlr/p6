@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { Article } from '../interfaces/article';
+import { Article } from '../interfaces/model/article';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { ArticleRequest } from '../interfaces/article-request';
+import { ArticleRequest } from '../interfaces/payload/article-request';
 import { DialogComponent } from '../components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SnackService } from './snack.service';

@@ -2,8 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { map, Observable } from 'rxjs';
-import { User } from '../interfaces/user';
-import { UserEditRequest } from '../pages/auth/interfaces/user-edit-request';
+import { User } from '../interfaces/model/user';
+import { UserEditRequest } from '../modules/auth/interfaces/user-edit-request';
 
 @Injectable({
   providedIn: 'root',
