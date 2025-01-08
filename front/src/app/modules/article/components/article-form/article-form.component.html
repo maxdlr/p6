@@ -1,0 +1,55 @@
+<app-base>
+  @if (mode === "create" || article) {
+    <form (ngSubmit)="submit()" [formGroup]="form" class="flex flex-col justify-center items-center w-[80%] mx-auto">
+      <div class="w-full flex justify-between items-center flex-wrap mb-8">
+        <h1>
+          @if (mode === 'edit') {
+            Modifier
+          } @else {
+            Créer
+          } {{ pageTitle }}
+        </h1>
+        <div>
+          <button *ngIf="mode ==='edit'" (click)="delete()" class="me-5" color="warn" mat-flat-button
+                  type="button"
+          >
+            Supprimer
+          </button>
+          <button color="primary" mat-flat-button type="submit" [disabled]="!this.form.valid">Publier</button>
+        </div>
+      </div>
+
+      <div class="grid max-sm:grid-cols-1 grid-cols-2 grid-flow-row gap-3 w-full">
+
+        <mat-form-field class="w-full">
+          <mat-label>
+            Titre
+          </mat-label>
+          <input formControlName="title" matInput type="text" [(ngModel)]="pageTitle">
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+          <mat-label>Theme</mat-label>
+          <mat-select formControlName="theme">
+            @for (theme of themes; track theme) {
+              <mat-option [value]="theme">{{ theme.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+      </div>
+
+      <mat-form-field class="w-full">
+        <mat-label>
+          Contenu
+        </mat-label>
+        <textarea class="min-h-[50vh]" formControlName="content" matInput></textarea>
+      </mat-form-field>
+
+    </form>
+  } @else {
+    <div class="w-full flex justify-center items-center h-[30vh]">
+      <mat-spinner />
+    </div>
+  }
+</app-base>

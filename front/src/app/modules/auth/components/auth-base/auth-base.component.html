@@ -1,0 +1,13 @@
+<app-base>
+  <div>
+    <a color="secondary" href="/" mat-icon-button>
+      <mat-icon>arrow_left</mat-icon>
+    </a>
+  </div>
+  <section class="flex flex-col justify-center items-center">
+    <h1>{{ title }}</h1>
+    <div class="my-5">
+      <ng-content />
+    </div>
+  </section>
+</app-base>

@@ -1,0 +1,9 @@
+<form (ngSubmit)="submit()" class="flex flex-col justify-center items-center w-[80%] mx-auto">
+  <mat-form-field class="w-full">
+    <mat-label>
+      Contenu
+    </mat-label>
+    <textarea [formControl]="commentForm" class="min-h-[10vh]" matInput></textarea>
+  </mat-form-field>
+  <button [disabled]="!this.commentForm.valid" color="primary" mat-flat-button type="submit">Commenter</button>
+</form>

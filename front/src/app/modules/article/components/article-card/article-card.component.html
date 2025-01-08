@@ -1,0 +1,50 @@
+<mat-card appearance="outlined" class="p-3 h-full w-full">
+
+  <mat-card-header>
+    <mat-card-title>
+      <p>{{ article.title }}</p>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <div class="py-3">
+      <span class="text-gray-500 italic block">Par {{ _.upperFirst(article.author.username) }},
+        le {{ article.createdAt | date }}</span>
+        @if (article.comments.length > 0) {
+          <span class="italic text-gray-500 block">
+          {{ article.comments.length }} commentaires
+        </span>
+        }
+      </div>
+      <mat-chip>
+        {{ article.theme.name }}
+      </mat-chip>
+    </mat-card-subtitle>
+
+  </mat-card-header>
+
+  <mat-card-content>
+    <p class="py-3">{{ _.truncate(article.content, { length: 300 }) }}</p>
+  </mat-card-content>
+
+  <mat-card-footer class="text-center py-5">
+    <mat-card-actions>
+      <div class="flex flex-wrap items-center gap-3">
+        <a [routerLink]="['/articles/read', article.id]" color="primary" mat-flat-button>
+          Lire
+        </a>
+        @if (isAuthor) {
+          <div>
+            <a [routerLink]="['/articles/edit', article.id]" color="secondary" mat-stroked-button class="me-2">
+              Modifier
+            </a>
+            <button mat-flat-button
+                    (click)="delete()"
+                    color="warn">Supprimer
+            </button>
+          </div>
+        }
+      </div>
+    </mat-card-actions>
+
+  </mat-card-footer>
+</mat-card>
+

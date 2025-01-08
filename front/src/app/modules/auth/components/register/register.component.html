@@ -1,0 +1,58 @@
+<app-auth-base title="S'inscrire">
+  <form (ngSubmit)="submit()" [formGroup]="form" class="flex flex-col justify-center items-center">
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input
+        autocomplete="email"
+        formControlName="email"
+        matInput
+        placeholder="Ex. pat@example.com"
+        required
+        type="email">
+      <mat-error *ngIf="form.controls['email'].hasError('email')">
+        Please enter a valid email address
+      </mat-error>
+      <mat-error *ngIf="form.hasError('required')">
+        Email is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Username</mat-label>
+      <input
+        autocomplete="username"
+        formControlName="username"
+        matInput
+        placeholder="Maxou"
+        required
+        type="text">
+      <mat-error *ngIf="form.controls['username'].hasError('username')">
+        Please enter a valid username address
+      </mat-error>
+      <mat-error *ngIf="form.hasError('required')">
+        Username is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input autocomplete="current-password" formControlName="password" matInput placeholder="Ex. 12345678"
+             required
+             type="password">
+      <mat-error *ngIf="form.controls['password'].hasError('min')">
+        Please enter a valid password
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Verify password</mat-label>
+      <input autocomplete="current-password" formControlName="verifyPassword" matInput placeholder="Ex. 12345678"
+             required
+             type="password">
+      <mat-error *ngIf="form.errors ? form.errors['passwordsMismatch'] : false">
+        Passwords do not match.
+      </mat-error>
+    </mat-form-field>
+    <button (click)="submit()" [disabled]="!this.form.valid" color="primary" mat-flat-button type="button">S'inscrire
+    </button>
+    <a color="secondary" mat-button routerLink="/login">Vous avez déjà un compte ?</a>
+  </form>
+</app-auth-base>
